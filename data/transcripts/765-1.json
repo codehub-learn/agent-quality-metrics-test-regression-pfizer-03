@@ -1,0 +1,102 @@
+{
+  "run": "765-1",
+  "number": 765,
+  "issue": {
+    "number": 765,
+    "title": "Cannot build Mockito on Windows 64b with Java 8 ",
+    "body": "Hi guys,\n\n I am trying to build Mockito on my Windows 64 machine with jdk1.8.0_66 and the build is failing. I tried the `master `branch and also the `release/2.x` branch, both are having the same problem. \n\nWhen I run `gradlew clean build` I am getting:\n\n```\nmockito\\src\\test\\java\\org\\mockitousage\\matchers\\MatchersTest.java:599: error: unclosed character literal\n        mock.oneArg(Character.valueOf('Ôé¼'));\n                                      ^\nmockito\\src\\test\\java\\org\\mockitousage\\matchers\\MatchersTest.java:599: error: illegal character: '\\u201a'\n        mock.oneArg(Character.valueOf('Ôé¼'));\n                                        ^\nmockito\\src\\test\\java\\org\\mockitousage\\matchers\\MatchersTest.java:599: error: illegal character: '\\u00ac'\n        mock.oneArg(Character.valueOf('Ôé¼'));\n                                         ^\nmockito\\src\\test\\java\\org\\mockitousage\\matchers\\MatchersTest.java:599: error: unclosed character literal\n        mock.oneArg(Character.valueOf('Ôé¼'));\n                                          ^\nmockito\\src\\test\\java\\org\\mockitousage\\matchers\\MatchersTest.java:599: error: ';' expected\n        mock.oneArg(Character.valueOf('Ôé¼'));\n                                            ^\n5 errors\n:compileTestJava FAILED\n:removeTestResources\n\nFAILURE: Build failed with an exception.\n```\n\n\nAfter removing the line containing `        mock.oneArg(Character.valueOf('€'));` inside **MatchersTest.java** on line 599, the build works OK.\n\nAnyone else facing similar trouble? \n  \n\n\n",
+    "created_at": "2016-11-17T15:07:27Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/765.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 765,\n3\t  \"title\": \"Cannot build Mockito on Windows 64b with Java 8 \",\n4\t  \"body\": \"Hi guys,\\n\\n I am trying to build Mockito on my Windows 64 machine with jdk1.8.0_66 and the build is failing. I tried the `master `branch and also the `release/2.x` branch, both are having the same p [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Character.valueOf\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "encoding|UTF-8",
+        "path": "mockito",
+        "glob": "*.gradle",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Cannot build|encoding|Windows|unclosed character",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "26:97\tMockito won't build on a Windows machine\n101:206\tNoJUnitDependenciesTest is failing on Windows machine.\n111:225\tFailing tests on Windows machine\n128:256\ttask mockitoJavadoc fails when compiling in windows\n400:765\tCannot build Mockito on Windows 64b with Java 8\n502:978\tAttachNotSupportedExcepti [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MatchersTest.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "sourceEncoding|compileJava|compileTestJava|options.encoding",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 765, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [26, 2933], \"evidence\": [], \"reply\": \"Thanks for the report. The compile errors and the offending line are enough to see the cause: a char literal in a test source file contains non-ASCII characters, so the test compile fails on a Windows machine whose default source encoding is not UTF-8. I could not open the Mockito source in this checkout, so I have not confirmed the file on the branch you built. Could you tell us the exact commit or branch you built from, and whether the build passes when the compiler is set to UTF-8 (for example with -Dfile.encoding=UTF-8 or the javac encoding option)? That would confirm the cause.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,294 @@
+{
+  "run": "379-1",
+  "number": 379,
+  "issue": {
+    "number": 379,
+    "title": "Verification using After and ArgumentCaptor with Times or AtLeast methods returns unexpected size of captured values list.",
+    "body": "Hi!\nI was looking issue #345 and found that the test \"shouldReturnListOfArgumentsWithSameSizeAsGivenInAtMostVerification\" (located in VerificationAfterDelayTest.java) fails if you use atLeast() or times() instead of atMost().\nI created these tests:\n\n![screenshot from 2016-03-24 16 50 29](https://cloud.githubusercontent.com/assets/17257307/14034443/8a3d8b98-f1e0-11e5-856a-65dc20a4fa6b.png)\n",
+    "created_at": "2016-03-24T23:42:00Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/379.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 379,\n3\t  \"title\": \"Verification using After and ArgumentCaptor with Times or AtLeast methods returns unexpected size of captured values list.\",\n4\t  \"body\": \"Hi!\\nI was looking issue #345 and found that the test \\\"shouldReturnListOfArgumentsWithSameSizeAsGivenInAtMostVerification\\\"  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class (VerificationAfterDelay|AtLeast|Times|AtMost|Timeout|After)\\b|ArgumentCaptor|shouldReturnListOfArgumentsWithSameSize",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "atLeast|atMost|times|after|capture",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "21:91\tDocument Mockito.after() method\n70:160\tAdditionalMatchers logical matchers don't capture arguments\n94:197\tMockito.after() method accepts negative timeperiods and subsequent verifications always pass\n118:237\tTest error after upgrading Mockito from 2.0.14-beta to 2.0.15-beta\n142:284\tRemove invoc [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{After,Timeout,VerificationAfterDelay,AtLeast,Times,AtMost,ArgumentCaptor}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static VerificationAfterDelay after\\(|public static VerificationMode (atLeast|times|atMost)\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1,
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "VerificationAfterDelay|atLeast\\(|atMost\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "40:import org.mockito.verification.VerificationAfterDelay;\n475: * //verification using atLeast()/atMost()\n478: * verify(mockedList, atLeast(2)).add(\"three times\");\n479: * verify(mockedList, atMost(5)).add(\"three times\");\n1050: *   verify(mock, timeout(100).atLeast(2)).someMethod();\n2026:     *   inO [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "shouldReturnListOfArgumentsWithSameSizeAsGivenInAtMostVerification|class VerificationOverTimeImpl|class VerificationAfterDelayTest",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/VerificationOverTimeImpl.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.verification;\n6\t\n7\timport org.mockito.exceptions.base.MockitoAssertionError;\n8\timport org.mockito.internal.util.Timer;\n9\timport org.mockito.i [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class CapturingMatcher|public boolean matches|arguments\\.add|captured\\.add|getAllValues",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "20:public class CapturingMatcher<T> implements ArgumentMatcher<T>, CapturesArguments, Serializable {\n34:    public boolean matches(Object argument) {\n64:    public List<T> getAllValues() {\n78:            this.arguments.add((T) argument);",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/verification/VerificationAfterDelay.java",
+        "offset": 1,
+        "limit": 40
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.verification;\n6\t\n7\timport org.mockito.Mockito;\n8\t\n9\t/**\n10\t * VerificationAfterDelay is a {@link VerificationMode} that allows combining existing veri [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java",
+        "offset": 30,
+        "limit": 55
+      },
+      "result": "30\t        this.clazz = Objects.requireNonNull(clazz);\n31\t    }\n32\t\n33\t    @Override\n34\t    public boolean matches(Object argument) {\n35\t        if (argument == null) {\n36\t            return true;\n37\t        }\n38\t\n39\t        if (Primitives.isPrimitiveOrWrapper(clazz)) {\n40\t            return Primiti [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom\\(",
+        "path": "mockito/mockito-core/src/main/java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom|captureFrom\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureFrom",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/invocation/InvocationMatcher.java",
+        "output_mode": "content",
+        "-n": true,
+        "-C": 6
+      },
+      "result": "126-    @Override\n127-    public Location getLocation() {\n128-        return invocation.getLocation();\n129-    }\n130-\n131-    @Override\n132:    public void captureArgumentsFrom(Invocation invocation) {\n133-        MatcherApplicationStrategy strategy =\n134-                getMatcherApplicationStrateg [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/Times.java",
+        "offset": 20,
+        "limit": 40
+      },
+      "result": "20\tpublic class Times implements VerificationInOrderMode, VerificationMode {\n21\t\n22\t    final int wantedCount;\n23\t\n24\t    public Times(int wantedNumberOfInvocations) {\n25\t        if (wantedNumberOfInvocations < 0) {\n26\t            throw new MockitoException(\"Negative value is not allowed here\");\n27\t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/NumberOfInvocationsChecker.java",
+        "output_mode": "content",
+        "-n": true,
+        "-C": 8
+      },
+      "result": "Path does not exist: mockito\\mockito-core\\src\\main\\java\\org\\mockito\\internal\\verification\\NumberOfInvocationsChecker.java. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/AtLeast.java",
+        "output_mode": "content",
+        "-n": true,
+        "-C": 8
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom|captureFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/handler/MockHandlerImpl.java",
+        "output_mode": "content",
+        "-n": true,
+        "-C": 4
+      },
+      "result": "110-                    invocationContainer.getStubbingsAscending(),\n111-                    mockSettings);\n112-\n113-            if (stubbing != null) {\n114:                stubbing.captureArgumentsFrom(invocation);\n115-\n116-                try {\n117-                    return stubbing.answer(invoca [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/Times.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captureArgumentsFrom",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification",
+        "output_mode": "content",
+        "-n": true,
+        "-C": 5
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 379: after() with ArgumentCaptor and times()/atLeast() returns more captured values than expected. Evidence: VerificationOverTimeImpl.verify polls delegate.verify repeatedly, and CapturingMatcher.captureFrom appends on every match. Related: 345 (same problem, atMost), 1037 (duplicate captures)."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 379, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [345, 1037], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/verification/VerificationOverTimeImpl.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java\", \"mockito/mockito-core/src/main/java/org/mockito/verification/VerificationAfterDelay.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/invocation/InvocationMatcher.java\", \"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. The issue text points to a screenshot, and I could not read it, so the report is not reproducible as written yet. Could you please add as text:\\n- the Mockito version you used,\\n- the test code, including the after(...) call, the ArgumentCaptor and the times() or atLeast() call,\\n- the expected and the actual number of captured values.\\nThe after() path is in VerificationOverTimeImpl, and captured values are collected in CapturingMatcher, so those are the classes to look at once we have the snippet.\"}",
+  "final_is_json": true
+}

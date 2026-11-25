@@ -1,0 +1,118 @@
+{
+  "run": "541-1",
+  "number": 541,
+  "issue": {
+    "number": 541,
+    "title": "improve Mockito.mockingDetails API",
+    "body": "In order to make the API cleaner & expose useful information:\n1. MockingDetails.getInvocations() throws meaningful exception when passed object is not a mock and documents this behavior\n2. getMockedType() and getExtraInterfaces() are replaced with getMockCreationSettings() that returns MockCreationSettings instance.\n",
+    "created_at": "2016-08-10T00:38:47Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/541.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 541,\n3\t  \"title\": \"improve Mockito.mockingDetails API\",\n4\t  \"body\": \"In order to make the API cleaner & expose useful information:\\n1. MockingDetails.getInvocations() throws meaningful exception when passed object is not a mock and documents this behavior\\n2. getMockedType() and ge [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getMockCreationSettings|getExtraInterfaces|getMockedType|interface MockingDetails|class MockingDetails",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails|MockingDetails|mockingdetails",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n273:541\timprove Mockito.mockingDetails API\n274:542\tnew API MockingDetails.getStubbings for advanced users and integrations\n275:543\tnew MockingDetails.printInvocations() API for debugging tests and edge cases",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*MockingDetails*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockingDetails",
+        "path": "mockito",
+        "output_mode": "count"
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getInvocations|getStubbings",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 541, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [542, 543], \"evidence\": [], \"reply\": \"Thanks for the suggestion. You're asking for clearer errors when the mocking-details inspection is given an object that isn't a mock, with that behaviour documented. You also want the separate mocked-type and extra-interfaces getters replaced by one creation-settings accessor, which would make the API cleaner.\"}",
+  "final_is_json": true
+}

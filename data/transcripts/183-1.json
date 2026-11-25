@@ -1,0 +1,121 @@
+{
+  "run": "183-1",
+  "number": 183,
+  "issue": {
+    "number": 183,
+    "title": "Feature request: Method to reset mock interactions/invocations without resetting stubs",
+    "body": "I'm still missing the ability to reset the invocations on a mock, while keeping all the stubbing, so this is a GitHub equivalent of https://code.google.com/p/mockito/issues/detail?id=316\n\nSome background discussion exists in a [thread](https://groups.google.com/forum/#!topic/mockito/5G-XnpIhP3s) that also refers to [issue 84](https://code.google.com/p/mockito/issues/detail?id=84) for which there already [is a GitHub issue](https://github.com/mockito/mockito/issues/86).\n",
+    "created_at": "2015-03-19T19:16:34Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/183.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 183,\n3\t  \"title\": \"Feature request: Method to reset mock interactions/invocations without resetting stubs\",\n4\t  \"body\": \"I'm still missing the ability to reset the invocations on a mock, while keeping all the stubbing, so this is a GitHub equivalent of https://code.google.com/p/moc [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "clearInvocations|public static .* reset\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "reset|invocation",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n75:173\tIgnoring invocations on a spy()?\n82:183\tFeature request: Method to reset mock interactions/invocations without resetting stubs\n142:284\tRemove invocation from mock after it's being verified\n181:339\tLast Invocation Verification Mode\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "clearInvocations",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* reset\\(|public static .* clearInvocations\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* (reset|clearInvocations)\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3231:    public static <T> void reset(T... mocks) {\n3257:    public static <T> void clearInvocations(T... mocks) {",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 183, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [3215], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the request. You asked for a way to clear a mock's recorded invocations while keeping its stubbing. Mockito.clearInvocations(T... mocks) now does this, and Mockito.reset(T... mocks) is still there for when you also want to drop the stubs. Happy to hear whether clearInvocations covers your case.\"}",
+  "final_is_json": true
+}

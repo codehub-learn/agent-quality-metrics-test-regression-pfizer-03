@@ -1,0 +1,108 @@
+{
+  "run": "688-1",
+  "number": 688,
+  "issue": {
+    "number": 688,
+    "title": "Enabled mocking interface clone method",
+    "body": "Mocking a `clone()` method on an interface appears to no longer be working with **Mockito 2.1.0**. The below code works fine with **Mockito 1.10.19** but throws an `IllegalAccessError` with **Mockito 2.1.0**:\n\n```\npublic interface CloneableInterface extends Cloneable {\n   CloneableInterface clone();\n}\n\npublic class CloneableInterfaceTest {\n\n   @Test\n   public void test() {      \n      CloneableInterface i = Mockito.mock(CloneableInterface.class);\n      Mockito.when(i.clone()).thenReturn(i); // Throws IllegalAccessError\n   }\n}\n```\n\nResult of running above test:\n\n```\njava.lang.IllegalAccessError: CloneableInterface$MockitoMock$833899610.clone()LCloneableInterface;\n```\n\nEnvironment: **JDK 1.8.0_102, JUnit 4.11, Mockito 2.1.0, Gradle 3.0, Windows 10**\n\nEDIT: Link to [SO post](http://stackoverflow.com/questions/39967723/mocking-interface-clone-method)\n",
+    "created_at": "2016-10-11T14:48:16Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/688.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 688,\n3\t  \"title\": \"Enabled mocking interface clone method\",\n4\t  \"body\": \"Mocking a `clone()` method on an interface appears to no longer be working with **Mockito 2.1.0**. The below code works fine with **Mockito 1.10.19** but throws an `IllegalAccessError` with **Mockito 2.1.0**:\\ [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)clone",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "351:688\tEnabled mocking interface clone method",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "clone",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ClassImposterizer*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ObjectMethodsGuru*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ObjectMethodsGuru|ClassImposterizer",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)IllegalAccess|Cloneable|default method|interface",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n58:146\tSpy on java 8 default methods with interface hierarchy\n153:305\tmocking method an interface inherits from its parent interface is not working when the method is re-stated in extending interf [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 688, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1083], \"evidence\": [], \"reply\": \"Thanks for the report. It includes the Mockito version (2.1.0), a complete snippet, the expected result (it works on 1.10.19) and the full IllegalAccessError message, so it can be reproduced as written. I could not find the code that handles clone() on interface mocks in the source copy I checked, so I can't point to the responsible class yet. Thanks for the Stack Overflow link too.\"}",
+  "final_is_json": true
+}

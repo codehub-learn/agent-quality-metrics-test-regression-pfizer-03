@@ -1,0 +1,106 @@
+{
+  "run": "877-1",
+  "number": 877,
+  "issue": {
+    "number": 877,
+    "title": "No way for user to tell Mockito about matchers that take matchers",
+    "body": "I was trying to write a new Matcher that would take a lambda, and a matcher. This might sounds familiar because I am trying to create a PropertyMatcher for Mockito with lambdas. I made the following matcher.\n\n```\npublic class PropertyMatcher<T, S> extends ArgumentMatcher<T> {\n\n    @NonNull private final Func1<T, S> map;\n    @NonNull private final S matcher;\n\n    @SuppressWarnings(\"unchecked\")\n    public static <T,S> T propertyThat(@NonNull Func1<T, S> map, @NonNull S matcher) {\n        return Matchers.argThat(new PropertyMatcher<>(map, matcher));\n    }\n\n    public PropertyMatcher(@NonNull Func1<T, S> map, @NonNull S matcher) {\n        this.map = map;\n        this.matcher = matcher;\n    }\n\n    @SuppressWarnings(\"unchecked\")\n    @Override\n    public boolean matches(Object item) {\n        try {\n            // pretty sure this won't work because mockito doesn't work like hamcrest\n            Matcher<S> m = (Matcher<S>) matcher;\n            return m.matches(map.call((T) item));\n        } catch (ClassCastException cce) {\n            return matcher.equals(map.call((T) item));\n        }\n    }\n\n    @Override\n    public void describeTo(Description description) {\n    }\n}\n```\n\nNow this works ONLY if you use nothing but values. So a working example would be\n```\nverify(managerMock).manage(propertyThat(Request::id, 1)); // ok\n```\nHowever once I start to use a matcher, I get an error saying that I am mixing matchers and real values.\n```\nverify(managerMock).manage(propertyThat(Request::id, eq(1))); // error\n```\nThis is because the argument matcher storage has no idea I am a matcher taking matchers. All of that is private so I don't really have a way to get to it (without reflection). That is only the part I know I would need to fix. I don't know the implementation all that well so I don't know if there is something else that would be required. Is there any expectation that this could be done? Should I just not even bother with this and just make a matcher that is a lambda with the checks? I will admit that I am still on version 1.10.19. When I went to figure this out I was quite surprised that 2 had been release. I haven't tried it yet, but I don't know if Android's sorta Java 8 would work with Mockito 2 anyway.",
+    "created_at": "2017-01-12T04:11:58Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/877.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 877,\n3\t  \"title\": \"No way for user to tell Mockito about matchers that take matchers\",\n4\t  \"body\": \"I was trying to write a new Matcher that would take a lambda, and a matcher. This might sounds familiar because I am trying to create a PropertyMatcher for Mockito with lambdas. I ma [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)matcher|argThat",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 60
+      },
+      "result": "38:117\tNullPointerException when using argThat() for long parameter in verify\n41:120\tAdd Matchers.any(Object) or Marchers.any(Type)\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n70:160\tAdditionalMatchers logical matchers don't capture arguments\n78:178\tMockito  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{ArgumentMatcher,ArgumentMatchers,MatcherApplicationStrategy,ArgumentMatcherStorage,ArgumentMatcherStorageImpl,MockitoHamcrest}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Invalid use of argument matchers|class ArgumentMatcherStorageImpl|public interface ArgumentMatcher|public static <T> T argThat",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ArgumentMatcher*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Invalid use of argument matchers",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 877, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1398, 1515], \"evidence\": [], \"reply\": \"Thanks for the detailed report and the clear example. You are asking for a way to nest an argument matcher inside a custom matcher that wraps a lambda, so that propertyThat(Request::id, eq(1)) works the way propertyThat(Request::id, 1) already does. Logging this as a feature request for the backlog.\"}",
+  "final_is_json": true
+}

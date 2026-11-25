@@ -1,0 +1,42 @@
+{
+  "run": "1127-1",
+  "number": 1127,
+  "issue": {
+    "number": 1127,
+    "title": "Version not released to Maven Central",
+    "body": "2 days ago I requested a [build](https://github.com/mockito/mockito/commit/04961ae3cc8093916f563d7edc223224d757a4a1) with Maven Central sync (having notable changes merged). Looking into release configuration I used `[ci maven-central-release]` and it seems to be [enabled](https://travis-ci.org/mockito/mockito/jobs/242215132#L842) in Travis.\n\nHowever, that release is not [available](https://maven-badges.herokuapp.com/maven-central/org.mockito/mockito-core) in Maven Central (2.8.9 is the newest as time of raising this issue instead of 2.8.44).\n\n@szczepiq Is there anything else (with the current release mechanism) that is needed to do to build a \"notable version\"?",
+    "created_at": "2017-06-14T09:56:30Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1127.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1127,\n3\t  \"title\": \"Version not released to Maven Central\",\n4\t  \"body\": \"2 days ago I requested a [build](https://github.com/mockito/mockito/commit/04961ae3cc8093916f563d7edc223224d757a4a1) with Maven Central sync (having notable changes merged). Looking into release configuration  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(release|maven|central|sync|publish)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "9:73\tNew release\n19:89\tadd latest release into maven central\n30:105\tContinuous deployment should not release new version if binaries are equal\n33:109\tImprove automated release notes look\n40:119\ttidy-up and rework release notes automation\n43:123\tRelease Mockito 2.0\n48:132\tMaven Release for 1.10.14\n52 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 1127: \"Version not released to Maven Central\". Reporter asks what else is needed to get a notable version released to Maven Central via the [ci maven-central-release] tag. No Mockito API is named, so no source evidence applies."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1127, \"label\": \"question\", \"route\": \"answer\", \"related\": [1085, 1107, 1150], \"evidence\": [], \"reply\": \"Thanks for the report. The question is about the project's release pipeline, not about a Mockito API, and the source in this repo doesn't document how a version gets synced to Maven Central. Whether a tagged build gets published is decided by the maintainers and the CI release setup, so this is best answered by them. If you need a specific version now, check the Maven Central index directly, since the badge you linked may lag behind. Related reports on sync delays are #1085 and #1150.\"}",
+  "final_is_json": true
+}

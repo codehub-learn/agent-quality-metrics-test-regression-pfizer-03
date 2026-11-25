@@ -1,0 +1,209 @@
+{
+  "run": "804-1",
+  "number": 804,
+  "issue": {
+    "number": 804,
+    "title": "Verify exception would be swallowed when specifing expected  parameter",
+    "body": "Android Studio Version: 2.2.3\nMockito Version: org.mockito:mockito-core:2.2.29'\nHere is my test:\n```java\n@Test(expected = IndexOutOfBoundsException.class)\npublic void test(){\n    List mockedList = mock(LinkedList.class);\n\n    final Matcher<Integer> matcher = new Matcher<Integer>() {\n        @Override\n        public boolean matches(Object item) {\n            if(!(item instanceof Integer)){\n                return false;\n            }\n\n            final Integer integer = (Integer) item;\n\n            return integer >= 0 && integer <= 10;\n        }\n\n        @Override\n        public void describeMismatch(Object item, Description mismatchDescription) {}\n\n        @Override\n        public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {}\n\n        @Override\n        public void describeTo(Description description) {}\n    };\n\n    when(mockedList.get(intThat(matcher))).thenReturn(\"Some Strings\");\n    when(mockedList.get(intThat(not(matcher)))).thenThrow(new IndexOutOfBoundsException());\n    \n    mockedList.get(0);// 1\n    mockedList.get(10);// 2\n    mockedList.get(10);// 3\n    mockedList.get(11);// 4\n\n    verify(mockedList).get(10);\n}\n```\nAt the last line I verify `get(10)` will be invoked once time which is invoked twice in fact , this test should  fail but passed . \nThen I remove `mockedList.get(11);` , and it would throw correct exceptions.",
+    "created_at": "2016-12-08T11:16:53Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/804.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 804,\n3\t  \"title\": \"Verify exception would be swallowed when specifing expected  parameter\",\n4\t  \"body\": \"Android Studio Version: 2.2.3\\nMockito Version: org.mockito:mockito-core:2.2.29'\\nHere is my test:\\n```java\\n@Test(expected = IndexOutOfBoundsException.class)\\npublic void test( [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* (intThat|verify|thenThrow)\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "glob": "*.java",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "expected|verify|exception|swallow",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 30
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n20:90\tImprove exception messages when user mocks a method declared on non-public parent\n27:98\tpossible NPE exception when class cannot be mocked via PowerMockito\n38:117\tNullPointerException when using argThat() for long parameter in ver [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Mockito,ArgumentMatchers,OngoingStubbing,Matchers}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenThrow\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/stubbing/OngoingStubbing.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "21: * when(mock.someMethod(\"some arg\")).thenThrow(new RuntimeException());\n26: *  .thenThrow(new RuntimeException())\n31: * when(mock.otherMethod()).thenThrow(exc1, exc2);\n76:     * when(mock.someMethod()).thenThrow(new RuntimeException());\n93:    OngoingStubbing<T> thenThrow(Throwable... throwables) [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "intThat|argThat",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "intThat|anyInt\\(|Matcher<Integer>|isA\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public (static )?.*\\bverify\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 5
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Matchers*.java",
+        "path": "mockito/mockito-core/src/main/java/org/mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito/mockito-core/src/main/java/org/mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/stubbing/OngoingStubbing.java",
+        "offset": 85,
+        "limit": 15
+      },
+      "result": "85\t     * If throwable is null then exception will be thrown.\n86\t     * <p>\n87\t     * See examples in javadoc for {@link Mockito#when}\n88\t     *\n89\t     * @param throwables to be thrown on method invocation\n90\t     *\n91\t     * @return object that allows stubbing consecutive calls\n92\t     */\n93\t    O [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "anyInt|intThat|argThat",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 10
+      },
+      "result": "37: * //stubbing using anyInt() argument matcher\n38: * when(mockedList.get(anyInt())).thenReturn(\"element\");\n44: * verify(mockedList).get(anyInt());\n48: * Since Mockito <code>any(Class)</code> and <code>anyInt</code> family matchers perform a type check, thus they won't\n83: * verify(mock).someMethod [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* verify\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 5
+      },
+      "result": "3175:    public static <T> T verify(T mock) {\n3201:    public static <T> T verify(T mock, VerificationMode mode) {",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static int intThat\\(|public static .* not\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "1021:    public static int intThat(ArgumentMatcher<Integer> matcher) {",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "expected|swallow|passes|passed",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 20
+      },
+      "result": "61:150\tmockito 1.9.5 or 1.10.17  can not passed junit test when use generic class\n185:345\tVerification using After and ArgumentCaptor returns unexpected size of captured values list\n209:379\tVerification using After and ArgumentCaptor with Times or AtLeast methods returns unexpected size of captured  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 804, \"label\": \"question\", \"route\": \"answer\", \"related\": [1267], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java\", \"mockito/mockito-core/src/main/java/org/mockito/stubbing/OngoingStubbing.java\"], \"reply\": \"Hi, this is not a Mockito bug. The stub on get(11) throws IndexOutOfBoundsException, which is the exception your @Test(expected = ...) is waiting for. That exception leaves the test method at mockedList.get(11), so the verify line never runs, and JUnit marks the test as passed. To check the call count, call verify(mockedList).get(10) before the call that throws, or move the throwing call into a try/catch and verify afterwards. The verify() method is in Mockito.java and thenThrow() is in OngoingStubbing.java.\"}",
+  "final_is_json": true
+}

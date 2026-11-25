@@ -1,0 +1,110 @@
+{
+  "run": "445-1",
+  "number": 445,
+  "issue": {
+    "number": 445,
+    "title": "Introduce MockitoExtension for JUnit Jupiter (a.k.a. JUnit 5)",
+    "body": "## New Features in JUnit 5\n\nThe JUnit Jupiter extension model in JUnit 5 introduces support for constructor and method parameter resolution (i.e., dependency injection).\n\nSpecifically, third parties can implement the `ParameterResolver` extension API to inject dependencies, mocks, etc. into constructors and methods. In addition, the `TestInstancePostProcessor` extension API can be implemented to post-process a test instance (e.g., to perform field injection).\n\n## Status Quo\n\nMockito supports _field injection_ for mocks via the `@Mock` annotation. In addition, #438 allows `@Mock` to be declared on parameters for constructors and methods which makes `@Mock` support an ideal candidate for both the `TestInstancePostProcessor` and `ParameterResolver` extension APIs in JUnit Jupiter. In fact, the JUnit Team has already developed a proof of concept: see the `MockitoExtension` in the [junit5-mockito-extension](https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension) sample project.\n\n## Deliverables\n\n- [x] Introduce an official `MockitoExtension` for JUnit Jupiter to replace the proof of concept from the JUnit team.\n",
+    "created_at": "2016-06-19T14:16:31Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/445.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 445,\n3\t  \"title\": \"Introduce MockitoExtension for JUnit Jupiter (a.k.a. JUnit 5)\",\n4\t  \"body\": \"## New Features in JUnit 5\\n\\nThe JUnit Jupiter extension model in JUnit 5 introduces support for constructor and method parameter resolution (i.e., dependency injection).\\n\\nSpecificall [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoExtension|class MockitoAnnotations|@interface Mock\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Mockito|JUnit|Jupiter|extension|junit|^445|mock",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 40
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n11:75\tNew \"serializable\" parameter of @Mock annotation\n13:77 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/{Mock.java,MockitoAnnotations.java,MockitoJUnitRunner.java}"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Mock,MockitoAnnotations,MockitoJUnitRunner}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoAnnotations|MockitoJUnitRunner",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 445, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [140, 139], \"evidence\": [], \"reply\": \"Thanks for the detailed proposal. You are asking for an official JUnit Jupiter extension that injects mocks into test fields, constructors and method parameters, replacing the proof of concept from the JUnit team.\"}",
+  "final_is_json": true
+}

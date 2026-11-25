@@ -1,0 +1,131 @@
+{
+  "run": "329-1",
+  "number": 329,
+  "issue": {
+    "number": 329,
+    "title": "Mocking a function with a default implementation but no concrete implementation generates an error",
+    "body": "This behavior worked in 2.0.26-beta but causes an error in 2.0.33-beta.  \n\nSee https://github.com/emosesSfdc/mockito-default-mock-repro for a repro case.  Its tests pass in .26, but one of them fails in .33 with the error:\n\n```\nCannot call abstract real method on java object!\nCalling real methods is only possible when mocking non abstract method.\n  //correct example:\n  when(mockOfConcreteClass.nonAbstractMethod()).thenCallRealMethod();\norg.mockito.exceptions.base.MockitoException: \nCannot call abstract real method on java object!\nCalling real methods is only possible when mocking non abstract method.\n  //correct example:\n  when(mockOfConcreteClass.nonAbstractMethod()).thenCallRealMethod();\n    at mockitoTest.ApplicationTest.testGetValue(ApplicationTest.java:16)\n    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n...\n```\n\nIf you have an interface \n\n```\npublic interface I {\n    default String m() { return \"m\"; }\n}\n```\n\nAnd a concrete implementation that doesn't override `m()`, \n\n```\npublic class Impl implements I {}\n```\n\nThen if you try \n\n```\nI i = Mockito.spy(new Impl());\nMocktio.when(i.m()).thenReturn(\"other\");\ni.m();\n```\n\nYou'll get the above error.\n",
+    "created_at": "2015-12-22T23:09:34Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/329.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 329,\n3\t  \"title\": \"Mocking a function with a default implementation but no concrete implementation generates an error\",\n4\t  \"body\": \"This behavior worked in 2.0.26-beta but causes an error in 2.0.33-beta.  \\n\\nSee https://github.com/emosesSfdc/mockito-default-mock-repro for a repro [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Cannot call abstract real method",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isDefault\\(\\)|DefaultMethod|default method",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "default|spy|abstract",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n22:92\tAllow convenient spying on abstract classes\n31:107\tImprove internal implementation so that it is possible to implement mocking abstract classes\n32:108\tClarify Spy vs Mock CALLS_REAL_METHODS\n42:122\tProblem spying on abstract classes\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/CallsRealMethods*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "abstract real method|isAbstract",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenCallRealMethod",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockingProgressImpl|CallsRealMethods|DefaultAnswer",
+        "path": "mockito",
+        "output_mode": "count"
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 329: Mockito.spy on a class that inherits a default interface method (Impl implements I, I has default m()) and when(i.m()).thenReturn(\"other\") fails with \"Cannot call abstract real method on java object\". Mockito source folder mockito/ appears empty in this workspace, so source checks were not possible."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 329, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1176, 1400, 2818], \"evidence\": [], \"reply\": \"Thanks for the report and the repro project. Your report includes the Mockito versions (2.0.26-beta works, 2.0.33-beta fails), a code snippet, the expected behaviour (the stub returns \\\"other\\\") and the actual behaviour (the \\\"Cannot call abstract real method on java object\\\" exception), plus the full stack trace. As written, it is reproducible from the issue alone. I could not locate the class where this behaviour lives in the copy of the source I have, so I am not naming one here.\"}",
+  "final_is_json": true
+}

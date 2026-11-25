@@ -1,0 +1,140 @@
+{
+  "run": "554-1",
+  "number": 554,
+  "issue": {
+    "number": 554,
+    "title": "Checks.checkNotNull should emit IllegalArgumentException instead of NPE",
+    "body": "Checks.checkNotNull emits NPE. I think it is better to emit IAE, because:\n- IAE is more specific whereas NPE is more generic. Specific exception is easier to test.\n- Specific exception gives better experience for users, NPE is often assumed to be developer error.\n\nThis change is not backwards compatible.\n\n@bric3, thoughts?\n",
+    "created_at": "2016-08-14T18:08:05Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/554.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 554,\n3\t  \"title\": \"Checks.checkNotNull should emit IllegalArgumentException instead of NPE\",\n4\t  \"body\": \"Checks.checkNotNull emits NPE. I think it is better to emit IAE, because:\\n- IAE is more specific whereas NPE is more generic. Specific exception is easier to test.\\n- Specific [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "checkNotNull",
+        "path": "mockito",
+        "glob": "**/Checks.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)checkNotNull|NullPointer|IllegalArgument",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n38:117\tNullPointerException when using argThat() for long parameter in verify\n146:295\tinitMocks produces NullPointerException\n243:450\tMock serialization can fail with NullPointerException when using Java 6\n282:554\tChecks.checkNotNull sh [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "checkNotNull",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Checks.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/org/mockito/internal/util/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class Checks\\b|Checks\\.",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "checkNotNull",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public class Mockito\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "NullPointerException",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 554, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [2200], \"evidence\": [], \"reply\": \"Thanks for the report and the reasoning behind it. You're asking for the null-check helper to throw IllegalArgumentException instead of NullPointerException, so callers can catch a more specific exception and users aren't misled into thinking it's a developer error. We've logged it as a change request to existing behaviour. As you note, it would break backwards compatibility, so it will need a deliberate decision before anything changes.\"}",
+  "final_is_json": true
+}

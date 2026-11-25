@@ -1,0 +1,150 @@
+{
+  "run": "726-1",
+  "number": 726,
+  "issue": {
+    "number": 726,
+    "title": "InstanceOf matcher does not accept null values -> mockedObject.setValue(null) is not possible",
+    "body": "I don't know if this is Mockito or GwtMockito related (https://github.com/google/gwtmock\nhttps://github.com/google/gwtmockito/issues/62). I mocked a text field and used an answer object to connect the `getValue()` and `setValue()` methods. Both methods work with a string. This worked fine with Mockito 1.10.19 but since Mockito 2.1.0 the following case is broken: `textField.setValue(null);`\n\nI debugged the code and saw that the answer object is never been called. The reason is, that the `InstanceOf.matches()` method does not accept a null value:\n```\npublic boolean matches(Object actual) {\n    return (actual != null) &&\n            (Primitives.isAssignableFromWrapper(actual.getClass(), clazz)\n                    || clazz.isAssignableFrom(actual.getClass()));\n}\n```\n`textField.setValue(null);` -> `actual` is null and therefore the answer object is not called.\n\nIn other words: It is not possible to set a null string.\n\nMy answer implementation:\n```\npublic class ValueAnswer implements Answer<Object> {\n\n  private Object value;\n\n  @Override\n  public Object answer(final InvocationOnMock invocation) throws Throwable {\n\n    if ((invocation != null) && (invocation.getArguments() != null) && (invocation.getArguments().length == 1)) {\n      value = invocation.getArguments()[0];\n    }\n\n    return value;\n  }\n\n}\n````\n",
+    "created_at": "2016-11-01T12:00:57Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/726.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 726,\n3\t  \"title\": \"InstanceOf matcher does not accept null values -> mockedObject.setValue(null) is not possible\",\n4\t  \"body\": \"I don't know if this is Mockito or GwtMockito related (https://github.com/google/gwtmock\\nhttps://github.com/google/gwtmockito/issues/62). I mocked a text [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class InstanceOf",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "null",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n38:117\tNullPointerException when using argThat() for long parameter in verify\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n83:185\tanyString() does not work for null\n114:230\tNull Pointer when invo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InstanceOf",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "instanceOf|isA\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*ArgumentMatchers*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InstanceOf*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isAssignableFromWrapper",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Primitives\\.isAssignableFromWrapper|InstanceOf",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 726: InstanceOf matcher does not accept null values, so mockedObject.setValue(null) never reaches the Answer. Label: bug. Mockito source folder mockito/ appeared empty to my search tools, so no source files could be opened."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 726, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [134, 185, 1188], \"evidence\": [], \"reply\": \"Thanks for the detailed report. It gives the Mockito version range (1.10.19 works, 2.1.0 and later fail), the matcher code you quoted, and both the expected behaviour (the Answer gets called with null) and the actual behaviour (it never is). That is enough to reproduce it as written. I could not open the Mockito source in this checkout, so I have not confirmed which class holds the null check you quoted. A maintainer will need to confirm that against the code.\"}",
+  "final_is_json": true
+}

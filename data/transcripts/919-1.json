@@ -1,0 +1,108 @@
+{
+  "run": "919-1",
+  "number": 919,
+  "issue": {
+    "number": 919,
+    "title": "FAQ is not updated with Mockito 2 new features",
+    "body": "The current [FAQ](https://github.com/mockito/mockito/wiki/FAQ) points that Mockito can't mock final classes or objects.\nBut [what's new](https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2#unmockable) point that can be done now.\n\nOne side-question: What about static methods and constructors? Still unmockable?\n",
+    "created_at": "2017-01-31T07:14:56Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/919.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 919,\n3\t  \"title\": \"FAQ is not updated with Mockito 2 new features\",\n4\t  \"body\": \"The current [FAQ](https://github.com/mockito/mockito/wiki/FAQ) points that Mockito can't mock final classes or objects.\\nBut [what's new](https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)final|faq|static|constructor|inline",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 60
+      },
+      "result": "45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n92:195\tIf you have both through constructor and through annotation injection fields in class, injection will be failed for the first time\n175:332\tFinalize Mockito Runners\n191:352\tuse @I [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock-maker-inline",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock-maker-inline|InlineByteBuddyMockMaker",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "final",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "103: *      <a href=\"#39\">39. Mocking final types, enums and final methods (Since 2.1.0)</a><br/>\n159: * which supports mocking of final classes and methods. This means it can mock Kotlin classes without having to mark them as {@code open}.\n805: * <li>Watch out for final methods.\n806: * Mockito does [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1471,
+        "limit": 30
+      },
+      "result": "1471\t *\n1472\t * <h3 id=\"39\">39. <a class=\"meaningful_link\" href=\"#Mocking_Final\" name=\"Mocking_Final\">Mocking final types, enums and final methods</a> (Since 2.1.0)</h3>\n1473\t *\n1474\t * Mockito now offers support for mocking final classes and methods by default.\n1475\t * This is a fantastic improveme [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> MockedStatic<T> mockStatic|public static <T> MockedConstruction<T> mockConstruction\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockStatic|mockConstruction|static methods|constructor",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 15
+      },
+      "result": "87: *      <a href=\"#23\">23. Automatic instantiation of <code>&#064;Spies</code>, <code>&#064;InjectMocks</code> and constructor injection goodness (Since 1.9.0)</a><br/>\n112: *      <a href=\"#48\">48. New API for mocking static methods (Since 3.4.0)</a><br/>\n121: *      <a href=\"#57\">57. Spying on s [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 919, \"label\": \"docs\", \"route\": \"answer\", \"related\": [657, 1013, 1105], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. The FAQ lives on the project wiki, which is not part of this source tree, so this reply covers what the shipped Javadoc says. Mockito.java already documents the Mockito 2 changes you mention. Section 39 (Mocking final types, enums and final methods) says final classes and methods can be mocked, using the inline mock maker, which has been the default since 5.0.0. Static methods are covered by Mockito.mockStatic (section 48, Mocking static methods). Constructors are covered by Mockito.mockConstruction, which also needs the inline mock maker. The FAQ entry that still says final classes can't be mocked is out of date and should be updated to match these sections.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,151 @@
+{
+  "run": "593-1",
+  "number": 593,
+  "issue": {
+    "number": 593,
+    "title": "Mockito Javadoc has a TODO about hamcrest",
+    "body": "``` java\n * TODO rework the documentation, write about hamcrest.\n *\n */\n@SuppressWarnings(\"unchecked\")\npublic class Mockito extends ArgumentMatchers {\n```\n\nhttps://github.com/bric3/mockito/blob/18133aa0cb5b51c0472fb8b33ab0a22aa9f0fbf3/src/main/java/org/mockito/Mockito.java#L1207-L1207\n\nLet's remove it or fix it.\n",
+    "created_at": "2016-08-24T13:31:29Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/593.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 593,\n3\t  \"title\": \"Mockito Javadoc has a TODO about hamcrest\",\n4\t  \"body\": \"``` java\\n * TODO rework the documentation, write about hamcrest.\\n *\\n */\\n@SuppressWarnings(\\\"unchecked\\\")\\npublic class Mockito extends ArgumentMatchers {\\n```\\n\\nhttps://github.com/bric3/mockito/blob/18 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "TODO rework the documentation|write about hamcrest",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hamcrest|javadoc",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "65:154\tstop depending on hamcrest internally\n74:172\tUpdate hamcrest-core to version 1.3\n112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n115:231\tUpgrade to Hamcrest 1.3 in pom\n128:256\ttask mockitoJavadoc fails when compiling in windows\n167:324\tmocki [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "TODO|[Hh]amcrest",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "414: * {@link ArgumentMatchers Click here} {@link org.mockito.hamcrest.MockitoHamcrest or here} to see more built-in matchers\n415: * and examples of <b>custom argument matchers / hamcrest matchers</b>.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 405,
+        "limit": 20
+      },
+      "result": "405\t * verify(mockedList).get(anyInt());\n406\t *\n407\t * //<b>argument matchers can also be written as Java 8 Lambdas</b>\n408\t * verify(mockedList).add(argThat(someString -&gt; someString.length() &gt; 5));\n409\t *\n410\t * </code></pre>\n411\t *\n412\t * <p>\n413\t * Argument matchers allow flexible verificat [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockitoHamcrest.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockitoHamcrest",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentMatchers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public class ArgumentMatchers|public class ArgumentMatcher",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ArgumentMatchers",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ArgumentMatchers",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "files_with_matches"
+      },
+      "result": "Found 1 file\nmockito\\mockito-core\\src\\main\\java\\org\\mockito\\Mockito.java",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito-core/src/main/java/org/mockito/*Matcher*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1,
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 593, \"label\": \"docs\", \"route\": \"answer\", \"related\": [336, 356, 1817], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. The TODO about hamcrest is no longer in Mockito.java at this commit. The class Javadoc now has an argument matcher paragraph around lines 412-415, which is the place the TODO pointed to. That paragraph still has a problem: its second link, {@link org.mockito.hamcrest.MockitoHamcrest or here}, points to a class I could not find in this checkout, and its label reads 'or here'. So the link may be broken and the sentence is unclear. Fixing that link and wording would close the docs gap. Thanks for flagging it.\"}",
+  "final_is_json": true
+}

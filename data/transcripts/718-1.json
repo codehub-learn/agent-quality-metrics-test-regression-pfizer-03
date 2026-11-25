@@ -1,0 +1,58 @@
+{
+  "run": "718-1",
+  "number": 718,
+  "issue": {
+    "number": 718,
+    "title": "Option for mock variable instead of method",
+    "body": "Hi, I cannot find any documentation or way to mock variable instead of method. I want to mock Build.Versio.SDK_INT:\n\n```\nfinal Build.VERSION buildVersion = Mockito.mock(Build.VERSION.class);\ndoReturn(buildVersion.getClass()).when(buildVersion).getClass();\ndoReturn(16).when(buildVersion.SDK_INT);\n```\n\nProblem is that: when requires method after mock, and .SDK_INT is not a method.\n",
+    "created_at": "2016-10-28T08:20:10Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/718.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 718,\n3\t  \"title\": \"Option for mock variable instead of method\",\n4\t  \"body\": \"Hi, I cannot find any documentation or way to mock variable instead of method. I want to mock Build.Versio.SDK_INT:\\n\\n```\\nfinal Build.VERSION buildVersion = Mockito.mock(Build.VERSION.class);\\ndoReturn(b [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)field|variable|SDK_INT|static|final",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n73:169\t@InjectMocks and @Spy on same field should cause MockitoException\n92:195\tIf you have both through constructor and through annotation injection fields in class, injection will be  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* (doReturn|when|mock)\\(|fields",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "1010: * <li>&#064;{@link InjectMocks} - injects mock or spy fields into tested object automatically.\n1060: * Mockito will now try to instantiate &#064;{@link Spy} and will instantiate &#064;{@link InjectMocks} fields\n1293: * Mockito now offers a JUnit rule. Until now in JUnit there were two ways to  [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 718, \"label\": \"question\", \"route\": \"answer\", \"related\": [1417, 1389], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Mockito can only stub method calls. when(...) and doReturn(...).when(...) need a method invoked on the mock (see Mockito.when and Mockito.doReturn in Mockito.java), so a field like Build.VERSION.SDK_INT cannot be stubbed. SDK_INT is a static final constant that the compiler inlines, so mocking Build.VERSION does not change it either. The usual fix is to move the read behind a method you own: create an interface with an int sdkInt() method, whose real implementation returns Build.VERSION.SDK_INT. Inject that interface into the code under test, then stub it in the test with when(provider.sdkInt()).thenReturn(16). The Javadoc in Mockito.java covers when and doReturn.\"}",
+  "final_is_json": true
+}

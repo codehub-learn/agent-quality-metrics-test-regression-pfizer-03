@@ -1,0 +1,158 @@
+{
+  "run": "233-1",
+  "number": 233,
+  "issue": {
+    "number": 233,
+    "title": "mockito 2.0.14 fails to mock jetty httpclient",
+    "body": "this fails:\n\n<pre>\n     import org.eclipse.jetty.client.HttpClient;\n    HttpClient httpClient = mock(HttpClient.class);\n</pre>\n\n(jetty 9.2.10.v20150310)\n\nwith mockito 2.0.2-beta i can mock that class without a problem. \n\nstacktrace:\n\n<pre>\njava.lang.IllegalAccessError: tried to access class org.eclipse.jetty.util.component.ContainerLifeCycle$Managed from class org.eclipse.jetty.client.HttpClient$MockitoMock$362486671\n    at org.eclipse.jetty.client.HttpClient$MockitoMock$362486671.<clinit>(Unknown Source)\n    at sun.reflect.GeneratedSerializationConstructorAccessor2.newInstance(Unknown Source)\n    at java.lang.reflect.Constructor.newInstance(Constructor.java:408)\n    at org.objenesis.instantiator.sun.SunReflectionFactoryInstantiator.newInstance(SunReflectionFactoryInstantiator.java:45)\n    at org.objenesis.ObjenesisBase.newInstance(ObjenesisBase.java:73)\n    at org.mockito.internal.creation.instance.ObjenesisInstantiator.newInstance(ObjenesisInstantiator.java:14)\n    at org.mockito.internal.creation.bytebuddy.ByteBuddyMockMaker.createMock(ByteBuddyMockMaker.java:27)\n    at org.mockito.internal.util.MockUtil.createMock(MockUtil.java:33)\n    at org.mockito.internal.MockitoCore.mock(MockitoCore.java:59)\n    at org.mockito.Mockito.mock(Mockito.java:1392)\n    at org.mockito.Mockito.mock(Mockito.java:1270)\n</pre>\n",
+    "created_at": "2015-06-18T06:24:45Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/233.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 233,\n3\t  \"title\": \"mockito 2.0.14 fails to mock jetty httpclient\",\n4\t  \"body\": \"this fails:\\n\\n<pre>\\n     import org.eclipse.jetty.client.HttpClient;\\n    HttpClient httpClient = mock(HttpClient.class);\\n</pre>\\n\\n(jetty 9.2.10.v20150310)\\n\\nwith mockito 2.0.2-beta i can mock that [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(jetty|IllegalAccess|access|classloader|inaccessible|package-private|private class|objenesis)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "12:76\tUpgraded Objenesis dependency to 2.1\n49:133\tMockito can't spy on object loaded in parent classloader\n106:214\tobjenesis dependency in INDEX.LIST (mockito-all)\n107:216\tMockito can't create mock on public class that extends package-private class\n116:233\tmockito 2.0.14 fails to mock jetty httpclie [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ByteBuddyMockMaker.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ObjenesisInstantiator.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ByteBuddyMockMaker|class ObjenesisInstantiator|class SubclassBytecodeGenerator",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ObjenesisInstantiator",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "jetty",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.internal.exceptions.Reporter;\n9\timport org.mockito.invoc [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "jetty",
+        "path": "issues",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/SubclassBytecodeGenerator.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport static java.lang.Thread.currentThread;\n8\timport static net.bytebuddy.description.modifier.Visibility.PRIVATE; [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/instance/ObjenesisInstantiator.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.instance;\n6\t\n7\timport org.mockito.creation.instance.Instantiator;\n8\timport org.mockito.internal.configuration.GlobalConfiguration;\n9 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 233, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [216, 323], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/ByteBuddyMockMaker.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/SubclassBytecodeGenerator.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/instance/ObjenesisInstantiator.java\"], \"reply\": \"Thanks for the detailed report. It has the Mockito version (2.0.14, with 2.0.2-beta working), a short snippet calling mock(HttpClient.class), the expected and actual behaviour, and the full stack trace, so it is reproducible as written with Jetty 9.2.10 on the classpath. The failing path is the mock class generation in SubclassBytecodeGenerator.mockClass, which ByteBuddyMockMaker.createMock delegates to. The IllegalAccessError is raised while the generated mock class initialises, so the class to look at is SubclassBytecodeGenerator.\"}",
+  "final_is_json": true
+}

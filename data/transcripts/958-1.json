@@ -1,0 +1,172 @@
+{
+  "run": "958-1",
+  "number": 958,
+  "issue": {
+    "number": 958,
+    "title": "Document migration path of 'any()' matcher in Javadocs",
+    "body": "### Suggested Javadoc update\n\nIt would be useful if the docs where a bit clearer on the migration path. Any( String.class) needs to be replaced with nullable(String.class). Nowhere in the reference for the changed method was this mentioned.\n\n### Original report\n\nHello, \nWe were trying to upgrade to mockito 2, but the change in the any() semantics is causing 100s of tests to fail. I understand the reason of the change, but I think that the compatibility shouldn't be broken, as repairing 100s of tests is many hours of work. \n\nWouldn't be possible to release a version with a MockitoJUnitRunner  option  to support the old semantics? This approach would allow a progressive upgrade by writing new test suites with mockito 2, but allowing  existing tests suites to pass, instead of stopping us to upgrade.   \n\nSincerely\nEnric",
+    "created_at": "2017-02-19T00:16:17Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/958.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 958,\n3\t  \"title\": \"Document migration path of 'any()' matcher in Javadocs\",\n4\t  \"body\": \"### Suggested Javadoc update\\n\\nIt would be useful if the docs where a bit clearer on the migration path. Any( String.class) needs to be replaced with nullable(String.class). Nowhere in the ref [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T (any|nullable)\\(",
+        "path": "mockito",
+        "-n": true,
+        "output_mode": "content",
+        "-B": 2,
+        "-A": 0
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "any|nullable|migrat|2\\.0|matcher",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "41:120\tAdd Matchers.any(Object) or Marchers.any(Type)\n43:123\tRelease Mockito 2.0\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n70:160\tAdditionalMatchers logical matchers don't capture arguments\n78:178\tMockito matchers used in \"when\" impact the \"there was one\"\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "static .* (any|nullable)\\(",
+        "path": "mockito",
+        "-n": true,
+        "output_mode": "content",
+        "glob": "ArgumentMatchers.java"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentMatchers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "nullable",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "offset": 0,
+        "limit": 5
+      },
+      "result": "0\t/*\n1\t * Copyright (c) 2016 Mockito contributors\n2\t * This program is made available under the terms of the MIT License.\n3\t */\n4\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* (any|nullable)\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "140:    public static <T> T any() {\n179:    public static <T> T any(Class<T> type) {\n808:    public static <T> T nullable(Class<T> clazz) {",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "offset": 120,
+        "limit": 70
+      },
+      "result": "120\t     * <p>\n121\t     * See examples in javadoc for {@link ArgumentMatchers} class\n122\t     * </p>\n123\t     *\n124\t     * <p>\n125\t     * <strong>Notes : </strong><br/>\n126\t     * <ul>\n127\t     *     <li>For primitive types use {@link #anyChar()} family or {@link #isA(Class)} or {@link #any(Class)}. [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "offset": 785,
+        "limit": 30
+      },
+      "result": "785\t     * <p>\n786\t     * See examples in javadoc for {@link ArgumentMatchers} class\n787\t     * </p>\n788\t     *\n789\t     * @param type the type of the argument being matched.\n790\t     * @return <code>null</code>.\n791\t     * @see #isNull()\n792\t     * @since 4.11.0\n793\t     */\n794\t    public static <T [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 958: Document migration path of any() matcher in Javadocs. Label: docs. Facts checked: ArgumentMatchers.any(Class) (mockito-core/src/main/java/org/mockito/ArgumentMatchers.java, line 179) excludes nulls since 2.1.0 and its Javadoc suggests isNull() for matching null, but does not mention nullable(Class) (line 808), which matches null or the given type."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 958, \"label\": \"docs\", \"route\": \"answer\", \"related\": [1910, 2886, 1964], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java\"], \"reply\": \"Thanks for the report. You're right that the migration path is hard to find. Since Mockito 2.1.0, ArgumentMatchers.any(Class) no longer matches null. Its Javadoc points to isNull() for matching null but never mentions nullable(Class), which matches either null or an instance of the given type. If your old any(String.class) calls relied on accepting nulls, switch them to nullable(String.class). The Javadoc for any(Class) should say this, so we'll look at adding a note.\"}",
+  "final_is_json": true
+}

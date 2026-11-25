@@ -1,0 +1,125 @@
+{
+  "run": "487-1",
+  "number": 487,
+  "issue": {
+    "number": 487,
+    "title": "Provide upgrade guide for Mockito 2.0",
+    "body": "The upgrade guide should depict all breaking changes since 1.10.19 as well as new functionality.\n- http://abi-laboratory.pro/java/tracker/compat_report/mockito/1.10.19/2.0.79-beta/2afce/bin_compat_report.html lists all changes to the public API.\n- Remove new tag from changes introduced in 1.10, several sections starting at http://site.mockito.org/mockito/docs/current/org/mockito/Mockito.html#29\n- The changelog at https://github.com/mockito/mockito/blob/master/doc/release-notes/official.md\n\nThe guide should help developers estimate the amount of effort required to update to Mockito 2.0. If we provide enough tools to ease the process, Mockito 2.0 adoption will be faster.\n",
+    "created_at": "2016-07-08T13:10:16Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/487.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 487,\n3\t  \"title\": \"Provide upgrade guide for Mockito 2.0\",\n4\t  \"body\": \"The upgrade guide should depict all breaking changes since 1.10.19 as well as new functionality.\\n- http://abi-laboratory.pro/java/tracker/compat_report/mockito/1.10.19/2.0.79-beta/2afce/bin_compat_report.html  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)upgrade|migrat|2\\.0|1\\.10",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "12:76\tUpgraded Objenesis dependency to 2.1\n37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n43:123\tRelease Mockito 2.0\n48:132\tMaven Release for 1.10.14\n61:150\tmockito 1.9.5 or 1.10.17  can not passed junit test when use generic class\n63:152\tMock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/release-notes/official.md",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Bash",
+      "input": {
+        "command": "ls -la \"mockito\" | head -30"
+      },
+      "result": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public final class Mockito|class Mockito\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/release-notes/**",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Mockito",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 487: \"Provide upgrade guide for Mockito 2.0\". Label: docs. Request is for a missing upgrade guide covering breaking changes since 1.10.19 and new functionality. Mockito source folder appears empty in this workspace, so no source files could be opened; the reply must avoid naming any class or method."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 487, \"label\": \"docs\", \"route\": \"answer\", \"related\": [992, 958], \"evidence\": [], \"reply\": \"Thanks for the report. You're right that a consolidated Mockito 2.0 upgrade guide is missing. It should list the breaking changes since 1.10.19 and the new features so teams can estimate the effort to upgrade. I could not open the Mockito source in this triage pass, so I can't confirm the individual breaking changes here and won't list them from memory. The request is a documentation gap, and the release notes are the best place to start until a guide exists.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,91 @@
+{
+  "run": "408-1",
+  "number": 408,
+  "issue": {
+    "number": 408,
+    "title": "Guide beginners what mockito version to use",
+    "body": "_I found github issues to be the right place for this, as the \"solution\" should be a simple description added to the readme._\n\nTo me it's unclear if I as a first-time user should download the [latest stable build](https://github.com/mockito/mockito/releases/tag/v1.10.19) or the [latest beta build](https://github.com/mockito/mockito/releases/tag/v2.0.52-beta). Yes, this is a general choice and I tend to always go for the latest stable build, but in this case 1.10.19 is over a year old!\n\nI'm asking for whoever who knows something about mockito to add a short \"guideline\" in the readme helping beginners to pick a version that they won't regret a year from now (or whenever 2.0 is released, #123).\n\nI hope this request is appreciated. I can't imagine I'm the first person feeling a bit lost by this. Cheers.\n",
+    "created_at": "2016-05-11T10:01:18Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/408.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 408,\n3\t  \"title\": \"Guide beginners what mockito version to use\",\n4\t  \"body\": \"_I found github issues to be the right place for this, as the \\\"solution\\\" should be a simple description added to the readme._\\n\\nTo me it's unclear if I as a first-time user should download the [latest  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)version|readme|beta|stable|release",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "9:73\tNew release\n16:84\tConsume new cglib and asm versions\n18:88\tEnsure continuous deployment process does not produce \"-dev\" versions\n19:89\tadd latest release into maven central\n29:101\tDocumentation mentions non-existing version 1.9.8 in few places\n30:105\tContinuous deployment should not release new [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/README*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.md",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/README.md"
+      },
+      "result": "1\t<a href=\"https://site.mockito.org\">\n2\t<img src=\"https://raw.githubusercontent.com/mockito/mockito/main/config/javadoc/resources/org/mockito/logo.png\"\n3\t     srcset=\"https://raw.githubusercontent.com/mockito/mockito/main/config/javadoc/resources/org/mockito/logo@2x.png 2x\"\n4\t     alt=\"Mockito\" />\n5 [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 408, \"label\": \"docs\", \"route\": \"answer\", \"related\": [346, 123], \"evidence\": [\"mockito/README.md\"], \"reply\": \"Thanks for the report. The README now covers this. Its \\\"Current version is 5.x\\\" section says only one major version is supported at a time and that changes are not backported to older versions. It also says the 1.x and 2.x releases are still available in Maven Central and on javadoc.io. The README links to the Semantic Versioning page on the wiki for what the version numbers mean. So a new user should start with the latest 5.x release. If that section is still unclear for a first-time user, please say which part, so the README can be improved.\"}",
+  "final_is_json": true
+}

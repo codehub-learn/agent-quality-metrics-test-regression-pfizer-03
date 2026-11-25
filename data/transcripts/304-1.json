@@ -1,0 +1,143 @@
+{
+  "run": "304-1",
+  "number": 304,
+  "issue": {
+    "number": 304,
+    "title": "Problem verifying bridge methods",
+    "body": "Hello, I think there might be a bug in mockito when verifying bridge methods.\nThe bug is present both in version 2.0.31-beta, and in version 1.10.19.\n\n``` java\nimport java.io.Serializable;\nimport org.junit.Test;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.verify;\n\npublic class MockitoBridgeTest {\n\n    @Test\n    public void test() {\n        Extended ext = mock(Extended.class);\n        ext.test(\"123\");\n        verify(ext).test(\"123\"); // Passes\n        ((Base<String>)ext).test(\"456\");\n        verify(ext).test(\"456\"); // Fails\n    }\n\n    public interface Base<T extends Serializable> {\n        int test(T value);\n    }\n\n    public interface Extended extends Base<String> {\n        @Override\n        int test(String value);\n    }\n\n}\n```\n",
+    "created_at": "2015-10-13T08:56:57Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/304.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 304,\n3\t  \"title\": \"Problem verifying bridge methods\",\n4\t  \"body\": \"Hello, I think there might be a bug in mockito when verifying bridge methods.\\nThe bug is present both in version 2.0.31-beta, and in version 1.10.19.\\n\\n``` java\\nimport java.io.Serializable;\\nimport org.junit.Test [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)bridge",
+        "path": "mockito",
+        "output_mode": "content",
+        "glob": "*.java",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)bridge|generic|verify",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n38:117\tNullPointerException when using argThat() for long parameter in verify\n44:124\tConcise way to collect multiple verify failures, ideally with JUnitCollector or  derivative\n46:128\tDeep stubbin [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)bridge|isSynthetic|getGenericParameterTypes",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{InvocationMatcher,Invocation,MatcherApplicationStrategy}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*Invocation*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Invocation*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Invocation",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/invocation/InvocationMatcher.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.invocation;\n6\t\n7\timport static org.mockito.internal.invocation.MatcherApplicationStrategy.getMatcherApplicationStrategyFor;\n8\timport static o [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 304, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [278, 2929, 874], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/invocation/InvocationMatcher.java\"], \"reply\": \"Thanks for the report. The Mockito versions, the full snippet, and the expected versus actual results (the second verify fails) are all included, so this is reproducible as written. The verify comparison lives in InvocationMatcher.hasSameMethod, which compares the parameter types of the wanted and actual methods. The bridge call through Base<String> arrives with a Serializable parameter, so it does not match the String overload that was verified. Thanks for the clear example.\"}",
+  "final_is_json": true
+}

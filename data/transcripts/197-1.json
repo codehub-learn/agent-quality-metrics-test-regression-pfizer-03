@@ -1,0 +1,206 @@
+{
+  "run": "197-1",
+  "number": 197,
+  "issue": {
+    "number": 197,
+    "title": "Mockito.after() method accepts negative timeperiods and subsequent verifications always pass",
+    "body": "e.g.\n\n```\nRunnable runnable = Mockito.mock(Runnable.class);\nMockito.verify(runnable, Mockito.never()).run(); // passes as expected\nMockito.verify(runnable, Mockito.after(1000).never()).run(); // passes as expected\nMockito.verify(runnable, Mockito.after(-1000).atLeastOnce()).run(); // passes incorrectly\n```\n",
+    "created_at": "2015-04-13T14:33:49Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/197.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 197,\n3\t  \"title\": \"Mockito.after() method accepts negative timeperiods and subsequent verifications always pass\",\n4\t  \"body\": \"e.g.\\n\\n```\\nRunnable runnable = Mockito.mock(Runnable.class);\\nMockito.verify(runnable, Mockito.never()).run(); // passes as expected\\nMockito.verify(runn [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class Timeout|after\\(|class After|VerificationAfterDelay|timeout\\(",
+        "path": "mockito",
+        "glob": "*.java",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)after|timeout|negative|dispatch|delay",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "21:91\tDocument Mockito.after() method\n63:152\tMockito 1.10.x timeout verification needs JUnit classes (VerifyError, NoClassDefFoundError)\n94:197\tMockito.after() method accepts negative timeperiods and subsequent verifications always pass\n118:237\tTest error after upgrading Mockito from 2.0.14-beta to  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{After,Timeout,VerificationAfterDelay,VerificationWithTimeout}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class After|class Timeout",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "issues",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/verification/After.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.verification;\n6\t\n7\timport org.mockito.internal.verification.VerificationOverTimeImpl;\n8\timport org.mockito.internal.verification.VerificationWrapper;\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/VerificationOverTimeImpl.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.verification;\n6\t\n7\timport org.mockito.exceptions.base.MockitoAssertionError;\n8\timport org.mockito.internal.util.Timer;\n9\timport org.mockito.i [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/util/Timer.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.util;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.cannotCreateTimerWithNegativeDurationTime;\n8\t\n9\tpublic class Timer {\n10\t\n11 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1,
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static VerificationAfterDelay after\\(|cannotCreateTimerWithNegativeDurationTime",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "VerificationAfterDelay after\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "-A": 3
+      },
+      "result": "3938:    public static VerificationAfterDelay after(long millis) {\n3939-        return new After(millis, VerificationModeFactory.times(1));\n3940-    }\n3941-",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "cannotCreateTimerWithNegativeDurationTime",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/exceptions/Reporter.java",
+        "output_mode": "content",
+        "-n": true,
+        "-A": 6
+      },
+      "result": "1100:    public static MockitoException cannotCreateTimerWithNegativeDurationTime(long durationMillis) {\n1101-        return new FriendlyReminderException(\n1102-                join(\n1103-                        \"\",\n1104-                        \"Don't panic! I'm just a friendly reminder!\",\n1105-     [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 197: Mockito.after() with negative millis (after(-1000).atLeastOnce()) makes verification pass incorrectly. Source: mockito-core/src/main/java/org/mockito/Mockito.java after(long) calls new After(...); After.java passes it to VerificationOverTimeImpl; internal/util/Timer.java validateInput throws cannotCreateTimerWithNegativeDurationTime (Reporter.java) when durationMillis < 0."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": [
+          {
+            "file": "mockito/mockito-core/src/main/java/org/mockito/internal/util/Timer.java",
+            "line": 35,
+            "summary": "Timer rejects negative durations, so after(-1000) should throw instead of letting verification pass.",
+            "failure_scenario": "after(-1000).atLeastOnce() calls new Timer(-1000) via After and VerificationOverTimeImpl, which throws cannotCreateTimerWithNegativeDurationTime rather than passing silently. The reported silent pass does not match this commit.",
+            "verdict": "CONFIRMED",
+            "outcome": "no_change_needed"
+          }
+        ],
+        "level": "low"
+      },
+      "result": "1 finding reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 197, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/verification/After.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/verification/VerificationOverTimeImpl.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/util/Timer.java\"], \"reply\": \"Thanks for the report. The snippet is clear, but the source at this commit does not match the behaviour you describe. Mockito.after(long) wraps the mode in an After object, and Timer rejects any negative duration when it is created, so after(-1000) should throw an exception instead of letting the verification pass. I could not run the snippet here, so could you tell us which Mockito version you used and paste the output you see, including any exception message? That will show whether the silent pass still happens.\"}",
+  "final_is_json": true
+}

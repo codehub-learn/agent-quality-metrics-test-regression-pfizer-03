@@ -1,0 +1,83 @@
+{
+  "run": "707-1",
+  "number": 707,
+  "issue": {
+    "number": 707,
+    "title": "Improve usability of arity Answers with regards to checked exceptions",
+    "body": "Recently introduced Answer1 style answers don't declare Throwable. They should! Otherwise the user is forced to add boilerplate code to AnswerX implementations, whenever they use methods that declare checked exceptions. Plus, AnswerX should behave exactly as good old Answer interface!\n\nReported via the [mailing-list](https://groups.google.com/d/msgid/mockito/82d08ba9-5536-495e-90db-78c1062b6400%40googlegroups.com)\n",
+    "created_at": "2016-10-21T22:28:34Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/707.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 707,\n3\t  \"title\": \"Improve usability of arity Answers with regards to checked exceptions\",\n4\t  \"body\": \"Recently introduced Answer1 style answers don't declare Throwable. They should! Otherwise the user is forced to add boilerplate code to AnswerX implementations, whenever they use [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "interface Answer1",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "checked|exception|Throwable|arity|Answer1|Answer2|Answer3",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n20:90\tImprove exception messages when user mocks a method declared on non-public parent\n27:98\tpossible NPE exception when class cannot be mocked via PowerMockito\n38:117\tNullPointerException when using argThat() for long parameter in ver [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answer1|Answer2|AnswerFunctionalInterfaces",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Throwable",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "206:372\tConsider using @SafeVarargs for OngoingStubbing.thenThrow(Class<? extends Throwable>)\n591:1166\t[Kotlin] thenThrow(Throwable) should be able to stub the method with any checked exceptions\n671:1306\tInvocationFactory.createInvocation's realmethod cannot throw a Throwable\n1216:2344\tdoThow(Throwa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Answer*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 707, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the report. You're asking that the arity-specific Answer interfaces declare Throwable in their method signature, so that implementations don't need boilerplate try/catch blocks when stubbing methods with checked exceptions, and so that they behave like the classic Answer interface.\"}",
+  "final_is_json": true
+}

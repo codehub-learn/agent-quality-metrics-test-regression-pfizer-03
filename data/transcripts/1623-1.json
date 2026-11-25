@@ -1,0 +1,153 @@
+{
+  "run": "1623-1",
+  "number": 1623,
+  "issue": {
+    "number": 1623,
+    "title": "Consider renaming TooLittleActualInvocations",
+    "body": "I agree with the commenter [here](https://github.com/mockito/mockito/issues/1088#issuecomment-303374289) that the exception name `TooLittleActualInvocations` is not ideal.\n\nThe correct English would be `TooFewActualInvocations` (where \"few\" is the opposite of \"many\" - as used in `TooManyActualInvocations`).\n\nI appreciate this isn't the most critical issue ever raised, but it would make this assertion failure more readable!\n\nAs the existing class is non-final, I imagine it could be changed without breaking existing client code via subclassing and deprecating the original. Please let me know if it would be helpful for me to pick this up (or instead if the change wouldn't be desirable, or I'm otherwise missing something).\n\nThanks\n\n",
+    "created_at": "2019-02-18T11:22:32Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1623.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1623,\n3\t  \"title\": \"Consider renaming TooLittleActualInvocations\",\n4\t  \"body\": \"I agree with the commenter [here](https://github.com/mockito/mockito/issues/1088#issuecomment-303374289) that the exception name `TooLittleActualInvocations` is not ideal.\\n\\nThe correct English would b [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "TooLittleActualInvocations",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "rename|TooFew|TooLittle",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "311:612\tRename milestones (2.1 to 2.2, 2.0 to 2.0)\n434:845\tRename MockMethodDispatcher.class to MockMethodDispatcher.raw on build\n716:1386\tAdd AtMostOnce(),rename one testClass and one TODO.\n853:1623\tConsider renaming TooLittleActualInvocations",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "TooFew|TooMany|ActualInvocations|class WantedButNotInvoked",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(invocations|renam)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "75:173\tIgnoring invocations on a spy()?\n82:183\tFeature request: Method to reset mock interactions/invocations without resetting stubs\n259:500\tSpies and TooManyActualInvocations\n275:543\tnew MockingDetails.printInvocations() API for debugging tests and edge cases\n291:577\tDeprecate Mockito.debug().prin [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Invocation*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class TooLittle|TooLittle|TooFew",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "-i": true
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/verification/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "TooManyActualInvocations",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^1088\\t|exception name|naming",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "554:1088\tJavadoc Example Throws Unexpected Exception\n853:1623\tConsider renaming TooLittleActualInvocations",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1623, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [3057], \"evidence\": [], \"reply\": \"Thanks for raising this and for offering to pick it up. You're right that the exception name reads awkwardly next to its \\\"too many\\\" counterpart, and that a \\\"too few\\\" name would make count-mismatch failures easier to read. You're asking for the exception to be renamed, with the old name kept as a deprecated subclass so existing code still compiles. I've logged it for the backlog. If you still want to take it on, leave a comment on this thread and we can talk through the approach.\"}",
+  "final_is_json": true
+}

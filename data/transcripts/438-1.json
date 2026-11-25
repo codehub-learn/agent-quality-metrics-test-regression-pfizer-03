@@ -1,0 +1,54 @@
+{
+  "run": "438-1",
+  "number": 438,
+  "issue": {
+    "number": 438,
+    "title": "Add ElementType.PARAMETER to @Mock",
+    "body": "Parameterized tests are becoming more common - JUnit 5 explicitly allows parameters and the sample [MockitoExtension](https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito) currently includes an @InjectMock to trigger the creation of a mock parameter.  It would be so much cleaner to use @Mock in both places.\n\nThis shouldn't be an issue for most legacy test systems since they don't allow test parameters (by default). \n",
+    "created_at": "2016-06-18T17:10:29Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/438.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 438,\n3\t  \"title\": \"Add ElementType.PARAMETER to @Mock\",\n4\t  \"body\": \"Parameterized tests are becoming more common - JUnit 5 explicitly allows parameters and the sample [MockitoExtension](https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "@Target|@interface Mock\\b",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mock.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "74:@Target({FIELD, PARAMETER})\n77:public @interface Mock {",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "parameter|Parameter|JUnit|junit",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "11:75\tNew \"serializable\" parameter of @Mock annotation\n25:96\tDocument minimum JUnit requirement for MockitoJUnitRule\n38:117\tNullPointerException when using argThat() for long parameter in verify\n44:124\tConcise way to collect multiple verify failures, ideally with JUnitCollector or  derivative\n54:139 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mock.java",
+        "offset": 70,
+        "limit": 10
+      },
+      "result": "70\t * @see InjectMocks\n71\t * @see MockitoAnnotations#openMocks(Object)\n72\t * @see MockitoJUnitRunner\n73\t */\n74\t@Target({FIELD, PARAMETER})\n75\t@Retention(RUNTIME)\n76\t@Documented\n77\tpublic @interface Mock {\n78\t\n79\t    /**",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 438, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1348, 1960], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mock.java\"], \"reply\": \"Thanks for the request. You would like @Mock to be usable on JUnit 5 test method parameters, so parameterized tests can declare mocks the same way fields do. Note that Mock.java already declares @Target({FIELD, PARAMETER}), so the annotation itself can be placed on parameters. Parameter resolution for JUnit 5 is handled by the mockito-junit-jupiter module, so if a parameter mock still does not get created, please reply with your JUnit and Mockito versions and a short example so we can look at it.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,141 @@
+{
+  "run": "340-1",
+  "number": 340,
+  "issue": {
+    "number": 340,
+    "title": "Mockito does not call real method with Scala Trait with concrete methods mocks. ",
+    "body": "import org.mockito.Mockito\nimport org.mockito.Mockito._\nimport org.scalatest.{Matchers, WordSpec}\n\nclass FooSpec extends WordSpec with Matchers {\n\n  trait TraitWithConcreteMethods {\n    def getTrue: Boolean = true\n  }\n\n  private val mockTraitWithConcreteMethods = Mockito.mock(classOf[TraitWithConcreteMethods], CALLS_REAL_METHODS)\n\n  \"mockTraitWithConcreteMethods.getTrue\" should {\n    \"return true\" in {\n        val result = mockTraitWithConcreteMethods.getTrue\n        result shouldBe true\n      }\n  }\n}\n\n//ouput\n//false was not equal to true\n",
+    "created_at": "2016-01-08T12:30:57Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/340.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 340,\n3\t  \"title\": \"Mockito does not call real method with Scala Trait with concrete methods mocks. \",\n4\t  \"body\": \"import org.mockito.Mockito\\nimport org.mockito.Mockito._\\nimport org.scalatest.{Matchers, WordSpec}\\n\\nclass FooSpec extends WordSpec with Matchers {\\n\\n  trait TraitW [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv"
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito\n6\t70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7\t71\tjava.lang.NoClassDefFoundError: org.mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)scala|trait|real method|CALLS_REAL|default method|callsrealmethod|thenCallRealMethod",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "32:108\tClarify Spy vs Mock CALLS_REAL_METHODS\n58:146\tSpy on java 8 default methods with interface hierarchy\n95:198\tAdd matchers for scala value classes containing primitives\n182:340\tMockito does not call real method with Scala Trait with concrete methods mocks.\n190:351\tA question about mock thenCall [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "CALLS_REAL_METHODS|class CallsRealMethods",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{CallsRealMethods,Answers,Mockito}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "CALLS_REAL_METHODS",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "issues",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/CallsRealMethods.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.answers;\n6\t\n7\timport static org.mockito.Answers.RETURNS_DEFAULTS;\n8\timport static org.mockito.internal.exceptions.Reporter.cannotCal [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Answers.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport org.mockito.internal.stubbing.answers.CallsRealMethods;\n8\timport org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;\n9 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 340: Scala trait with a concrete method, mocked with Mockito.mock(classOf[Trait], CALLS_REAL_METHODS). Calling getTrue returns false instead of calling the real method (true). Evidence: mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/CallsRealMethods.java returns RETURNS_DEFAULTS when Modifier.isAbstract(method) is true; mockito/mockito-core/src/main/java/org/mockito/Answers.java defines CALLS_REAL_METHODS. Likely cause: Scala 2.11 compiles trait concrete methods to an abstract interface method plus a $class helper, so the method looks abstract to Mockito."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 340, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [2818, 2620, 146], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/CallsRealMethods.java\", \"mockito/mockito-core/src/main/java/org/mockito/Answers.java\"], \"reply\": \"Thanks for the report. The snippet plus the expected (true) and actual (false) results are enough to reproduce this as written. The behaviour lives in CallsRealMethods (org.mockito.internal.stubbing.answers), which falls back to the default answer whenever the invoked method is abstract, so a trait method that the compiler emits as abstract never reaches the real implementation.\"}",
+  "final_is_json": true
+}

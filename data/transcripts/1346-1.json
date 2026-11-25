@@ -1,0 +1,236 @@
+{
+  "run": "1346-1",
+  "number": 1346,
+  "issue": {
+    "number": 1346,
+    "title": "Different mocks are used for @Mock and @InjectMock in the same test class with JUnit 5 extension",
+    "body": "I've been playing with the new JUnit 5 support in Mockito 2.17.0. I have found that with `@Mock` and `@InjectMocks` used in the same test class different mocks are injected. I would expect to have the same mock reused (as it works with JUnit 4 or manual `@Mock` initialization).\n\nSample code:\n```\n@ExtendWith(MockitoExtension.class)\npublic class SpaceShip5BugMiniTest {\n\n    @InjectMocks\n    private SpaceShip spaceShip;\n\n    @Mock\n    private TacticalStation tacticalStation;\n\n    @Test\n    public void shouldInjectMocks() {\n        assertThat(tacticalStation).isNotNull();\n        assertThat(spaceShip.getTacticalStation()).isEqualTo(tacticalStation);  \n        //Bug ↑ - different mocks are use in @Mock and @InjectMock\n    }\n}\n```\n\nError message:\n```\norg.opentest4j.AssertionFailedError: \nExpecting:\n <\"tacticalStation (TacticalStation$MockitoMock$991606095@61d6015a)\">\nto be equal to:\n <\"tacticalStation (TacticalStation$MockitoMock$991606095@b62d79)\">\nbut was not.\nExpected :tacticalStation\nActual   :tacticalStation\n```\n\nThe minimal (non-)working example is available [here](https://github.com/szpak/code-examples-and-poc/tree/mockito2junit5-bug/mockito2-junit5).\n\n@TimvdLippe Do you have an idea what could be wrong?\n\nMockito 2.17.0 (2.17.1 is not being released due to (https://github.com/mockito/shipkit/issues/679), junit-jupiter 5.1.0, OpenJDK 1.8.0_161, Linux.\n\n### Checklist:\n - [x] The mockito message in the stacktrace have useful information, but it didn't help\n - [x] The problematic code (if that's possible) is copied here;\n       Note that some configuration are impossible to mock via Mockito\n - [x] Provide versions (mockito / jdk / os / any other relevant information)\n - [x] Provide a [Short, Self Contained, Correct (Compilable), Example](http://sscce.org) of the issue\n       (same as any question on stackoverflow.com)\n - [x] Read the [contributing guide](https://github.com/mockito/mockito/blob/master/.github/CONTRIBUTING.md)\n",
+    "created_at": "2018-03-25T12:31:24Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1346.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1346,\n3\t  \"title\": \"Different mocks are used for @Mock and @InjectMock in the same test class with JUnit 5 extension\",\n4\t  \"body\": \"I've been playing with the new JUnit 5 support in Mockito 2.17.0. I have found that with `@Mock` and `@InjectMocks` used in the same test class differ [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockitoExtension|class MockitoAnnotations|class InjectingAnnotationEngine|class MockAnnotationProcessor",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockito|InjectMock",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 0
+      },
+      "result": "<persisted-output>\nOutput too large (44KB). Full output saved to: [local file]\n\nPreview (first 2KB):\n5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.R [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{MockitoExtension,InjectingAnnotationEngine,MockitoAnnotations}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)inject ?mocks?|mockito ?junit|junit ?5|extension",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 60
+      },
+      "result": "6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n25:96\tDocument minimum JUnit requirement for MockitoJUnitRule\n51:135\tIntroduce PluginSwitch extension point\n54:139\tTidy-up public API of Mockito JUnit rule\n55:140\tMake Mockito JUnit rule easier to use\n73:169\t@Injec [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*InjectingAnnotationEngine*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InjectingAnnotationEngine",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class InjectingAnnotationEngine",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InjectingAnnotationEngine.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/MockInjection.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration.injection;\n6\t\n7\timport static org.mockito.internal.util.Checks.checkItemsNotNull;\n8\timport static org.mockito.internal.util.Che [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/InjectingAnnotationEngine.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration;\n6\t\n7\timport static org.mockito.internal.util.collections.Sets.newMockSafeHashSet;\n8\t\n9\timport java.lang.reflect.Field;\n10\timpo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/scanner/MockScanner.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration.injection.scanner;\n6\t\n7\timport static org.mockito.internal.util.collections.Sets.newMockSafeHashSet;\n8\t\n9\timport java.lang.refl [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/DefaultInjectionEngine.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito\\mockito-core\\src\\main\\java\\org\\mockito\\internal\\configuration\\injection'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-junit-jupiter"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "injectMocksOnFields",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/InjectMocksScanner.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/DefaultInjectionEngine.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration;\n6\t\n7\timport java.lang.reflect.Field;\n8\timport java.util.Set;\n9\t\n10\timport org.mockito.internal.configuration.injection.MockInj [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/scanner/InjectMocksScanner.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration.injection.scanner;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.unsupportedCombinationOfAnnotations;\n8\t\n9\timport [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 1346: \"Different mocks are used for @Mock and @InjectMocks in the same test class with JUnit 5 extension\". Reporter uses MockitoExtension (Mockito 2.17.0, junit-jupiter 5.1.0) with @InjectMocks SpaceShip and @Mock TacticalStation, and asserts spaceShip.getTacticalStation() equals tacticalStation. Source checked: mockito-core InjectingAnnotationEngine.java (creates @Mock fields first, then injects one shared mock set), MockScanner.java, InjectMocksScanner.java, DefaultInjectionEngine.java, MockInjection.java. The mockito-junit-jupiter directory is not present in this checkout, so the extension code path cannot be read here."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "```json\n{\"number\": 1346, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1437], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/InjectingAnnotationEngine.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/DefaultInjectionEngine.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/scanner/MockScanner.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/scanner/InjectMocksScanner.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/MockInjection.java\"], \"reply\": \"Thanks for the report. It includes the Mockito and JUnit versions, a runnable snippet, and the expected and actual results, so it looks reproducible as written. The snippet does not include the SpaceShip and TacticalStation classes, so please add them when you retry. The injection code lives in InjectingAnnotationEngine, which creates the @Mock fields and then injects the same mock set into @InjectMocks fields through DefaultInjectionEngine. The JUnit 5 extension is not in the source we checked, so that part still needs confirming on our side.\"}\n```",
+  "final_is_json": false
+}

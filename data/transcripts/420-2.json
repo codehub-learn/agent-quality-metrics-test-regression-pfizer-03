@@ -1,0 +1,109 @@
+{
+  "run": "420-2",
+  "number": 420,
+  "issue": {
+    "number": 420,
+    "title": "Changes to InvocationOnMock API should include version info",
+    "body": "PR #365 added a new method, `getArgument`, to `InvocationOnMock`, and deprecated `getArgumentAt`, but the new docs do not mention the version at which the new method was added and from what version the deprecation is in effect. This is confusing for users who are still using the 1.10.x series when using the Javadocs on the mockito.org website (which just shows the latest docs).\n\nA quick update to the docs in `InvocationOnMock` will solve this. I haven't yet noticed other instances of this, but a quick sweep of the recent changes might be worth doing, to see if the same sort of update needs to be done elsewhere.\n",
+    "created_at": "2016-05-24T13:34:11Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/420.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 420,\n3\t  \"title\": \"Changes to InvocationOnMock API should include version info\",\n4\t  \"body\": \"PR #365 added a new method, `getArgument`, to `InvocationOnMock`, and deprecated `getArgumentAt`, but the new docs do not mention the version at which the new method was added and from wha [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getArgument|@since|@deprecated",
+        "path": "mockito",
+        "glob": "**/InvocationOnMock.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|version|since|docs|InvocationOnMock|getArgument",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "16:84\tConsume new cglib and asm versions\n18:88\tEnsure continuous deployment process does not produce \"-dev\" versions\n29:101\tDocumentation mentions non-existing version 1.9.8 in few places\n30:105\tContinuous deployment should not release new version if binaries are equal\n74:172\tUpdate hamcrest-core to [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InvocationOnMock.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*InvocationOnMock*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "@since",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 420: \"Changes to InvocationOnMock API should include version info\". Label: docs. Mockito source folder mockito/ is empty in this workspace, so no source files could be opened."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/invocation/InvocationOnMock.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.invocation;\n6\t\n7\timport java.io.Serializable;\n8\timport java.lang.reflect.Method;\n9\t\n10\timport org.mockito.NotExtensible;\n11\t\n12\t/**\n13\t * An invocatio [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 420, \"label\": \"docs\", \"route\": \"answer\", \"related\": [697, 1837], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/invocation/InvocationOnMock.java\"], \"reply\": \"Thanks for the report. You're right. In the current InvocationOnMock Javadoc, getArgument(int) has @since 2.1.0, but getArgument(int, Class) has no @since tag, so readers on 1.10.x can't tell when it was added. The page also no longer mentions the older accessor that was removed, so nothing says which release changed it. Adding @since tags and a short note about the removal to InvocationOnMock is a small docs fix, and a PR would be welcome. The same check could be done on other recently changed methods.\"}",
+  "final_is_json": true
+}

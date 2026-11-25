@@ -1,0 +1,44 @@
+{
+  "run": "692-1",
+  "number": 692,
+  "issue": {
+    "number": 692,
+    "title": "Host javadocs at javadoc.io",
+    "body": "javadoc.io offers free hosting of javadoc, see: http://www.javadoc.io/doc/org.mockito/mockito-core/2.2.0\n\nIt's completely free - no effort is needed from our end - they get javadoc from central.\n\nUsing this service, we could simplify our release pipeline and avoid growing mockito git repo with every release (javadocs are checked-in). Downside is that there is some delay in showing the docs and it's another 3rd party integration.\n\nCurrently, our release pipeline for javadoc does not fully support 2 concurrent dev branches. Releasing 3.x experimental version will replace the 'current' permalink for javadocs. I'm not very keen on spending effort on fixing that if we can get javadocs for free from an external service.\n\nThoughts?\n",
+    "created_at": "2016-10-13T05:18:46Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/692.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 692,\n3\t  \"title\": \"Host javadocs at javadoc.io\",\n4\t  \"body\": \"javadoc.io offers free hosting of javadoc, see: http://www.javadoc.io/doc/org.mockito/mockito-core/2.2.0\\n\\nIt's completely free - no effort is needed from our end - they get javadoc from central.\\n\\nUsing this service,  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|hosting|release pipeline",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n128:256\ttask mockitoJavadoc fails when compiling in windows\n244:453\tEither revert recent Functional Interfaces change or change JavaDoc\n269:533\tRemove code.google.com from javadoc\n277:545\tEnsure threa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "\"javadoc.io|javadoc\\.io</enter",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 692, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [753, 1651, 3212], \"evidence\": [], \"reply\": \"Thanks for the suggestion, Tim. Moving Mockito's Javadoc hosting to javadoc.io would take the checked-in docs out of the repo and simplify the release pipeline, and we've noted the trade-off of the publishing delay and the extra third-party dependency. Related reports on javadoc.io hosting are linked from this issue for the maintainers to consider.\"}",
+  "final_is_json": true
+}

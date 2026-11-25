@@ -1,0 +1,166 @@
+{
+  "run": "755-1",
+  "number": 755,
+  "issue": {
+    "number": 755,
+    "title": "Tidy-up javadoc generation",
+    "body": "I investigated the need for Javadoc doclet rule that currently is kept in buildSrc.\n\n- currently, some javadoc links from public API lead to internal API, which gives 404 error (search for ReturnEmptyValues in public Mockito.html, click the link, 404).\n- excluding files at the Javadoc task level does not prevent Javadoc from being generated for the internal classes. However, it does turn links to private API into non-clickable \\<code\\>\\</code\\> links.\n\nI'm tempted to just start generating Javadoc for internals, and be very explicit that internal API is not intended for public use and can be changed at any time. Thoughts?",
+    "created_at": "2016-11-14T05:29:00Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/755.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 755,\n3\t  \"title\": \"Tidy-up javadoc generation\",\n4\t  \"body\": \"I investigated the need for Javadoc doclet rule that currently is kept in buildSrc.\\n\\n- currently, some javadoc links from public API lead to internal API, which gives 404 error (search for ReturnEmptyValues in public Mo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnEmptyValues",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Javadoc|javadoc",
+        "path": "mockito",
+        "glob": "*.gradle*",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^",
+        "path": "issue-index.tsv",
+        "output_mode": "count"
+      },
+      "result": "issue-index.tsv:1811\n\nFound 1811 total occurrences across 1 file.",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|doclet|ReturnsEmptyValues|internal",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n15:80\tExpose 'internal' classes so Powermock-osgi can be incorporated without special builds of Mockito\n31:107\tImprove internal implementation so that it is possible to implement mocking abstr [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ReturnsEmptyValues.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnsEmptyValues",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "\\{@link|@see",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "head_limit": 5
+      },
+      "result": "414: * {@link ArgumentMatchers Click here} {@link org.mockito.hamcrest.MockitoHamcrest or here} to see more built-in matchers\n417: * For information solely on <b>custom argument matchers</b> check out javadoc for {@link ArgumentMatcher} class.\n423: * Also, read <a href=\"#15\">section 15</a> or javado [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ReturnsEmptyValues|class ReturnEmptyValues|RETURNS_DEFAULTS",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito-core/src/main/java/org/mockito/internal/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc",
+        "path": "mockito",
+        "glob": "**/*.{gradle,kts,groovy,java}",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^package org\\.mockito\\.internal",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 3
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{ArgumentMatchers,ArgumentCaptor,ArgumentMatcher,MockitoHamcrest}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public (final )?(class|interface) (ArgumentMatchers|ArgumentCaptor|ArgumentMatcher|MockitoHamcrest)\\b",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    }
+  ],
+  "final": "```json\n{\"number\": 755, \"label\": \"docs\", \"route\": \"answer\", \"related\": [226, 762, 814], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. I could not find ReturnEmptyValues anywhere in the Mockito source, so I could not reproduce the 404 from the repository. Could you tell us which Javadoc page and link returned the 404, and which Mockito version you were reading? That will let us fix the broken link. On the wider point, the Javadoc should not link to internal classes at all, so we will look at how the internal packages are excluded from generation.\"}\n```",
+  "final_is_json": false
+}

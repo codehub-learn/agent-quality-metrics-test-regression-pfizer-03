@@ -1,0 +1,131 @@
+{
+  "run": "730-1",
+  "number": 730,
+  "issue": {
+    "number": 730,
+    "title": "Expose public verification API",
+    "body": "### Problem\n\nPublic API under org.mockito.verification.* leaks internal APIs:\n - VerificationMode leaks internal VerificationData interface\n - VerificationData leaks InvocationMatcher concrete class\n\n### Options\n\n1. Move VerificationData to public package, hide behind an interface: #728\n2. Deprecate internal types, create new public interfaces, delegate to deprecated APIs to avoid breaking API compatibility and behavior.\n\n### Recommendation\n\n- Option 1 is easier to implement. It introduces breaking change on an internal type. This is legal from the standpoint of semantic versioning.\n- Option 2 adds some implementation overhead and leaves some deprecated code. It is fairly easy to implement, too. Although it is legal to change private API at will, this particular API was leaking from public api (for many releases) so users may have started depending on it.\n\n+1 for option 2.\n\n### Plan\n\n- org.mockito.internal.verification.api.VerificationData deprecated by new org.mockito.verification.VerificationData\n- org.mockito.internal.verification.api.VerificationData.getWanted() deprecated by new org.mockito.verification.VerificationData.getTarget()\n\n\n\n",
+    "created_at": "2016-11-03T04:33:05Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/730.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 730,\n3\t  \"title\": \"Expose public verification API\",\n4\t  \"body\": \"### Problem\\n\\nPublic API under org.mockito.verification.* leaks internal APIs:\\n - VerificationMode leaks internal VerificationData interface\\n - VerificationData leaks InvocationMatcher concrete class\\n\\n### Options [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "VerificationData|VerificationMode|InvocationMatcher",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "verification|VerificationData|InvocationMatcher|VerificationMode",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "47:130\tSpying and Verification Doesn't Work On Instances Created With Javassist\n63:152\tMockito 1.10.x timeout verification needs JUnit classes (VerifyError, NoClassDefFoundError)\n94:197\tMockito.after() method accepts negative timeperiods and subsequent verifications always pass\n98:203\tIntroduce BDD  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/VerificationMode.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/VerificationData*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "interface VerificationData",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/api/VerificationData.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.verification.api;\n6\t\n7\timport java.util.List;\n8\t\n9\timport org.mockito.invocation.Invocation;\n10\timport org.mockito.invocation.MatchableInvoca [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/verification/VerificationMode.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.verification;\n6\t\n7\timport org.mockito.Mockito;\n8\timport org.mockito.internal.verification.VerificationModeFactory;\n9\timport org.mockito.internal.verif [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/verification/VerificationData.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 730, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [744, 1421], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/verification/VerificationMode.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/verification/api/VerificationData.java\"], \"reply\": \"Thanks for the detailed write-up. You are asking for a public verification API that does not expose internal types. Right now VerificationMode.verify(...) takes the internal org.mockito.internal.verification.api.VerificationData, and the plan is a public replacement with a deprecation path for the old type. We have added it to the backlog for a future release.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,198 @@
+{
+  "run": "186-1",
+  "number": 186,
+  "issue": {
+    "number": 186,
+    "title": "Allow Java 8 default (\"defender\") methods to be tested",
+    "body": "Java 8 allows default methods on interfaces. It seems like a legitimate use case to test these, by mocking the results of non-default methods of the interface. Here's a (hypothetical) example that currently doesn't work with Mockito:\n\n``` java\nimport org.junit.Assert;\nimport org.junit.Test;\nimport org.mockito.Mockito;\n\npublic class Java8DefaultMethodTest {\n\n    interface I {\n        int i();\n        default int f() {\n            return i() + 1;\n        }\n    }\n\n    @Test\n    public void testFAddsOne() {\n        I h = Mockito.mock(I.class);\n        Mockito.when(h.i()).thenReturn(2);\n        Assert.assertEquals(3, h.f());\n    }\n}\n```\n\nWhat is needed to make this work?\n\nI've tried adding `Mockito.when(h.f()).thenCallRealMethod()` but this didn't work. Also, there has been a related question (see Google Code ticket [#456](https://code.google.com/p/mockito/issues/detail?id=456)) which is similar in that it is related to Java 8 default methods but not the same because it deals with _implementations_ of interfaces containing default methods.\n",
+    "created_at": "2015-03-24T02:34:58Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/186.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 186,\n3\t  \"title\": \"Allow Java 8 default (\\\"defender\\\") methods to be tested\",\n4\t  \"body\": \"Java 8 allows default methods on interfaces. It seems like a legitimate use case to test these, by mocking the results of non-default methods of the interface. Here's a (hypothetical) example [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isDefault\\(\\)|CALLS_REAL_METHODS|callRealMethod",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^(2[0-9]{2}|1[0-9]{2}|[0-9]{1,2})\\t",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 0
+      },
+      "result": "2:1\t[test] improve stuff\n3:64\tDefault answer to fail on an unstubbed method invocation\n4:67\tFlickering test\n5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.ru [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)default|java 8|thenCallRealMethod|callRealMethod",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n58:146\tSpy on java 8 default methods with interface hierarchy\n84:186\tAllow Java 8 default (\"defender\") methods to be tested\n89:191\tMock returning java.util.Optional should return Optional.empty() by default (Java 8)\n139:278\tIncorrect defa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)default method|isDefault",
+        "path": "mockito/mockito-core/src/main/java",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenCallRealMethod",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/stubbing/Stubber.java",
+        "output_mode": "content"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{OngoingStubbing,Stubber,MockSettings,CallsRealMethods}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenCallRealMethod",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenCallRealMethod",
+        "path": "mockito",
+        "output_mode": "count"
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 186: \"Allow Java 8 default (\"defender\") methods to be tested\". Reporter asks how to test a default method that calls an abstract method on an interface mock, and says thenCallRealMethod on the default method did not work. Note: the mockito/ folder appeared empty when searched, so no source could be verified."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)default method|thenCallRealMethod|callRealMethod",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/stubbing/Stubber.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.stubbing;\n6\t\n7\timport org.mockito.CheckReturnValue;\n8\timport org.mockito.Mockito;\n9\timport org.mockito.NotExtensible;\n10\t\n11\t/**\n12\t * Allows to choos [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 5,
+        "limit": 200
+      },
+      "result": "5\tpackage org.mockito;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n9\timport org.mockito.exceptions.misusing.UnnecessaryStubbingException;\n10\timport org.mockito.internal.MockitoCore;\n11\timport org.mockito.internal.creation.MockSett [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 205,
+        "limit": 150
+      },
+      "result": "205\t * To explicitly attach Mockito during test execution, the library's jar file needs to be specified as <code>-javaagent</code>\n206\t * as an argument to the executing JVM. To enable this in Gradle, the following example adds Mockito to all test\n207\t * tasks using <strong>Kotlin DSL</strong>. Usin [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/stubbing/OngoingStubbing.java",
+        "offset": 1,
+        "limit": 40
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.stubbing;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.Mockito;\n9\timport org.mockito.NotExtensible;\n10\t\n11\t/**\n12\t * Simply put [cut]",
+      "error": false
+    }
+  ],
+  "final": "```json\n{\"number\": 186, \"label\": \"question\", \"route\": \"answer\", \"related\": [680, 146, 1400], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/stubbing/OngoingStubbing.java\"], \"reply\": \"Thanks for the clear example. By default a mock of an interface returns default answers for every method, so h.f() never runs its body and never calls i(). That is why the stub on i() has no effect here. The Mockito Javadoc covers stubbing and mocking in Mockito.java, and the stubbing rules are in OngoingStubbing.java. I could not confirm from the source in this pass whether a call to the real default method works on an interface mock, so I won't promise it does. A safer route is to write a small class that implements I, spy on it with Mockito.spy, and stub i() on that spy. If the real-method call still fails for you, please reply with your Mockito version and JDK so we can check it.\"}\n```",
+  "final_is_json": false
+}

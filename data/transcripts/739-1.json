@@ -1,0 +1,61 @@
+{
+  "run": "739-1",
+  "number": 739,
+  "issue": {
+    "number": 739,
+    "title": "Conflict with dependency 'org.mockito:mockito-core'",
+    "body": "Have a problem with mockito's depenndencies:\n\n:app:preDebugUnitTestBuild UP-TO-DATE\n:app:prepareDebugUnitTestDependencies\nConflict with dependency 'net.bytebuddy:byte-buddy'. Resolved versions for app (1.4.3) and test app (1.5.3) differ. See http://g.co/androidstudio/app-test-app-conflict for details.\nConflict with dependency 'org.mockito:mockito-core'. Resolved versions for app (2.0.71-beta) and test app (2.2.11) differ. See http://g.co/androidstudio/app-test-app-conflict for details.\n\n FAILED\n\nFAILURE: Build failed with an exception.\n\n* What went wrong:\nExecution failed for task ':app:prepareDebugUnitTestDependencies'.\n> Dependency Error. See console for details.\n\n* Try:\nRun with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.\n\nBUILD FAILED\n\n\nFrom my build.gradle:\ntestCompile 'org.mockito:mockito-core:2.2.11'",
+    "created_at": "2016-11-04T15:54:29Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/739.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 739,\n3\t  \"title\": \"Conflict with dependency 'org.mockito:mockito-core'\",\n4\t  \"body\": \"Have a problem with mockito's depenndencies:\\n\\n:app:preDebugUnitTestBuild UP-TO-DATE\\n:app:prepareDebugUnitTestDependencies\\nConflict with dependency 'net.bytebuddy:byte-buddy'. Resolved versions [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)conflict|byte-?buddy|android|gradle",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n93:196\tStable version (1.10.19) and HEAD don't build on Android\n124:249\tuse Gradle built-in osgi plugin\n215:392\tNPE when Test extends from android.test.ActivityInstrumentationTestCase2\n283:561 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 739: Android Gradle reports dependency conflicts between app (mockito-core 2.0.71-beta, byte-buddy 1.4.3) and test app (mockito-core 2.2.11, byte-buddy 1.5.3). Reporter's build.gradle uses testCompile 'org.mockito:mockito-core:2.2.11'. No Mockito class or method named."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "byte-?buddy",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "glob": "*.gradle",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 739, \"label\": \"question\", \"route\": \"answer\", \"related\": [737, 706, 196], \"evidence\": [], \"reply\": \"Thanks for the report. This is an Android Gradle dependency check, not a Mockito runtime failure. The app module and the test module resolve different versions of mockito-core and byte-buddy, and the Android plugin stops the build when they differ. Your app module uses mockito-core 2.0.71-beta with byte-buddy 1.4.3, while the test configuration uses mockito-core 2.2.11 with byte-buddy 1.5.3. The simplest fix is to use the same mockito-core version in both places, then let the byte-buddy version come from that single mockito-core dependency, or pin byte-buddy to one version in both configurations. Try aligning the versions and rerun the build.\"}",
+  "final_is_json": true
+}

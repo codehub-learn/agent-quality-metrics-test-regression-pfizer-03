@@ -1,0 +1,149 @@
+{
+  "run": "310-2",
+  "number": 310,
+  "issue": {
+    "number": 310,
+    "title": "Can't mock InetSocketAddress on Java 8 because hashcode throw NPE",
+    "body": "I'm trying to run simple test, but it fail with NPE\n\n```\nimport junit.framework.Assert;\nimport org.junit.Test;\nimport org.mockito.Mockito;\n\nimport java.net.InetSocketAddress;\n\npublic class InetSocketAddressTest {\n    @Test\n    public void testSocketAddress() throws Exception {\n        InetSocketAddress address = Mockito.mock(InetSocketAddress.class);\n        Mockito.when(address.toString()).thenReturn(\"address\");\n        Assert.assertEquals(\"address\", address.toString());\n    }\n}\n\n```\n\nHow can I resolve it?\n",
+    "created_at": "2015-10-29T19:12:26Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/310.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 310,\n3\t  \"title\": \"Can't mock InetSocketAddress on Java 8 because hashcode throw NPE\",\n4\t  \"body\": \"I'm trying to run simple test, but it fail with NPE\\n\\n```\\nimport junit.framework.Assert;\\nimport org.junit.Test;\\nimport org.mockito.Mockito;\\n\\nimport java.net.InetSocketAddress;\\ [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T mock\\(|public static <T> OngoingStubbing<T> when\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isToString|isHashCode|hashCode\\(\\)",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Mockito,MockitoCore,MockMaker,ObjectMethodsGuru,MockUtil}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isToStringMethod|isHashCodeMethod",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv"
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito\n6\t70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7\t71\tjava.lang.NoClassDefFoundError: org.mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)hashcode|tostring|InetSocket|final class|NPE|NullPointer|Java 8",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n27:98\tpossible NPE exception when class cannot be mocked via PowerMockito\n38:117\tNullPointerException when using argThat() for long parameter in verify\n45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: co [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hashCode|isToString|toString",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "offset": 1266,
+        "limit": 3
+      },
+      "result": "1266\t2476\tCannot stub hashcode\n1267\t2478\tCI is crashing with memory issues\n1268\t2481\tUnfinishedStubbingException: Unfinished stubbing detected",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 310: Can't mock InetSocketAddress on Java 8 because hashCode throws NPE. Reporter calls Mockito.mock(InetSocketAddress.class), then Mockito.when(address.toString()).thenReturn(\"address\"), and gets an NPE. Mockito source folder mockito/ could not be read in this session."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "Step 1 checklist: the Mockito version is missing, the snippet is present, expected and actual behaviour are clear (expected \"address\", actual NPE), and no stack trace is included. The version and stack trace are missing, so I'll ask for those. I couldn't open any source under `mockito/`, so `evidence` stays empty and the reply names no classes.\n\n{\"number\": 310, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [2476, 2331, 2399], \"evidence\": [], \"reply\": \"Thanks for the report. Your snippet is clear, but I need two more things before I can reproduce this:\\n- The Mockito version you are using (for example 1.10.19 or 2.x.x).\\n- The full stack trace of the NullPointerException, including the line where it is thrown.\\nWith those, we can check whether the NPE comes from creating the mock or from the stubbing call.\"}",
+  "final_is_json": false
+}

@@ -1,0 +1,99 @@
+{
+  "run": "307-1",
+  "number": 307,
+  "issue": {
+    "number": 307,
+    "title": "Interface method signature for cglib.proxy.CallbackFilter different between github and Maven built Jar",
+    "body": "After trying to use Powermock 1.6.2 with a Mockito 1.10.19 jar built from source on my own laptop led to:\n\n```\nAbstractMethodError: org.powermock.api.mockito.repackaged.ClassImposterizer$2.accept(java.lang.Method, java.util.List<Method>)\n```\n\nHowever, with the prebuilt jar for mockito-all 1.10.19 from Maven central works perfectly with Powermock 1.6.2.\n\nAfter some digging, I found that the method signatures for org.mockito.cglib.proxy.CallbackFilter#accept are different between what's there in github source and what's there in the Maven central built jar. The signatures are:\n\nGithub source: accept(Method method, List<Method> methods)\nMaven built jar: accept(Method method)\n\nPowermock 1.6.2. is using the latter\n\nJust wondering why there is such a discrepancy?\n",
+    "created_at": "2015-10-23T21:27:28Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/307.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 307,\n3\t  \"title\": \"Interface method signature for cglib.proxy.CallbackFilter different between github and Maven built Jar\",\n4\t  \"body\": \"After trying to use Powermock 1.6.2 with a Mockito 1.10.19 jar built from source on my own laptop led to:\\n\\n```\\nAbstractMethodError: org.powerm [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "boolean accept\\(|interface CallbackFilter",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "cglib|CallbackFilter|accept",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "16:84\tConsume new cglib and asm versions\n88:190\tBuild Fails with NoClassDefFoundError on CglibMockMaker\n94:197\tMockito.after() method accepts negative timeperiods and subsequent verifications always pass\n123:248\tpush cglib into a separate jar\n154:307\tInterface method signature for cglib.proxy.Callba [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "CallbackFilter",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "package org\\.mockito",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 307, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [248, 84], \"evidence\": [], \"reply\": \"Thanks for the detailed report. The stack trace and the Mockito version (1.10.19) help. We could not reproduce this from the issue as written, and we could not find the related cglib callback code in the checked-out source, so we need a few more details: 1. A short code snippet or test that triggers the AbstractMethodError, including the PowerMock setup you use. 2. The commit or tag you built from source, and the Maven command you ran. 3. Which jar you compared against when you saw the different method signature. With these we can check whether the source and the released jar really differ.\"}",
+  "final_is_json": true
+}

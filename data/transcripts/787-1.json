@@ -1,0 +1,41 @@
+{
+  "run": "787-1",
+  "number": 787,
+  "issue": {
+    "number": 787,
+    "title": "Broken Javadoc generation with Java 9",
+    "body": "In master. Temporary disabled for Java 9.\n\n```\nExecution failed for task ':javadoc'.\n\n> Javadoc generation failed. Generated Javadoc options file (useful for troubleshooting): '/home/travis/build/mockito/mockito/build/tmp/javadoc/javadoc.options'\n```\n\nSample Travis build: https://travis-ci.org/mockito/mockito/jobs/179224893#L212",
+    "created_at": "2016-11-27T17:33:59Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/787.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 787,\n3\t  \"title\": \"Broken Javadoc generation with Java 9\",\n4\t  \"body\": \"In master. Temporary disabled for Java 9.\\n\\n```\\nExecution failed for task ':javadoc'.\\n\\n> Javadoc generation failed. Generated Javadoc options file (useful for troubleshooting): '/home/travis/build/mockito/m [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|java ?9",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n128:256\ttask mockitoJavadoc fails when compiling in windows\n244:453\tEither revert recent Functional Interfaces change or change JavaDoc\n263:520\tProvide Java 9 compatibility\n269:533\tRemove code.google. [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 787, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [894, 1476, 1595], \"evidence\": [], \"reply\": \"Thanks for the report. To reproduce this we need a few details:\\n1. The Mockito version or commit you built from.\\n2. The JDK version (the output of java -version) and the exact build command you ran.\\n3. The full javadoc error output, including the lines printed before 'Javadoc generation failed'. The message in the report only points to the options file, so the actual javadoc error is missing.\\nWith these we can check whether the failure still happens on the current source.\"}",
+  "final_is_json": true
+}

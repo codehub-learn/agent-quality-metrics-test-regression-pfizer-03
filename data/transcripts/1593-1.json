@@ -1,0 +1,129 @@
+{
+  "run": "1593-1",
+  "number": 1593,
+  "issue": {
+    "number": 1593,
+    "title": "Mockito confuses varargs and single-param methods (regression)",
+    "body": "In Mockito 2.2.5 and later, when setting expectations for mocking a varargs method, using an array doesn't work:\n```Java\nMockito.when(good.call(Mockito.any(String[].class))).thenReturn(1L);\n```\nAnd instead the contained type must be used:\n```Java\nMockito.when(good.call(Mockito.any(String.class))).thenReturn(1L);\n```\nHowever in the face of an overload of the varargs method that takes a single argument (of the same type):\n```Java\n    Long call(String value);\n    Long call(String... values);\n```\nThis results in being unable to set an expectation for the varargs call.\nThis worked previously in Mockito 2.2.4 and earlier.\n\nReproducer: [mockito-bug.tar.gz](https://github.com/mockito/mockito/files/2769668/mockito-bug.tar.gz)\n\n",
+    "created_at": "2019-01-17T16:44:17Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1593.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1593,\n3\t  \"title\": \"Mockito confuses varargs and single-param methods (regression)\",\n4\t  \"body\": \"In Mockito 2.2.5 and later, when setting expectations for mocking a varargs method, using an array doesn't work:\\n```Java\\nMockito.when(good.call(Mockito.any(String[].class))).thenRetu [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T any\\(Class<T> type\\)|class ArgumentMatchers|VarargMatcher|isVarArgs",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 40
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)vararg|varargs|any\\(|overload",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "39:118\tdoReturn with varargs\n41:120\tAdd Matchers.any(Object) or Marchers.any(Type)\n86:188\tArgumentCaptor no longer working for varargs\n195:356\tAdd MockitoHamcrest.varArgThat\n206:372\tConsider using @SafeVarargs for OngoingStubbing.thenThrow(Class<? extends Throwable>)\n224:407\tVararg method call on mo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{ArgumentMatchers,ArgumentMatcher,VarargMatcher,MatcherApplicationStrategy,ArgumentMatcherStorage}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isVarArgs|VarargMatcher",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isVarArgs",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;\n8\timport static org.mockito.internal.util.Primitives.defa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 1593: Mockito confuses varargs and single-param methods (regression). Reporter says any(String[].class) does not match varargs call in 2.2.5+, and with overloads call(String) and call(String...), a stub for the varargs call cannot be set. Evidence opened: mockito-core/src/main/java/org/mockito/ArgumentMatchers.java (any(Class) javadoc: since 5.0.0 matches varargs when array type given)."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1593, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [2796, 3786], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java\"], \"reply\": \"Thanks for the report. The version range (2.2.4 vs 2.2.5 and later), the code snippet, and the expected and actual behaviour are all clear, so this can be reproduced as written. The matcher in question is ArgumentMatchers.any(Class), which is where I would start looking. Note that its current Javadoc says that since Mockito 5.0.0 it can match varargs when the array type is given, such as any(String[].class). Could you check whether the overload case (call(String) next to call(String...)) still fails on the latest release?\"}",
+  "final_is_json": true
+}

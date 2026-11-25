@@ -1,0 +1,189 @@
+{
+  "run": "99-1",
+  "number": 99,
+  "issue": {
+    "number": 99,
+    "title": "RETURNS_DEEP_STUBS automatically tries to create serializable mocks",
+    "body": "I am just migrating from mockito 1.9.5 to 1.10.5\n\nThe following code runs fine with version 1.9.5. but breaks now:\n\n``` java\n\n  @Test\n  public void test() {\n    ToBeMocked mock = mock(ToBeMocked.class, RETURNS_DEEP_STUBS);\n    assertThat(mock.getSomething()).isNotNull();\n  }\n\n  public static class ToBeMocked {\n\n    NotSerializableReturnValue field1;\n\n    public ToBeMocked(NotSerializableReturnValue field1) {\n      this.field1 = field1;\n    }\n\n    public NotSerializableReturnValue getSomething() {\n      return field1;\n    }\n  }\n\n  public static class NotSerializableReturnValue {\n\n    String field1 = \"\";\n\n    public NotSerializableReturnValue(String field1) {\n      this.field1 = field1;\n    }\n\n    public String getSomething2() {\n      return field1;\n    }\n  }\n```\n\norg.mockito.exceptions.base.MockitoException: \nYou are using the setting 'withSettings().serializable()' however the type you are trying to mock 'NotSerializableReturnValue'\ndo not implement Serializable AND do not have a no-arg constructor.\n",
+    "created_at": "2014-10-08T13:49:48Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/99.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 99,\n3\t  \"title\": \"RETURNS_DEEP_STUBS automatically tries to create serializable mocks\",\n4\t  \"body\": \"I am just migrating from mockito 1.9.5 to 1.10.5\\n\\nThe following code runs fine with version 1.9.5. but breaks now:\\n\\n``` java\\n\\n  @Test\\n  public void test() {\\n    ToBeMocked m [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)deep.?stub|serializ",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "11:75\tNew \"serializable\" parameter of @Mock annotation\n28:99\tRETURNS_DEEP_STUBS automatically tries to create serializable mocks\n46:128\tDeep stubbing with generic responses in the call chain is not working\n120:244\tStackOverflowError in MockitoSerializationIssue.java\n121:245\tSerializable check is too [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "RETURNS_DEEP_STUBS|ReturnsDeepStubs|do not implement Serializable",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnsDeepStubs|RETURNS_DEEP_STUBS|do not implement Serializable",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{ReturnsDeepStubs,ReturnsEmptyValues,SerializableMode,SerializableMockitoStubs,ClassLoaders}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "deep",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.defaultanswers;\n6\t\n7\timport static org.mockito.Mockito.withSettings;\n8\timport static org.mockito.internal.util.MockUtil.typeMockabil [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Serializable",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "do not implement Serializable",
+        "path": "mockito",
+        "glob": "*.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/SerializableMockitoMethodProxy.java",
+        "limit": 5
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "no-arg constructor|serializable\\(\\)",
+        "path": "mockito/mockito-core/src/main/java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/SubclassBytecodeGenerator.java",
+        "offset": 1,
+        "limit": 80
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport static java.lang.Thread.currentThread;\n8\timport static net.bytebuddy.description.modifier.Visibility.PRIVATE; [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/SerializableMockitoMethodInterceptor.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 99: RETURNS_DEEP_STUBS automatically tries to create serializable mocks"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 99, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [245], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsDeepStubs.java\"], \"reply\": \"Thanks for the report. The snippet, the Mockito versions (works on 1.9.5, fails on 1.10.5) and the exception message are all included, so this is reproducible as written. The deep stub mocks are built in ReturnsDeepStubs (org.mockito.internal.stubbing.defaultanswers). Its propagateSerializationSettings method copies the parent mock's serializable mode onto each child mock created for RETURNS_DEEP_STUBS, which is where the serializable check on NotSerializableReturnValue comes from. That is the code path to look at.\"}",
+  "final_is_json": true
+}

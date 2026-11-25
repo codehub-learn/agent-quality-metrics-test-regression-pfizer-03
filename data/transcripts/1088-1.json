@@ -1,0 +1,161 @@
+{
+  "run": "1088-1",
+  "number": 1088,
+  "issue": {
+    "number": 1088,
+    "title": "Javadoc Example Throws Unexpected Exception",
+    "body": " Verify(mockedList, atLeast(2)).add(\"five times\"); - would throw\norg.mockito.exceptions.verification.TooLittleActualInvocations\n\nCorrecting this would help to make sure new devs are not confused by the verify use case there.\n\n<img width=\"678\" alt=\"screen shot 2017-05-17 at 8 40 03 pm\" src=\"https://cloud.githubusercontent.com/assets/10499046/26181818/2241904c-3b41-11e7-8f71-6974d46d5579.png\">\n",
+    "created_at": "2017-05-18T00:46:16Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1088.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1088,\n3\t  \"title\": \"Javadoc Example Throws Unexpected Exception\",\n4\t  \"body\": \" Verify(mockedList, atLeast(2)).add(\\\"five times\\\"); - would throw\\norg.mockito.exceptions.verification.TooLittleActualInvocations\\n\\nCorrecting this would help to make sure new devs are not confused by  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "atLeast\\(2\\)|five times",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|atLeast|Javadoc example|verify",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "38:117\tNullPointerException when using argThat() for long parameter in verify\n44:124\tConcise way to collect multiple verify failures, ideally with JUnitCollector or  derivative\n63:152\tMockito 1.10.x timeout verification needs JUnit classes (VerifyError, NoClassDefFoundError)\n104:212\tAdd BDD version  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "atLeast\\(|atLeast\\b.*add",
+        "path": "mockito",
+        "glob": "**/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockedList|atLeast",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 40
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "atLeast",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "475: * //verification using atLeast()/atMost()\n477: * verify(mockedList, atLeastOnce()).add(\"three times\");\n478: * verify(mockedList, atLeast(2)).add(\"three times\");\n1050: *   verify(mock, timeout(100).atLeast(2)).someMethod();\n2026:     *   inOrder.verify(person.getAddress(\"the docks\").getStreet(Lo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "atLeast",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 466,
+        "limit": 20
+      },
+      "result": "466\t * verify(mockedList, times(1)).add(\"once\");\n467\t *\n468\t * //exact number of invocations verification\n469\t * verify(mockedList, times(2)).add(\"twice\");\n470\t * verify(mockedList, times(3)).add(\"three times\");\n471\t *\n472\t * //verification using never(). never() is an alias to times(0)\n473\t * verif [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/verification/AtLeast.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.verification;\n6\t\n7\timport static org.mockito.internal.verification.checkers.AtLeastXNumberOfInvocationsChecker.checkAtLeastNumberOfInvocation [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 450,
+        "limit": 16
+      },
+      "result": "450\t * <h3 id=\"4\">4. <a class=\"meaningful_link\" href=\"#exact_verification\" name=\"exact_verification\">Verifying exact number of invocations</a> /\n451\t * <a class=\"meaningful_link\" href=\"#at_least_verification\" name=\"at_least_verification\">at least x</a> / never</h3>\n452\t *\n453\t * <pre class=\"code\"><c [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 1088: Javadoc example \"verify(mockedList, atLeast(2)).add(\"five times\")\" throws TooLittleActualInvocations. Current Mockito.java lines 453-481 show mockedList.add(\"three times\") called three times, so atLeast(2) passes. Relevant files: mockito-core/src/main/java/org/mockito/Mockito.java, internal/verification/AtLeast.java."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1088, \"label\": \"docs\", \"route\": \"answer\", \"related\": [228, 952], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/verification/AtLeast.java\"], \"reply\": \"Thanks for the report. In the current source, the example in the Mockito class Javadoc (section 4, exact and at-least verification, Mockito.java around lines 453 to 481) no longer throws. It calls mockedList.add(\\\"three times\\\") three times before verify(mockedList, atLeast(2)).add(\\\"three times\\\"), so the atLeast(2) check passes. The \\\"five times\\\" version from your screenshot is no longer in the file. If you still see TooLittleActualInvocations on a current release, please tell us which version you are using and we will take another look. Otherwise this looks fixed in the source.\"}",
+  "final_is_json": true
+}

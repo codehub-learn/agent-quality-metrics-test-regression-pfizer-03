@@ -1,0 +1,111 @@
+{
+  "run": "112-1",
+  "number": 112,
+  "issue": {
+    "number": 112,
+    "title": "Allow instances of other classes in AdditionalAnswers.delegatesTo",
+    "body": "We have `AdditionalAnswers.delegatesTo`, but if an object of the wrong type is passed we get a RuntimeException:\n\n```\njava.lang.IllegalArgumentException: object is not an instance of declaring class\n```\n\nIf we allow any type as long as it has the needed methods of the same signature, then we can create fake objects like:\n\n```\nclass FakeSession {\n    Map<String, Object> map = new HashMap<>();\n\n    public Object getAttribute(String key) {\n        return map.get(key);\n    }\n\n    public void setAttribute(String key, Object value) {\n        map.put(key, value);\n    }\n}\n\n@Test\npublic void test() {\n    HttpSession session = mock(HttpSession.class,\n        AdditionalAnswers.delegatesTo(new FakeSession()));\n\n    session.setAttribute(\"key\", \"value\");\n\n    assertEquals(\"value\", session.getAttribute(\"key\"));\n}\n```\n\nThis saves on implementing many methods that are not used in the test, and can be easier to write than adding separate Answers for each call. This can be used to create fakes for objects like SWT's StyledText which has a huge number of methods. Using a separate object instead of a subclass prevents code from accidentely calling the real object or requiring the real constructor to be called.\n\nThis is not type-safe but it doesn't seem any worse than the casting required in Answers, and the user will find out quickly if a required method doesn't exist by running the tests.\n\nI propose to modify the implementation of ForwardsInvocations with something like:\n\n```\npublic Object answer(InvocationOnMock invocation) throws Throwable {\n    Method mockMethod = invocation.getMethod();\n\n    if(mockMethod.getDeclaringClass().isAssignableFrom(delegatedObject.getClass())) {\n        return mockMethod.invoke(delegatedObject, invocation.getArguments());\n    } else {\n        Method delegateMethod = delegatedObject.getClass().getMethod(\n            mockMethod.getName(), mockMethod.getParameterTypes());\n        return delegateMethod.invoke(delegatedObject, invocation.getArguments());\n    }\n}\n```\n",
+    "created_at": "2014-10-25T13:51:08Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/112.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 112,\n3\t  \"title\": \"Allow instances of other classes in AdditionalAnswers.delegatesTo\",\n4\t  \"body\": \"We have `AdditionalAnswers.delegatesTo`, but if an object of the wrong type is passed we get a RuntimeException:\\n\\n```\\njava.lang.IllegalArgumentException: object is not an instance [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ForwardsInvocations|delegatesTo",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "delegat|forward|DelegatesTo|ForwardsInvocations",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "36:112\tAllow instances of other classes in AdditionalAnswers.delegatesTo\n224:407\tVararg method call on mock object fails when used org.mockito.AdditionalAnswers#delegatesTo\n575:1135\t[mock-maker-inline] Method calls on mock forwarded to real instance\n1198:2303\t\"The type is not public and its mock cla [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{AdditionalAnswers,ForwardsInvocations}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*Answers*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "delegatesTo",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 112, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the detailed proposal. You'd like the delegation answer to accept any object that has methods matching the mocked method's name and parameter types, instead of requiring an instance of the mocked interface, so lightweight fake classes can stand in for large types like HttpSession or StyledText.\"}",
+  "final_is_json": true
+}

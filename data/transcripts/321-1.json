@@ -1,0 +1,89 @@
+{
+  "run": "321-1",
+  "number": 321,
+  "issue": {
+    "number": 321,
+    "title": "Is it possible to use to mock some paths in sysfs?",
+    "body": "I am developing a java library which it interacts with a Linux environment and I would like to know if it is possible to use mockito in testing phase.\n\nThe class which interacts with sysfs is:\nhttps://github.com/jabrena/ev3dev-lang-java/blob/master/library/src/main/java/ev3dev/hardware/Sysfs.java\n\nI would like to simulate values using mockito.\n\nany idea?\n",
+    "created_at": "2015-11-30T08:06:01Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/321.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 321,\n3\t  \"title\": \"Is it possible to use to mock some paths in sysfs?\",\n4\t  \"body\": \"I am developing a java library which it interacts with a Linux environment and I would like to know if it is possible to use mockito in testing phase.\\n\\nThe class which interacts with sysfs is:\\nh [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(file|path|sysfs|static|mock.*(file|system)|filesystem)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 60
+      },
+      "result": "34:110\tJar contains duplicate txt files\n68:157\tSource files should not be put in binary JAR\n96:199\tMaven distribution mockito-core-1.10.16.jar contains *.java files (should only contain *.class files)\n164:321\tIs it possible to use to mock some paths in sysfs?\n233:422\tWhitebox.setInternalState for pr [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T mock\\(Class<T> classToMock\\)|public static MockedConstruction<\\w+> mockConstruction\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "2242:    public static <T> T mock(Class<T> classToMock) {",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockConstruction|mockStatic|public static <T> T mock\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "count"
+      },
+      "result": "mockito\\mockito-core\\src\\main\\java\\org\\mockito\\Mockito.java:55\n\nFound 55 total occurrences across 1 file.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 2200,
+        "limit": 45
+      },
+      "result": "2200\t     * See examples in javadoc for the {@link Mockito} class.\n2201\t     *\n2202\t     * @param name     the mock name to use.\n2203\t     * @param reified  don't pass any values to it. It's a trick to detect the class/interface you\n2204\t     *                 want to mock.\n2205\t     * @return the m [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> OngoingStubbing<T> when\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3145:    public static <T> OngoingStubbing<T> when(@Nullable T methodCall) {",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 321, \"label\": \"question\", \"route\": \"answer\", \"related\": [2342], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Hi, Mockito cannot intercept reads from /sys or any other OS path. It mocks Java objects, not the operating system. The usual approach is to put the sysfs access behind an interface, for example a small class with a method like String readValue(String path). Your library code depends on that interface, and in tests you create a mock with Mockito.mock(YourInterface.class) and stub it with Mockito.when(...).thenReturn(...). Production code keeps a real implementation that reads the file. Mockito.mock and Mockito.when are documented in the Javadoc of the Mockito class in mockito-core/src/main/java/org/mockito/Mockito.java. Hope this helps.\"}",
+  "final_is_json": true
+}

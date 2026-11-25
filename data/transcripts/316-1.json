@@ -1,0 +1,126 @@
+{
+  "run": "316-1",
+  "number": 316,
+  "issue": {
+    "number": 316,
+    "title": "modify StackTraceFilter to not strip away \"good\" elements from the middle",
+    "body": "according to javadoc of org.mockito.internal.exceptions.stacktrace.StackTraceFilter, filter works like this:\n[a+, b+, c-, d+, e+, f-, g+] -> [a+, b+, g+]\nit would be better to not strip away \"good\" d and e elements:\n[a+, b+, c-, d+, e+, f-, g+] -> [a+, b+, d+, e+, g+]\nWhat do you think about this? For me current behaviour is very inconvenient, I had to turn it off.\n",
+    "created_at": "2015-11-06T05:47:44Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/316.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 316,\n3\t  \"title\": \"modify StackTraceFilter to not strip away \\\"good\\\" elements from the middle\",\n4\t  \"body\": \"according to javadoc of org.mockito.internal.exceptions.stacktrace.StackTraceFilter, filter works like this:\\n[a+, b+, c-, d+, e+, f-, g+] -> [a+, b+, g+]\\nit would be bett [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class StackTraceFilter",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)stack ?trace|StackTraceFilter",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "158:312\tThrowsExceptionClass is urealiable - exception doesn't containt stack trace\n160:316\tmodify StackTraceFilter to not strip away \"good\" elements from the middle\n238:435\tPluginStackTraceFilteringTest failing locally\n402:767\tUnnecessaryStubbingException does not filter stack trace\n442:866\tWhen cu [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "StackTraceFilter",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Stack*Filter*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "StackTraceFilter",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 316, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [2238], \"evidence\": [], \"reply\": \"Thanks for the detailed report. You're asking for the stack trace filter to keep the internal frames that sit between the non-Mockito frames (for example d and e in your a+, b+, c-, d+, e+, f-, g+ example), instead of dropping everything between the first and last good frame. That's a reasonable request, and it's logged for the backlog. Trimming too aggressively has come up before in issue 2238, so it's a known pain point.\"}",
+  "final_is_json": true
+}

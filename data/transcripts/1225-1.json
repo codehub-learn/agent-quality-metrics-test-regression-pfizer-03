@@ -1,0 +1,33 @@
+{
+  "run": "1225-1",
+  "number": 1225,
+  "issue": {
+    "number": 1225,
+    "title": "Ensure auto-replacement of deprecated methods in IntelliJ",
+    "body": "Per https://blog.jetbrains.com/idea/2017/10/intellij-idea-2017-3-public-preview IntelliJ can now auto-suggest replacements for deprecated methods. Once IntelliJ 2017-3 is published, let's check whether our deprecations satisfy the requirements for this check.\n\nMaybe we can also write a static analysis check that can automatically verify that whenever we deprecated method we:\n1. Link to a replacement\n2. Add `@since` property\n3. Is only removed in the next major version (See #945 as example)",
+    "created_at": "2017-10-27T11:19:59Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1225.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1225,\n3\t  \"title\": \"Ensure auto-replacement of deprecated methods in IntelliJ\",\n4\t  \"body\": \"Per https://blog.jetbrains.com/idea/2017/10/intellij-idea-2017-3-public-preview IntelliJ can now auto-suggest replacements for deprecated methods. Once IntelliJ 2017-3 is published, let's c [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)deprecat",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "207:374\tRemove deprecated API from Mockito 2\n214:391\tDeprecate MockitoJUnitRunner in favor of MockitoRule?\n291:577\tDeprecate Mockito.debug().printInvocations() API\n616:1211\timprove @deprecated JavaDoc of MockitoDebugger\n621:1225\tEnsure auto-replacement of deprecated methods in IntelliJ\n743:1421\tDepr [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1225, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [374, 1211, 1887], \"evidence\": [], \"reply\": \"Thanks for the report. You're asking for two things: make Mockito's deprecated methods work with IntelliJ's auto-replacement suggestions once IntelliJ 2017.3 ships, and add a static check that every deprecated method links to a replacement, has a @since tag, and is only removed in the next major version.\"}",
+  "final_is_json": true
+}

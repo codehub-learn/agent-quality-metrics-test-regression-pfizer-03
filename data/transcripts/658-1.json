@@ -1,0 +1,172 @@
+{
+  "run": "658-1",
+  "number": 658,
+  "issue": {
+    "number": 658,
+    "title": "Port external blogposts to wiki page to prevent linkrot",
+    "body": "Dead links are bad, instead of relying on websites that can disappear anytime, the javadoc should only : \n- Have the content copied in a quoted fashion\n- Link to the mockito wiki (which is git based) or a markdown page within this code repository\n\ne.g. `Mockito` class link to this website that is not anymore available https://monkeyisland.pl/2009/01/13/subclass-and-override-vs-partial-mocking-vs-refactoring\n",
+    "created_at": "2016-09-29T08:19:09Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/658.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 658,\n3\t  \"title\": \"Port external blogposts to wiki page to prevent linkrot\",\n4\t  \"body\": \"Dead links are bad, instead of relying on websites that can disappear anytime, the javadoc should only : \\n- Have the content copied in a quoted fashion\\n- Link to the mockito wiki (which is g [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "monkeyisland\\.pl",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv"
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito\n6\t70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7\t71\tjava.lang.NoClassDefFoundError: org.mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(blog|link|javadoc|external|wiki)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n128:256\ttask mockitoJavadoc fails when compiling in windows\n216:393\tCan't click \"release notes\" link from mockito.org\n244:453\tEither revert recent Functional Interfaces change or change JavaDoc\n251:48 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "https?://",
+        "path": "mockito/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "Path does not exist: mockito\\src\\main\\java\\org\\mockito\\Mockito.java. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "https?://",
+        "path": "mockito",
+        "glob": "Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "https?://",
+        "path": "mockito",
+        "glob": "*.java",
+        "output_mode": "files_with_matches",
+        "head_limit": 40
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "monkeyisland|voxxed|Brice",
+        "path": "",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class Mockito\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "package org\\.mockito",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 658, \"label\": \"docs\", \"route\": \"answer\", \"related\": [1638, 713, 1579], \"evidence\": [], \"reply\": \"Thanks for the report. You are right that the Javadoc depends on an external blog post that has gone offline, so the link is dead and the explanation it pointed to is lost. Copying the relevant text into the Javadoc as a quote, and linking to the Mockito wiki or a page in this repository instead, is a sound fix. I could not open the Mockito source in this triage run to confirm the exact Javadoc location, so the maintainers will need to check the affected class comments when they make the change.\"}",
+  "final_is_json": true
+}

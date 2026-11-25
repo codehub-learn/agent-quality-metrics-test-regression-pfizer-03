@@ -1,0 +1,109 @@
+{
+  "run": "191-1",
+  "number": 191,
+  "issue": {
+    "number": 191,
+    "title": "Mock returning java.util.Optional should return Optional.empty() by default (Java 8)",
+    "body": "(From the discussion at https://code.google.com/p/mockito/issues/detail?id=497 )\n\n> A stubbed method that returns `Optional<?>` should return `Optional.empty()` if no explicit behavior is defined. This is equivalent to returning null for regular methods.\n> \n> Introducing this feature would add no extra dependencies. However, it would require a test whether the code is running in Java 8.\n\nSince the thread ends with the request for a GitHub ticket and I couldn't find one... here it is :)\n",
+    "created_at": "2015-04-02T06:03:22Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/191.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 191,\n3\t  \"title\": \"Mock returning java.util.Optional should return Optional.empty() by default (Java 8)\",\n4\t  \"body\": \"(From the discussion at https://code.google.com/p/mockito/issues/detail?id=497 )\\n\\n> A stubbed method that returns `Optional<?>` should return `Optional.empty()`  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Optional",
+        "path": "mockito",
+        "glob": "**/ReturnsEmptyValues.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)optional|empty value|default answer|returns? null",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n89:191\tMock returning java.util.Optional should return Optional.empty() by default (Java 8)\n103:210\tReturn empty value for Iterables\n155:308\tMatchers for Optional\n405:781\tAdd default answers for java.util.Optional{Double,Int,Long} and jav [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ReturnsEmptyValues.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Optional",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "**/src/main/**/*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnsEmptyValues",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.defaultanswers;\n6\t\n7\timport static org.mockito.internal.util.ObjectMethodsGuru.isCompareToMethod;\n8\timport static org.mockito.intern [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 191, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1416, 781, 2865], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java\"], \"reply\": \"Thanks for the suggestion. You are asking that unstubbed methods returning java.util.Optional return Optional.empty() by default instead of null, on Java 8 and later.\"}",
+  "final_is_json": true
+}

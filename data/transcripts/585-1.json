@@ -1,0 +1,127 @@
+{
+  "run": "585-1",
+  "number": 585,
+  "issue": {
+    "number": 585,
+    "title": "ArgumentCaptor A single `capture()` call captures all vararg elements.",
+    "body": "A single `ArgumentCaptor.capture()` call captures all vararg elements.\n\n```\nmock.varargs(\"1\",\"2\",\"3\");\n\n// captures \"1\",\"2\",\"3\"\nverify(mock).varargs(c.capture()); \n\n// fails with arguments are different\nverify(mock).varargs(c.capture(),\n                               c.capture()); \n\n\n// captures \"1\",\"2\",\"3\"\nverify(mock).varargs(c.capture(),\n                               c.capture(),\n                               c.capture()); \n\n```\n\n**Expected:** One capture() call should only capture one vararg argument\n**Actual:** A single `ArgumentCaptor.capture()` call captures all vararg elements.\n",
+    "created_at": "2016-08-23T12:10:59Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/585.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 585,\n3\t  \"title\": \"ArgumentCaptor A single `capture()` call captures all vararg elements.\",\n4\t  \"body\": \"A single `ArgumentCaptor.capture()` call captures all vararg elements.\\n\\n```\\nmock.varargs(\\\"1\\\",\\\"2\\\",\\\"3\\\");\\n\\n// captures \\\"1\\\",\\\"2\\\",\\\"3\\\"\\nverify(mock).varargs(c.capture( [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class CapturingMatcher|VarargMatcher|class ArgumentCaptor",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)vararg|capture",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "39:118\tdoReturn with varargs\n70:160\tAdditionalMatchers logical matchers don't capture arguments\n86:188\tArgumentCaptor no longer working for varargs\n185:345\tVerification using After and ArgumentCaptor returns unexpected size of captured values list\n195:356\tAdd MockitoHamcrest.varArgThat\n197:358\tEnhan [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class CapturingMatcher|interface VarargMatcher|class ArgumentCaptor",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ArgumentCaptor|CapturingMatcher",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/invocation/InterceptedInvocation.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Captur*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentsProcessor.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.util.Primitives.defaultValue;\n8\t\n9\timport java.util.List;\n10\t\n11\timport org.mockito.internal.matchers.Capturi [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "VarargMatcher",
+        "path": "mockito/mockito-core/src/main/java",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.matchers;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.noArgumentValueWasCaptured;\n8\t\n9\timport java.io.Serializable;\n10\timport [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 585, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [439, 584, 1652], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java\"], \"reply\": \"Thanks for the report. You are asking that each ArgumentCaptor.capture() call in a vararg verification capture exactly one vararg element, rather than the current behaviour where a single capture() collects all varargs. We have added this to the backlog as an enhancement request.\"}",
+  "final_is_json": true
+}

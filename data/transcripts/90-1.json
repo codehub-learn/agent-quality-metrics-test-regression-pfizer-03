@@ -1,0 +1,33 @@
+{
+  "run": "90-1",
+  "number": 90,
+  "issue": {
+    "number": 90,
+    "title": "Improve exception messages when user mocks a method declared on non-public parent",
+    "body": "Mockito does not support stubbing/verification of methods that are declared on a non-public parent class. This situation cannot be detected easily (see [issue 212](https://code.google.com/p/mockito/issues/detail?id=212)). However, we can improve the errors Mockito emits when invalid use of the API is detected.\n",
+    "created_at": "2014-09-28T18:05:10Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/90.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 90,\n3\t  \"title\": \"Improve exception messages when user mocks a method declared on non-public parent\",\n4\t  \"body\": \"Mockito does not support stubbing/verification of methods that are declared on a non-public parent class. This situation cannot be detected easily (see [issue 212](htt [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)non-public|package-private|private|parent|superclass|inherit",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "20:90\tImprove exception messages when user mocks a method declared on non-public parent\n49:133\tMockito can't spy on object loaded in parent classloader\n72:168\tCan't stub public method inherited from a package visible class\n107:216\tMockito can't create mock on public class that extends package-privat [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 90, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [323, 168, 216], \"evidence\": [], \"reply\": \"Thanks for the report. You're asking Mockito to give a clearer error message when a user stubs or verifies a method declared on a non-public parent class. Mockito can't reliably detect that case up front, so the aim is to improve the errors it emits when it sees invalid use of the API.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,144 @@
+{
+  "run": "638-1",
+  "number": 638,
+  "issue": {
+    "number": 638,
+    "title": "Could not initialize class org.mockito.internal.util.MockUtil\" - Maven , Mockito > 2.0.111-beta",
+    "body": "I get a \"java.lang.NoClassDefFoundError: **Could not initialize class org.mockito.internal.util.MockUtil\"** when running junit tests in maven (fine in Eclipse) and using a mockito version > 2.0.111-beta.\n\n**Environment**\n- Mockito - 2.1.0-RC.1 (issue started after 2.0.111-beta)\n- Maven - 3.3.9 (tests work in eclipse)\n- JUnit - 4.12 + MockitoJUnitRunner\n- JDK - 1.8.0_60-b27 \n\nHappy to help triage but don't know what more to share at the moment.\n",
+    "created_at": "2016-09-17T13:43:19Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/638.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 638,\n3\t  \"title\": \"Could not initialize class org.mockito.internal.util.MockUtil\\\" - Maven , Mockito > 2.0.111-beta\",\n4\t  \"body\": \"I get a \\\"java.lang.NoClassDefFoundError: **Could not initialize class org.mockito.internal.util.MockUtil\\\"** when running junit tests in maven (fine i [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockUtil",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(noclassdeffound|could not initialize|maven|MockUtil|initializ)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n19:89\tadd latest release into maven central\n45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n48:132\tMaven Release for 1.10.14\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockUtil.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^\\d+\\t.*(static initializer|ExceptionInInitializer|NoClassDef|Could not initialize class)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n63:152\tMockito 1.10.x timeout verification needs JUnit classes (VerifyError,  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*MockUtil*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockingProgressImpl.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockUtil",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/util/MockUtil.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.util;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.Mockito;\n9\timport org.mockito.exceptions.misusing.NotAMockException;\n1 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 638, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [2568, 2025], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/util/MockUtil.java\"], \"reply\": \"Thanks for the report. A NoClassDefFoundError saying 'Could not initialize class org.mockito.internal.util.MockUtil' usually means the class's static initializer failed the first time it ran, so the root cause is in an earlier exception. MockUtil is in mockito/mockito-core/src/main/java/org/mockito/internal/util/MockUtil.java. To reproduce this we need:\\n- A minimal failing test class and the runner or rule you use\\n- The full stack trace, including all 'Caused by' lines, since the first failure is the one we need\\n- The dependency and surefire plugin sections of your pom.xml\\n- The exact Mockito version that fails, and whether it still fails on the latest release\"}",
+  "final_is_json": true
+}

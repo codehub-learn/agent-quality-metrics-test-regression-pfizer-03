@@ -1,0 +1,166 @@
+{
+  "run": "3503-1",
+  "number": 3503,
+  "issue": {
+    "number": 3503,
+    "title": "Mark parameters of `Mockito.when` @Nullable",
+    "body": "I have a nullable method:\n\n<img width=\"578\" alt=\"image\" src=\"https://github.com/user-attachments/assets/da8744d9-f0bd-4a34-aaa7-d498c20ab26d\">\n\nThat I want to mock. \n\nThe problem is that IDEA shows tons of warnings because `Mockito.when` parameter is not marked as `@Nullable`:\n\n<img width=\"871\" alt=\"image\" src=\"https://github.com/user-attachments/assets/87dc0c9c-d1bc-4aa1-b58f-1ab9ab197dd1\">\n\n\n**I suggest to add [JSpecify](https://jspecify.dev/docs/user-guide/) to Mockito dependencies,\nand mark (at least) parameters of `Mockito.when` as `@Nullable`.**\n",
+    "created_at": "2024-11-09T00:48:10Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/3503.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 3503,\n3\t  \"title\": \"Mark parameters of `Mockito.when` @Nullable\",\n4\t  \"body\": \"I have a nullable method:\\n\\n<img width=\\\"578\\\" alt=\\\"image\\\" src=\\\"https://github.com/user-attachments/assets/da8744d9-f0bd-4a34-aaa7-d498c20ab26d\\\">\\n\\nThat I want to mock. \\n\\nThe problem is that IDEA [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> OngoingStubbing<T> when\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "nullable|jspecify|Nullable",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "742:1420\tAdd JSR 305 annotations (@NonNull / @Nullable)\n755:1447\tHave java.lang.IllegalStateException when trying to mock Kotlin class with nullable generic\n1686:3503\tMark parameters of `Mockito.when` @Nullable",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "static .* when\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "glob": "**/Mockito.java"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^(?:2[0-9]|1[0-9])\\d*\\t",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 5
+      },
+      "result": "29:101\tDocumentation mentions non-existing version 1.9.8 in few places\n30:105\tContinuous deployment should not release new version if binaries are equal\n31:107\tImprove internal implementation so that it is possible to implement mocking abstract classes\n32:108\tClarify Spy vs Mock CALLS_REAL_METHODS\n3 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "jspecify|nullable|JSR 305|javax.annotation",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "742:1420\tAdd JSR 305 annotations (@NonNull / @Nullable)\n755:1447\tHave java.lang.IllegalStateException when trying to mock Kotlin class with nullable generic\n1013:1913\tMockitoJunitRunner ignores javax annotations\n1686:3503\tMark parameters of `Mockito.when` @Nullable",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "OngoingStubbing<T> when",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "when\\(T methodCall\\)",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .*when\\(|Nullable|jspecify",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "7:import org.jspecify.annotations.Nullable;\n3145:    public static <T> OngoingStubbing<T> when(@Nullable T methodCall) {",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "jspecify|org\\.jspecify",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*.gradle*"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 3503, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1420], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report and the screenshots. You're asking for JSpecify nullability annotations on Mockito's public API, starting with the methodCall parameter of Mockito.when, so IDEs stop warning when you pass a nullable value. We've noted the request for the backlog.\"}",
+  "final_is_json": true
+}

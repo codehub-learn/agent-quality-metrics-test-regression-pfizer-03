@@ -1,0 +1,117 @@
+{
+  "run": "757-1",
+  "number": 757,
+  "issue": {
+    "number": 757,
+    "title": "\"mock-maker-inline\" prevents collection of code coverage for spys",
+    "body": "Hi,\n\nBeing one of [JaCoCo (Java Code Coverage Library)](http://www.jacoco.org/jacoco/index.html) developers, I was curious about interoperability of Mockito 2.2.x and JaCoCo on-the-fly instrumentation (using agent), so did some tests and came across following behavior:\n\nwith `mock-maker-inline`:\n![mock-maker-inline](https://cloud.githubusercontent.com/assets/138671/20305994/94290260-ab38-11e6-96ed-5d274d06cdda.png)\nwithout:\n![normal](https://cloud.githubusercontent.com/assets/138671/20305987/8c27b174-ab38-11e6-9230-6fccaee64541.png)\n\n\nHere is small example that reproduces this behavior - [example.zip](https://github.com/mockito/mockito/files/592003/example.zip) , `mvn clean verify` to run tests and generate JaCoCo report.\n\n* Mockito 2.2.16\n* JaCoCo 0.7.7\n* JDK 8u102\n\nAs a workaround possible to use JaCoCo offline instrumentation (`mvn clean verify -Djacoco-offline` on the given example), but we don't recommend this mode and it is not available nor in EclEmma (plugin for Eclipse based on JaCoCo), nor when using JaCoCo in IntellIJ IDEA.\n\nAlso should be noted that the same happens for IntelliJ IDEA's own built-in coverage engine:\n\n![intellij-mock-maker-inline](https://cloud.githubusercontent.com/assets/138671/20306440/8d6f6eb2-ab3a-11e6-9d07-e9a0108f8794.png)\nvs\n![intellij-normal](https://cloud.githubusercontent.com/assets/138671/20306446/93948e44-ab3a-11e6-9b73-ee4d78d3d55f.png)\n\nUnfortunately, I didn't had time (yet) to dig deeper into code of Mockito to understand why this happens. Best guess based on investigation of similar issue with PowerMock: Mockito's agent bypasses other agents by reading class files from disk.\n",
+    "created_at": "2016-11-15T13:20:41Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/757.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 757,\n3\t  \"title\": \"\\\"mock-maker-inline\\\" prevents collection of code coverage for spys\",\n4\t  \"body\": \"Hi,\\n\\nBeing one of [JaCoCo (Java Code Coverage Library)](http://www.jacoco.org/jacoco/index.html) developers, I was curious about interoperability of Mockito 2.2.x and JaCoCo on-t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock-maker-inline|class InlineByteBuddyMockMaker|class InlineDelegateByteBuddyMockMaker",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)jacoco|coverage|inline|instrument|mock-maker",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "215:392\tNPE when Test extends from android.test.ActivityInstrumentationTestCase2\n247:466\tRetrieving Arguments for ArgumentMatchers from other mocks not working inline\n378:729\tCode coverage has dramatically decreased after upgrade 2.2.3 -> 2.2.4\n382:733\tAttempt to mock a Kotlin-sealed class contained [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*InlineByteBuddyMockMaker*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock-maker-inline",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*MockMaker*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockMaker",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 757: \"mock-maker-inline\" prevents collection of code coverage for spys. Source tree mockito/ appears empty in this environment (Glob and Grep find no files), so no Mockito source could be opened."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 757, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [969, 1148, 1717], \"evidence\": [], \"reply\": \"Thanks for the detailed report, the screenshots and the JaCoCo context. The reproduction is only linked as an external zip, so it can't be run from the issue text alone. Could you paste a minimal test directly into the issue? Please include the spy setup, how mock-maker-inline is enabled (the mockito-extensions file or the mockito-inline dependency), and the JaCoCo version and command you ran. It would also help to state what you expected the coverage report to show and what it showed instead. Thanks.\"}",
+  "final_is_json": true
+}

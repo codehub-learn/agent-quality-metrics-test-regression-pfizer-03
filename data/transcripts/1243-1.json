@@ -1,0 +1,129 @@
+{
+  "run": "1243-1",
+  "number": 1243,
+  "issue": {
+    "number": 1243,
+    "title": "Provide Java 10 compatibility",
+    "body": "I ran the JUnit 5 build on jdk-10-ea and encountered a Mockito-related issue.\n\n```\n  JUnit Jupiter:TestFactoryTestDescriptorTests:streamsFromTestFactoriesShouldBeClosed()\n    MethodSource [className = 'org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptorTests', methodName = 'streamsFromTestFactoriesShouldBeClosed', methodParameterTypes = '']\n    => org.mockito.exceptions.base.MockitoException: \n\nMockito cannot mock this class: interface org.junit.jupiter.api.extension.ExtensionContext.\n\nMockito can only mock non-private & non-final classes.\nIf you're not sure why you're getting this error, please report to the mailing list.\n\nJava               : 10\nJVM vendor name    : Oracle Corporation\nJVM vendor version : 10-ea+29\nJVM name           : Java HotSpot(TM) 64-Bit Server VM\nJVM version        : 10-ea+29\nJVM info           : mixed mode\nOS name            : Linux\nOS version         : 4.11.6-041106-generic\n\nUnderlying exception : java.lang.UnsupportedOperationException: Cannot define class using reflection\n```\n\nSee full log at: https://travis-ci.org/junit-team/junit5/builds/296747184\nSee JUnit 5 issue that tracks JDK-9+ related issues at: https://github.com/junit-team/junit5/issues/1063\n\nI guess, there's command line switch that transforms the exception into a warning.\n\n\n",
+    "created_at": "2017-11-03T12:32:39Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1243.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1243,\n3\t  \"title\": \"Provide Java 10 compatibility\",\n4\t  \"body\": \"I ran the JUnit 5 build on jdk-10-ea and encountered a Mockito-related issue.\\n\\n```\\n  JUnit Jupiter:TestFactoryTestDescriptorTests:streamsFromTestFactoriesShouldBeClosed()\\n    MethodSource [className = 'org.junit.j [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "cannot mock this class|can only mock non-private",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)java ?10|jdk ?10|jdk-?9|java 9|Java 9|reflection|Cannot define|cannot mock",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "178:335\t2.0.31-beta -> 2.0.32-beta Cannot mock RecyclerView.Adapter\n183:341\tv.2.0.37-beta - cannot mock interface although it is visible\n194:355\tRegression with JDK-9-ea+104 and Mockito 2.0.42-beta\n196:357\tClassCastExceptions with JDK9 javac\n198:359\tv2.0.42-beta - Cannot mock interface which extends [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)cannot mock this class|can only mock non-private|ClassInjector|Cannot define class",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*MockitoException*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ClassInjector*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoException",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 1243: \"Provide Java 10 compatibility\". Reporter ran the JUnit 5 build on jdk-10-ea and got \"Mockito cannot mock this class: interface org.junit.jupiter.api.extension.ExtensionContext\", with underlying exception java.lang.UnsupportedOperationException: Cannot define class using reflection. Mockito source at mockito/ was empty or unreadable when I searched it (Glob and Grep returned no files), so no source file could be opened."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": [],
+        "level": "low"
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1243, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [520, 1116, 1300], \"evidence\": [], \"reply\": \"Thanks for the report. As written, we cannot reproduce this from the issue. Could you add the following?\\n- The Mockito version you used, and the JUnit version if it matters.\\n- A minimal test that mocks ExtensionContext and fails on JDK 10.\\n- Whether mockito-core or mockito-inline is on the classpath.\\n- The full stack trace from the test run, including the underlying cause.\\nThe error text you pasted is clear. The version and a small snippet are what is missing.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,41 @@
+{
+  "run": "478-1",
+  "number": 478,
+  "issue": {
+    "number": 478,
+    "title": "Improve release generator",
+    "body": "Currently releases are generated automatically and documentation pushed to the website. However, when we are publishing a major release, this should be changed.\n\nProbably the best solution is to disable the automatic generation for now and invoke this manually. This does require some changes to the current Gradle release process.\n\nAlso, in #79 the changelog was improved. We should take a look at improving this as well.\n\nTLDR: Take a good look at the Gradle release process and purge/improve tasks.\n",
+    "created_at": "2016-07-03T20:28:25Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/478.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 478,\n3\t  \"title\": \"Improve release generator\",\n4\t  \"body\": \"Currently releases are generated automatically and documentation pushed to the website. However, when we are publishing a major release, this should be changed.\\n\\nProbably the best solution is to disable the automatic gen [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)release|changelog|gradle",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "9:73\tNew release\n19:89\tadd latest release into maven central\n30:105\tContinuous deployment should not release new version if binaries are equal\n33:109\tImprove automated release notes look\n40:119\ttidy-up and rework release notes automation\n43:123\tRelease Mockito 2.0\n48:132\tMaven Release for 1.10.14\n62 [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 478, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [586, 710, 611], \"evidence\": [], \"reply\": \"Thanks for raising this. You're asking to improve the release generator and the Gradle release tasks, so that major releases can be published manually instead of automatically, and so the changelog generation gets better too. This is a build and release process change, not a Mockito API issue, so it's been added to the backlog. Related tracking issues: #586 (manual release of versions), #710 (simplify release notes generation) and #611 (automated release notes).\"}",
+  "final_is_json": true
+}

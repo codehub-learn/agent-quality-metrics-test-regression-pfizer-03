@@ -1,0 +1,116 @@
+{
+  "run": "945-1",
+  "number": 945,
+  "issue": {
+    "number": 945,
+    "title": "getArgumentAt is removed in 2.7.6",
+    "body": "I could not find this method in 2.7.6 version of InvocationOnMock and there is also no information in the release notes in the [incompatible-changes](https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2#incompatible-changes-with-110). Are you going to add it again or what was the reason to remove?\n\n\n",
+    "created_at": "2017-02-14T12:44:17Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/945.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 945,\n3\t  \"title\": \"getArgumentAt is removed in 2.7.6\",\n4\t  \"body\": \"I could not find this method in 2.7.6 version of InvocationOnMock and there is also no information in the release notes in the [incompatible-changes](https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito- [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getArgumentAt",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getArgument|getArguments",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "482:945\tgetArgumentAt is removed in 2.7.6\n846:1609\tAdd back InvocationOnMock.getArgument<T>(int, Class<T>)\n967:1837\tgetArgumentAt is removed in 3.2.0\n1252:2446\t`invocation.callRealMethod()` should use the array returned from `invocation.getArguments()`\n1376:2728\tTypeSafeMatching.getArgumentType caus [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getArgument\\b|getArgument\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "glob": "*InvocationOnMock*.java"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InvocationOnMock.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getArgumentAt|interface InvocationOnMock",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/invocation/InvocationOnMock.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.invocation;\n6\t\n7\timport java.io.Serializable;\n8\timport java.lang.reflect.Method;\n9\t\n10\timport org.mockito.NotExtensible;\n11\t\n12\t/**\n13\t * An invocatio [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 945, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1837, 1609], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/invocation/InvocationOnMock.java\"], \"reply\": \"Thanks for the report. You are asking for getArgumentAt to be restored on InvocationOnMock, since it is missing in 2.7.6 and the incompatible-changes notes do not mention its removal. The current API offers getArgument(int) and getArgument(int, Class) as the replacements. We have noted your request for the backlog.\"}",
+  "final_is_json": true
+}

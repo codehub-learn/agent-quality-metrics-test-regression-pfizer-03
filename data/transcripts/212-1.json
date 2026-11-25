@@ -1,0 +1,108 @@
+{
+  "run": "212-1",
+  "number": 212,
+  "issue": {
+    "number": 212,
+    "title": "Add BDD version of verifyZeroInteractions()",
+    "body": "Right now my tests look like:\n\n``` java\nthen(file).should().moveTo(directory);\nthen(log).should().warn(\"Moved file\"));\nverifyZeroInteractions(otherFile);\n```\n\nWould be great to have BDD replacement for `verifyZeroInteractions()`. Then the test would be even nicer:\n\n``` java\nthen(file).should().moveTo(directory);\nthen(log).should().warn(\"Moved file\"));\nthen(otherFile).shouldHaveZeroInteractions();\n```\n",
+    "created_at": "2015-05-22T05:48:18Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/212.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 212,\n3\t  \"title\": \"Add BDD version of verifyZeroInteractions()\",\n4\t  \"body\": \"Right now my tests look like:\\n\\n``` java\\nthen(file).should().moveTo(directory);\\nthen(log).should().warn(\\\"Moved file\\\"));\\nverifyZeroInteractions(otherFile);\\n```\\n\\nWould be great to have BDD replacem [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "shouldHaveZeroInteractions|verifyZeroInteractions|shouldHaveNoMoreInteractions",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)zero.?interaction|BDD",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "87:189\tCompatibility of BDDMockito.then() with AssertJ and Catch-Exception\n98:203\tIntroduce BDD InOrder verification\n104:212\tAdd BDD version of verifyZeroInteractions()\n157:311\tAdd BDD version of verifyNoMoreInteractions()\n501:977\tMisleading documentation of verifyZeroInteractions\n506:989\tMisleading [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/BDDMockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "verifyNoMoreInteractions|verifyZeroInteractions|shouldHaveNoInteractions",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Zero",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/BDDMockito.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.stubbing.Answer;\n9\timport org.mockito.stubbing.OngoingStubbing;\n10\timport org.moc [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 212, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [311, 203], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/BDDMockito.java\"], \"reply\": \"Thanks for the request. You asked for a BDD-style way to assert that a mock had zero interactions, written as then(otherFile).shouldHaveZeroInteractions(). Mockito already offers this as then(otherFile).shouldHaveNoInteractions() in BDDMockito, since 3.0.1, so your example can be written today with that method name.\"}",
+  "final_is_json": true
+}

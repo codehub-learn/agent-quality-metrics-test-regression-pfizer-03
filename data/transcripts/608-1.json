@@ -1,0 +1,45 @@
+{
+  "run": "608-1",
+  "number": 608,
+  "issue": {
+    "number": 608,
+    "title": "Extract continuous delivery automation to standalone library",
+    "body": "Originally proposed by @szczepiq in https://github.com/mockito/mockito/commit/db9b49f0ac6edeff12b33b47e290e10c2f99a68b#diff-b92bb31979d48c9946d7a14ada3baa2eR16\n\nWe could expose our buildSrc for other libraries, by turning it into a library itself. This does require:\n- Clear documentation\n- Clear code\n- Expose configuration by XML or JSON files\n- Agnostic of environment (e.g. untangle from Travis)\n",
+    "created_at": "2016-08-29T13:15:23Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/608.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 608,\n3\t  \"title\": \"Extract continuous delivery automation to standalone library\",\n4\t  \"body\": \"Originally proposed by @szczepiq in https://github.com/mockito/mockito/commit/db9b49f0ac6edeff12b33b47e290e10c2f99a68b#diff-b92bb31979d48c9946d7a14ada3baa2eR16\\n\\nWe could expose our buil [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(buildsrc|continuous|delivery|release|travis|gradle plugin|build)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 40
+      },
+      "result": "9:73\tNew release\n15:80\tExpose 'internal' classes so Powermock-osgi can be incorporated without special builds of Mockito\n18:88\tEnsure continuous deployment process does not produce \"-dev\" versions\n19:89\tadd latest release into maven central\n24:95\tMake continuous delivery machinery commits explicit\n2 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)buildSrc",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 608, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [331, 618], \"evidence\": [], \"reply\": \"Thanks for the proposal, and for the link to the original discussion. You're asking for the continuous delivery build automation (the buildSrc code) to be extracted into a standalone, environment-agnostic library with clear docs and configuration through XML or JSON files.\"}",
+  "final_is_json": true
+}

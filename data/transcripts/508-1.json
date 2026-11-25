@@ -1,0 +1,114 @@
+{
+  "run": "508-1",
+  "number": 508,
+  "issue": {
+    "number": 508,
+    "title": "Mockito.when() fails when method could originate from superclass or interface ",
+    "body": "I was testing/rebuilding a project with the latest mockito 2.0-beta when I noticed a couple of tests had started failing. Looked into why and was able to reduce the issue to [a reproducible test case](https://github.com/hansjoachim/mockito/blob/confusedSignature/src/test/java/org/mockito/ConfusedSignatureTest.java). \n\nIt looks like the problem is somehow caused by the method signature for `getFoo()`. The subclass gets this method from two places, the superclass with generic return type and from the interface with a concrete one, and this seems to be confusing Mockito. \n\nThe test works with 1.10.19, but fails with 2.0.90-beta (/latest HEAD).\n\nPS. Feel free to replace the title with something more descriptive.\n",
+    "created_at": "2016-07-26T18:14:39Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/508.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 508,\n3\t  \"title\": \"Mockito.when() fails when method could originate from superclass or interface \",\n4\t  \"body\": \"I was testing/rebuilding a project with the latest mockito 2.0-beta when I noticed a couple of tests had started failing. Looked into why and was able to reduce the issu [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "generic|superclass|bridge|interface",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n46:128\tDeep stubbing with generic responses in the call chain is not working\n58:146\tSpy on java 8 default methods with interface hierarchy\n61:150\tmockito 1.9.5 or 1.10.17  can not passed junit tes [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Mockito,MockitoCore,InvocationMatcher,ReturnsEmptyValues}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ReturnsEmptyValues|getGenericReturnType|class GenericMetadataSupport",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Bash",
+      "input": {
+        "command": "ls \"mockito\" | head -50"
+      },
+      "result": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getGenericReturnType",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 508, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [278, 874], \"evidence\": [], \"reply\": \"Thanks for the report. You say the test passes on 1.10.19 and fails on 2.0.90-beta, which gives us the version range and the expected versus actual behaviour. The reproducer is only linked to an external branch, though, so could you paste the minimal test and the exception or failure message inline? A stack trace would also help us see which code path fails. We have not confirmed the failure yet, so we will check it once we have those.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,146 @@
+{
+  "run": "952-1",
+  "number": 952,
+  "issue": {
+    "number": 952,
+    "title": "Javadoc, Answer1 code example does not compile.",
+    "body": "I believe that all interfaces: Answer1, Answer2 and so on have bad code example in javadoc.\n\nFor example Answer1 has this: \n\n`   when(mock.someMethod(anyString())).thenAnswer(new Answer<Integer, String>() {\n       Integer answer(String arg) {\n           return arg.length();\n       }\n   });`\n\nwhich does not compile. \nFirst: Answer1 should be there instead of Answer \nSecond: thenAnswer method does not accept Answer1 \n\nBTW. I personally consider naming classes or interfaces with digits as last character as poorly named construct. \nI know that there is a \"fashion\" right now to give names like in some functional languages, but still bothers me as something that is not aesthetic at all. Just a thought. \n",
+    "created_at": "2017-02-16T19:44:28Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/952.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 952,\n3\t  \"title\": \"Javadoc, Answer1 code example does not compile.\",\n4\t  \"body\": \"I believe that all interfaces: Answer1, Answer2 and so on have bad code example in javadoc.\\n\\nFor example Answer1 has this: \\n\\n`   when(mock.someMethod(anyString())).thenAnswer(new Answer<Integer, S [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "interface Answer1|thenAnswer\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answer1|thenAnswer|digit|Answer2|bad|compile|javadoc|sample|example|Answer",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n36:112\tAllow instances of other classes in AdditionalAnswers.delegatesTo\n112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n128:256\ttask mockitoJavadoc fails when compiling in windows\n167:3 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Answer1.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Answer.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenAnswer",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answer1",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 952: Javadoc example for Answer1 (and Answer2 etc.) does not compile. The example uses `new Answer<Integer, String>()` with a method named `answer` that is not an override, and says thenAnswer does not accept Answer1. Source checkout under mockito/ is empty, so the Answer1 Javadoc could not be opened."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answer",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 952, \"label\": \"docs\", \"route\": \"answer\", \"related\": [2186, 2273, 1088], \"evidence\": [], \"reply\": \"Thanks for the report. The Javadoc example you quoted is wrong. The anonymous class declares a method named answer that does not override the interface method, and the Answer type arguments in the example do not match what thenAnswer accepts, so the snippet cannot compile as written. I could not open the Mockito sources in this checkout (the mockito/ folder is empty), so I have not confirmed the exact current wording. The fix is a Javadoc correction that shows a valid Answer implementation. Your point about digit suffixes in interface names is noted, but that is a naming decision for the maintainers and is outside this docs fix.\"}",
+  "final_is_json": true
+}

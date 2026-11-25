@@ -1,0 +1,134 @@
+{
+  "run": "820-1",
+  "number": 820,
+  "issue": {
+    "number": 820,
+    "title": "[VarArgs] unexpected behaviour of returnsArgAt(int)",
+    "body": "I stumble about a test that failed after refactoring an array parameter to an varargs.\n\nThe following test succeed:\n```java\ninterface Foo{\n        int[] getOdd(int[] input);\n}\n\n@Test\npublic void test() throws Exception {\n    when(foo.getOdd(any())).then(returnsArgAt(0));\n        \n    int[] odd = mock.getOdd(new int[]{1,3,5});\n    assertThat(odd).contains(1,3,5);\n}\n```\nNow lets change the parameter _input_ to an varargs.\n```java\ninterface Foo{\n        int[] getOdd(int... input);\n}\n```\nThe test fails now with:\n\n```\norg.mockito.exceptions.misusing.WrongTypeOfReturnValue: \nThe argument of type 'int' cannot be returned because the following \nmethod should return the type 'int[]'\n -> foo.getOdd()\n```\n\nThis is not expected cause the change is source and binary(?) compatible, an varargs-parameter is still an array. ReturnsArgumentAt interprets the vararg array items as real parameters. In other words it tries to return an element type where the array type is required.\n\nCan the behaviour of interpreting vararg elements like parameters be changed so an vararg is treated as an array? E.g. in Mockito 3? There are several other cases were the current vararg handling leads to unexpected behaviour.",
+    "created_at": "2016-12-14T14:40:38Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/820.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 820,\n3\t  \"title\": \"[VarArgs] unexpected behaviour of returnsArgAt(int)\",\n4\t  \"body\": \"I stumble about a test that failed after refactoring an array parameter to an varargs.\\n\\nThe following test succeed:\\n```java\\ninterface Foo{\\n        int[] getOdd(int[] input);\\n}\\n\\n@Test\\npubl [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "returnsArgAt|class ReturnsArgumentAt|ReturnsArgumentAt\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)vararg|varargs|returnsArg|returnArg|ReturnsArgument|WrongTypeOfReturn",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "39:118\tdoReturn with varargs\n86:188\tArgumentCaptor no longer working for varargs\n195:356\tAdd MockitoHamcrest.varArgThat\n206:372\tConsider using @SafeVarargs for OngoingStubbing.thenThrow(Class<? extends Throwable>)\n218:399\tWrongTypeOfReturnValue when abstract class have two abstract method\n224:407\tVa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ReturnsArg*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "returnsArgAt|ReturnsArgumentAt|returnsArg",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnsArgumentAt",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/ReturnsArgumentAt.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.answers;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.invalidArgumentPositionRangeAtInvocationTime;\n8\timport static o [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/AdditionalAnswers.java",
+        "limit": 80
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.stubbing.answers.AnswerFunctionalInterfaces.toAnswer;\n8\t\n9\timport java.util.Collection;\n10\t\n11\timport org.moc [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 820, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [3893, 1593], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/ReturnsArgumentAt.java\", \"mockito/mockito-core/src/main/java/org/mockito/AdditionalAnswers.java\"], \"reply\": \"Thanks for the report. The snippet, the expected result and the error message are all clear. The one thing missing is the Mockito version you used. Could you add it, and say whether the failure still happens on the latest release? The vararg branch for AdditionalAnswers.returnsArgAt is implemented in ReturnsArgumentAt, so the version will help us check the right code path.\"}",
+  "final_is_json": true
+}

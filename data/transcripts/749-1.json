@@ -1,0 +1,131 @@
+{
+  "run": "749-1",
+  "number": 749,
+  "issue": {
+    "number": 749,
+    "title": "mockito Object return zero",
+    "body": "Hey,\n\nI test project with mockit-all.1.9.5.jar.\nI expect result is 4, but the result is 0. When  debugging that I found   the mock object return is 0, so why ?\n\n```java\npublic class CalculatorServiceSpringImpl implements CalculatorService {\n\tprivate AddService addService = new AddServiceSpringImpl();\n\tprivate SubtractService subtractService = new SubtractServiceSpringImpl();\n\t\n\t@Override\n\tpublic int result(int initNumber) {\n\t\tint result = 1;\n           //+1\n\t\tresult = addService.addOne(initNumber);\n          //-1\n\t\tresult = subtractService.subtractOne(result);\n\t\treturn result;\n\t}\n\n}\n\n@Test\npublic void testResult() {\n\tCalculatorService calculatorService = new CalculatorServiceSpringImpl();\n\tAddService addServiceMock = mock(AddServiceSpringImpl.class);\n\t SubtractService subtractServiceMock = mock(SubtractServiceSpringImpl.class);\n\t when(addServiceMock.addOne(anyInt())).thenReturn(5);\n\t when(subtractServiceMock.subtractOne(3)).thenReturn(10);\n\tint result= calculatorService.result(1);\n\t assertEquals(4 ,result);\n}\n```\n\n\n",
+    "created_at": "2016-11-09T09:06:38Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/749.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 749,\n3\t  \"title\": \"mockito Object return zero\",\n4\t  \"body\": \"Hey,\\n\\nI test project with mockit-all.1.9.5.jar.\\nI expect result is 4, but the result is 0. When  debugging that I found   the mock object return is 0, so why ?\\n\\n```java\\npublic class CalculatorServiceSpringImpl imple [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock|inject|@InjectMocks",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 40
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n11:75\tNew \"serializable\" parameter of @Mock annotation\n13:77 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito-core/src/main/java/org/mockito/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T mock\\(Class<T> classToMock\\)|class InjectMocks|public @interface InjectMocks",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InjectMocks.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class InjectMocks|public static <T> T mock\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 40
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n9\timport org.mockito.exceptions.mis [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InjectMocks|public static <T> T mock\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "85: *      <a href=\"#21\">21. New annotations: <code>&#064;Captor</code>, <code>&#064;Spy</code>, <code>&#064;InjectMocks</code> (Since 1.8.3) </a><br/>\n87: *      <a href=\"#23\">23. Automatic instantiation of <code>&#064;Spies</code>, <code>&#064;InjectMocks</code> and constructor injection goodness  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class InjectMocks|@interface InjectMocks",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "175:public @interface InjectMocks {}",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 749, \"label\": \"question\", \"route\": \"answer\", \"related\": [], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java\"], \"reply\": \"The stubs are never used because CalculatorServiceSpringImpl creates its own services with new AddServiceSpringImpl() and new SubtractServiceSpringImpl(). Stubbing the mocks in the test does not touch those fields, so the real code runs and returns its own values. Give the class the mocks instead, for example through its constructor or a setter, then call result(). Mockito.mock(Class) creates the mocks. If you prefer annotations, @InjectMocks (org.mockito.InjectMocks) injects mock fields into the class under test, but only into fields the class does not already set. Mocking the interface types is cleaner than mocking the Impl classes.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,174 @@
+{
+  "run": "714-1",
+  "number": 714,
+  "issue": {
+    "number": 714,
+    "title": "InjectMocks annotation injects fields with non default constructor",
+    "body": "Next code started working differently after update to Mockito 2.x.\n\n```\n@RunWith(MockitoJUnitRunner.Silent.class)\npublic class ChangePinActivityPresenterShould\n{\n  @InjectMocks private ChangePinActivityPresenter presenter;\n\n  @Test\n  public void delay_view_finish_until_subscribed()\n    throws Exception\n  {\n    presenter.finishFlow();\n\n    presenter.subscribe(viewMock);\n\n    verify(viewMock).finish();\n  }\n}\n\nclass ChangePinActivityPresenter\n  implements ChangePinActivityContract.Presenter\n{\n  private final Analytics analytics;\n  private final PendingActionsProcessor<ChangePinActivityContract.View> pendingActionsProcessor;\n\n  @Nullable private ChangePinActivityContract.View view;\n  @Nullable private Action1<ChangePinActivityContract.View> finishAction;\n\n  ChangePinActivityPresenter(\n    @NonNull Analytics analytics,\n    @NonNull PendingActionsProcessor<ChangePinActivityContract.View> pendingActionsProcessor\n  )\n  {\n    this.analytics = analytics;\n    this.pendingActionsProcessor = pendingActionsProcessor;\n  }\n\n  @Override\n  public void finishFlow()\n  {\n    if (view != null)\n    {\n      view.finish();\n    }\n    else\n    {\n      finishAction = ChangePinActivityContract.View::finish;\n    }\n  }\n\n  @Override\n  public void subscribe(@NonNull ChangePinActivityContract.View view)\n  {\n    this.view = view;\n\n    if (finishAction != null)\n    {\n      finishAction.call(view);\n    }\n    else\n    {\n      pendingActionsProcessor.applyAllPendingChanges(view);\n    }\n  }\n}\n```\n\nWhat I observing that **Mockito** uses non-default constructor (or maybe field injection) and field injection (or just it). The test above expects that after test setup `view` field is null. I read [javadoc](http://site.mockito.org/mockito/docs/current/org/mockito/InjectMocks.html) but looks like I have a combination of final/non-final fields and this case is not explained clearly.\n\nI use Java8 on Mack Sierra and my Mockito version is 2.2.0.\n",
+    "created_at": "2016-10-25T14:17:58Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/714.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 714,\n3\t  \"title\": \"InjectMocks annotation injects fields with non default constructor\",\n4\t  \"body\": \"Next code started working differently after update to Mockito 2.x.\\n\\n```\\n@RunWith(MockitoJUnitRunner.Silent.class)\\npublic class ChangePinActivityPresenterShould\\n{\\n  @InjectMock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)inject",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n73:169\t@InjectMocks and @Spy on same field should cause MockitoException\n76:174\tAnnotation to instantiate and inject non-mock into @InjectMocks\n92:195\tIf you have both through constructor and through annotation inj [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{InjectMocks,ConstructorInjection,ConstructorArgumentResolver,FieldInitializer}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ConstructorInjection|class ConstructorArgumentResolver|biggestConstructor|public @interface InjectMocks",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{InjectMocks,ConstructorInjection,InjectingAnnotationEngine}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Bash",
+      "input": {
+        "command": "ls \"mockito\" | head -50"
+      },
+      "result": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InjectMocks",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true,
+        "pattern2": "x",
+        "head_limit": 0
+      },
+      "result": "<tool_use_error>InputValidationError: Grep failed due to the following issue:\nAn unexpected parameter `pattern2` was provided</tool_use_error>",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InjectMocks",
+        "path": "issues",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static java.lang.annotation.ElementType.FIELD;\n8\timport static java.lang.annotation.RetentionPolicy.RUNTIME;\n9\t\n10\timport java.lang.annot [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/ConstructorInjection.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration.injection;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.fieldInitialisationThrewException;\n8\t\n9\timport java.lang [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 714: InjectMocks on a presenter with a package-private non-default constructor (two params: Analytics, PendingActionsProcessor) and a non-final nullable field `view`. Reporter expects `view` to be null after setup and finds that the injection differs from what they expected under Mockito 2.2.0. Evidence: mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java (Javadoc: constructor injection runs first, and if it succeeds Mockito won't try property or field injection; static and final fields are ignored); mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/ConstructorInjection.java (biggest constructor is used, unresolved args get null)."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 714, \"label\": \"question\", \"route\": \"answer\", \"related\": [195, 352, 1389], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/injection/ConstructorInjection.java\"], \"reply\": \"Hi, this is documented behaviour of @InjectMocks. Mockito tries constructor injection first. It picks the constructor with the most parameters and resolves each argument from the @Mock and @Spy fields in your test. If that constructor call succeeds, Mockito does not run property or field injection afterwards, so your non-final field `view` is left untouched and stays null. Static and final fields are always skipped. If an argument has no matching mock, Mockito passes null. If you need a specific state before the test runs, create the presenter yourself in a @Before method, or keep calling subscribe(viewMock) as you do now. The details are in the Javadoc of org.mockito.InjectMocks.\"}",
+  "final_is_json": true
+}

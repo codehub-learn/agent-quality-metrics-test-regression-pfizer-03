@@ -1,0 +1,83 @@
+{
+  "run": "800-1",
+  "number": 800,
+  "issue": {
+    "number": 800,
+    "title": "How to mock protected method",
+    "body": "Hey,\n\nI have a question for JUnit test. I need to test the `InvoiceAction.class`. But `InvoiceAction` extends `Strus2Action` and the `getSession()` is a protected method.\nI did try very much, but have to modify the source code. As the unit tester, not power to modify the source code,  so come here to ask for help.\n\n\n```java\npublic class InvoiceAction extends Struts2Action {\n\tpublic String demoMethod() {\n\t\tString userCode = (String) getSession().getAttribute(\"UserCode\");\n\t\treturn null;\n\t}\n} \n```\n\n```java\npublic class Struts2Action extends ActionSupport {\n\tprotected HttpServletRequest getRequest() {\n\t\treturn ServletActionContext.getRequest();\n\t}\n\n\tprotected ServletContext getServletContext() {\n\t\treturn ServletActionContext.getServletContext();\n\t}\n\n\tprotected HttpSession getSession() {\n\t\treturn getRequest().getSession();\n\t}\n}\n```\n\n",
+    "created_at": "2016-12-02T09:54:00Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/800.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 800,\n3\t  \"title\": \"How to mock protected method\",\n4\t  \"body\": \"Hey,\\n\\nI have a question for JUnit test. I need to test the `InvoiceAction.class`. But `InvoiceAction` extends `Strus2Action` and the `getSession()` is a protected method.\\nI did try very much, but have to modify the s [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T spy\\(|public static Stubber doReturn\\(|public static <T> OngoingStubbing<T> when\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "glob": "Mockito.java",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)protected|spy|partial|getSession|doReturn",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "22:92\tAllow convenient spying on abstract classes\n32:108\tClarify Spy vs Mock CALLS_REAL_METHODS\n39:118\tdoReturn with varargs\n42:122\tProblem spying on abstract classes\n47:130\tSpying and Verification Doesn't Work On Instances Created With Javassist\n49:133\tMockito can't spy on object loaded in parent c [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/org/mockito/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* (spy|doReturn|when)\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "2410:    public static <T> T spy(T object) {\n2447:    public static <T> T spy(Class<T> classToSpy) {\n2460:    public static <T> T spy(T... reified) {\n3145:    public static <T> OngoingStubbing<T> when(@Nullable T methodCall) {\n3547:    public static Stubber doReturn(Object toBeReturned) {\n3601:    p [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 2380,
+        "limit": 35
+      },
+      "result": "2380\t     *   //Impossible: real method is called so spy.get(0) throws IndexOutOfBoundsException (the list is yet empty)\n2381\t     *   when(spy.get(0)).thenReturn(\"foo\");\n2382\t     *\n2383\t     *   //You have to use doReturn() for stubbing\n2384\t     *   doReturn(\"foo\").when(spy).get(0);\n2385\t     * < [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 800, \"label\": \"question\", \"route\": \"answer-draft\", \"related\": [271, 1262], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Hi, Mockito can stub a protected method, but the test code has to be able to see it. Protected members are visible inside the same package, so put your test class in the same package as Struts2Action (for example, the same package path under src/test/java). Then create a partial mock with Mockito.spy(new InvoiceAction()) and stub the method with Mockito.doReturn(mockSession).when(spy).getSession(). Use doReturn rather than when(...), because when(spy.getSession()) would call the real method first. The spy section of the Javadoc for Mockito.spy in mockito-core/src/main/java/org/mockito/Mockito.java explains this. Hope that helps.\"}",
+  "final_is_json": true
+}

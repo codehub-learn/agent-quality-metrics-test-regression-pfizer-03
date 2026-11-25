@@ -1,0 +1,125 @@
+{
+  "run": "725-1",
+  "number": 725,
+  "issue": {
+    "number": 725,
+    "title": "Mockito should report mismatched argument warnings when using mocks in unconfigured ways",
+    "body": "The [MockitoHint](http://site.mockito.org/mockito/docs/current/org/mockito/quality/MockitoHint.html) documentation seems to indicate that this will give you warnings about mismatched arguments, when using the MockitoJUnitRunner.  However, from my experience this doesn't seem to work with Mockito 2.1.\n\nHere's the source I'm trying:\n```java\nFoo foo = mock(Foo.class);\nwhen(foo.bar(\"baz\")).thenReturn(\"bar\");\n\nfoo.bar(\"baz\");\nfoo.bar(\"test\"); // expected to get a warning here\n```\n\n@szczepiq indicated that he wanted to fix this issue in #384 and requested I open a new issue to track it.",
+    "created_at": "2016-11-01T05:00:55Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/725.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 725,\n3\t  \"title\": \"Mockito should report mismatched argument warnings when using mocks in unconfigured ways\",\n4\t  \"body\": \"The [MockitoHint](http://site.mockito.org/mockito/docs/current/org/mockito/quality/MockitoHint.html) documentation seems to indicate that this will give you wa [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoHint|PotentialStubbingProblem|mismatch",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)hint|mismatch|arg|stubb|warning",
+        "path": "issue-index.tsv",
+        "output_mode": "content"
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n10:74\tArgumentCaptor supports var args\n38:117\tNullPointerException when using argThat() for long parameter in verify\n39:118\tdoReturn with varargs\n46:128\tDeep stubbing with ge [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{PotentialStubbingProblem,MockitoHint,MismatchReportingTestListener,UnnecessaryStubbingsReporter}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockitoHint|class MismatchReportingTestListener|class PotentialStubbingProblem|Hint",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoHint",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "PotentialStubbingProblem",
+        "path": "mockito",
+        "output_mode": "count"
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 725, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [384, 1522, 1527], \"evidence\": [], \"reply\": \"Thanks for the report. The snippet is complete and shows both the expected behaviour (a warning when foo.bar(\\\"test\\\") is called after stubbing foo.bar(\\\"baz\\\")) and the actual behaviour (no warning), so the report contains what is needed to reproduce it on Mockito 2.1. I could not find the source for this warning in the checkout I have, so I can't yet name the class where the behaviour lives. Please also say whether it still happens on the current release, since the strict stubbing behaviour has changed since 2.1.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,71 @@
+{
+  "run": "666-1",
+  "number": 666,
+  "issue": {
+    "number": 666,
+    "title": "publish.gradle is unaware of commit message version",
+    "body": "I just tried to release a custom version with the command line, but this failed because the publish task does not honor the commit message version.\n\nhttps://github.com/mockito/mockito/blob/master/gradle/publish.gradle#L9 should be changed roughly to https://github.com/mockito/mockito/blob/master/gradle/release.gradle#L114-L115\n",
+    "created_at": "2016-10-03T12:21:32Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/666.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 666,\n3\t  \"title\": \"publish.gradle is unaware of commit message version\",\n4\t  \"body\": \"I just tried to release a custom version with the command line, but this failed because the publish task does not honor the commit message version.\\n\\nhttps://github.com/mockito/mockito/blob/maste [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "gradle/*.gradle",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)publish|release|gradle|version",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "9:73\tNew release\n16:84\tConsume new cglib and asm versions\n18:88\tEnsure continuous deployment process does not produce \"-dev\" versions\n19:89\tadd latest release into maven central\n29:101\tDocumentation mentions non-existing version 1.9.8 in few places\n30:105\tContinuous deployment should not release new [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*publish*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "release-version|commit message|\\[release",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 666: \"publish.gradle is unaware of commit message version\". Reporter says the publish task ignores the version given in the commit message when releasing a custom version. Source snapshot has no gradle/publish.gradle or gradle/release.gradle (globs for gradle/*.gradle and *publish* returned nothing). Related: 668, 2110, 586."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 666, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [2110, 668], \"evidence\": [], \"reply\": \"Thanks for the report. The publish script you linked (gradle/publish.gradle) is not in the source snapshot we are working from, so we could not find the behaviour yet. To reproduce this, please share: 1) the Mockito version or branch you were releasing from; 2) the exact commit message you used and the command you ran; 3) the output or error you got, and the version you expected the publish task to use. Thanks.\"}",
+  "final_is_json": true
+}

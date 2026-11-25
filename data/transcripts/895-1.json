@@ -1,0 +1,70 @@
+{
+  "run": "895-1",
+  "number": 895,
+  "issue": {
+    "number": 895,
+    "title": "Documentation missing clarification for consecutive stubbing",
+    "body": "The [documentation](https://static.javadoc.io/org.mockito/mockito-core/2.6.3/org/mockito/Mockito.html#10) for consecutive stubbing is missing a clarification.\n\nWhen multiple when/thenReturn statements are being used instead of chaining .thenReturn() statements, each stubbing overrides the existing one.\n\n\n",
+    "created_at": "2017-01-20T15:42:19Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/895.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 895,\n3\t  \"title\": \"Documentation missing clarification for consecutive stubbing\",\n4\t  \"body\": \"The [documentation](https://static.javadoc.io/org.mockito/mockito-core/2.6.3/org/mockito/Mockito.html#10) for consecutive stubbing is missing a clarification.\\n\\nWhen multiple when/thenRe [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "consecutive|thenReturn",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "-n": true,
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "74: *      <a href=\"#10\">10. Stubbing consecutive calls (iterator-style stubbing) </a><br/>\n350: * when(mockedList.get(0)).thenReturn(\"first\");\n396: * when(mockedList.get(anyInt())).thenReturn(\"element\");\n399: * when(mockedList.contains(argThat(isValid()))).thenReturn(true);\n628: * <h3 id=\"10\">10. < [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "consecutive|stub|thenReturn|override",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n17:86\tNew lightweight, stub-only mocks for scenarios where high performance is needed\n28:99\tRETURNS_DEEP_STUBS automatically tries to create serializable mocks\n46:128\tDeep st [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 628,
+        "limit": 56
+      },
+      "result": "628\t * <h3 id=\"10\">10. <a class=\"meaningful_link\" href=\"#stubbing_consecutive_calls\" name=\"stubbing_consecutive_calls\">Stubbing consecutive calls</a> (iterator-style stubbing)</h3>\n629\t *\n630\t * Sometimes we need to stub with different return value/exception for the same\n631\t * method call. Typical  [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 895, \"label\": \"docs\", \"route\": \"answer\", \"related\": [1719, 1877, 773], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. The current Javadoc in org.mockito.Mockito already covers this in section 10, 'Stubbing consecutive calls'. It has a warning that when several when(...).thenReturn(...) stubbings use the same arguments, each one overrides the previous, so every call returns the last value. The shorter form, thenReturn(\\\"one\\\", \\\"two\\\", \\\"three\\\"), is the way to return consecutive values. If you still see this section missing in a released version, please tell us which version and page you were reading, and we will look into it.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,98 @@
+{
+  "run": "405-1",
+  "number": 405,
+  "issue": {
+    "number": 405,
+    "title": "JUnit runner and Rule should detect unused mocks",
+    "body": "This is a follow up of\n-  #401 _\"JUnit runner detects unused stubs\"_ \n-  #384 _\"JUnit rule on test failure logs warnings about unsued / misused stubs\"_\n\nIt would be good to have warning log's for unused mock objects. If a developer knows unused mock he/she can remove them, this provides test clarity. \n\nSample test with unused mock of type `Foo`:\n\n```\n43  @Test\n44  public void testFoo(){\n45     Foo foo = mock(Foo.class);\n46     Bar bar = mock(Bar.class);\n47     foo.doSomething();\n48  }\n```\n\nSample Log-Message: Should be IDE friendly so dev's can click on the stack-element to navigate to line of the mock creation:\n\n```\n[WARNING] unused mock of type \"Bar\" was instantiated\n at org.blah.blub.FooTest.test(FooTest.java:46) \n```\n",
+    "created_at": "2016-04-25T12:45:20Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/405.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 405,\n3\t  \"title\": \"JUnit runner and Rule should detect unused mocks\",\n4\t  \"body\": \"This is a follow up of\\n-  #401 _\\\"JUnit runner detects unused stubs\\\"_ \\n-  #384 _\\\"JUnit rule on test failure logs warnings about unsued / misused stubs\\\"_\\n\\nIt would be good to have warning log's [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "unused|UnnecessaryStubbing|MockitoJUnitRunner|MockitoRule",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)unused|junit|rule|runner|stub",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n17:86\tNew lightweight, stub-only mocks for scenarios where high pe [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockitoJUnitRunner.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/UnnecessaryStubbingException*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnitRunner.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.junit;\n6\t\n7\timport java.lang.reflect.InvocationTargetException;\n8\t\n9\timport org.junit.runner.Description;\n10\timport org.junit.runner.Runner;\n11\timport [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "UnnecessaryStubbing",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 405, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [401, 384], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnitRunner.java\"], \"reply\": \"Thanks for the detailed report. You are asking for the JUnit runner and rule to log a warning for mocks that are created but never used in a test, and to point at the line where the mock was created so it is easy to jump to in an IDE. The idea is noted and this is now in the backlog.\"}",
+  "final_is_json": true
+}

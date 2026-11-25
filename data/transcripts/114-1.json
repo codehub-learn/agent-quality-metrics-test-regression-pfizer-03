@@ -1,0 +1,138 @@
+{
+  "run": "114-1",
+  "number": 114,
+  "issue": {
+    "number": 114,
+    "title": "1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound",
+    "body": "Add this to `GenericMetadataSupportTest`:\n\n``` java\n    interface GenericsSelfReference<T extends GenericsSelfReference<T>> {\n        T self();\n    }\n\n    @Test\n    public void typeVariable_of_self_type() {\n        GenericMetadataSupport genericMetadata = inferFrom(GenericsSelfReference.class).resolveGenericReturnType(firstNamedMethod(\"self\", GenericsSelfReference.class));\n\n        assertThat(genericMetadata.rawType()).isEqualTo(GenericsSelfReference.class);\n    }\n```\n\nIt fails on master and 1.10.8 with this:\n\n```\njava.lang.StackOverflowError\n    at sun.reflect.generics.reflectiveObjects.TypeVariableImpl.hashCode(TypeVariableImpl.java:201)\n    at java.util.HashMap.hash(HashMap.java:338)\n    at java.util.HashMap.get(HashMap.java:556)\n    at org.mockito.internal.util.reflection.GenericMetadataSupport.getActualTypeArgumentFor(GenericMetadataSupport.java:193)\n    at org.mockito.internal.util.reflection.GenericMetadataSupport.getActualTypeArgumentFor(GenericMetadataSupport.java:196)\n    at org.mockito.internal.util.reflection.GenericMetadataSupport.getActualTypeArgumentFor(GenericMetadataSupport.java:196)\n```\n\nIt worked on 1.9.5. May be caused by the changes in ab9e9f3 (cc @bric3).\n\n(Also note that while the above interface looks strange, it is commonly used for builder hierarchies, where base class methods want to return this with a more specific type.)\n",
+    "created_at": "2014-10-28T02:56:25Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/114.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 114,\n3\t  \"title\": \"1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\",\n4\t  \"body\": \"Add this to `GenericMetadataSupportTest`:\\n\\n``` java\\n    interface GenericsSelfReference<T extends GenericsSelfReference<T>> {\\n        T self();\\n   [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getActualTypeArgumentFor",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "StackOverflow|self.reference|GenericMetadataSupport",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n120:244\tStackOverflowError in MockitoSerializationIssue.java\n267:530\tProvide Mockito examples on Stackoverflow-Documentation\n427:818\tStackOverflow occurs when mocking a HashMap with mockmaker\n490: [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/GenericMetadataSupport.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "resolveGenericReturnType|rawType\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Generic*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "GenericMetadataSupport",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class GenericMetadataSupport",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "generic|type variable|self",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n46:128\tDeep stubbing with generic responses in the call chain is not working\n61:150\tmockito 1.9.5 or 1.10.17  can not passed junit test when use generic class\n139:278\tIncorrect default return valu [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 114: bug report, StackOverflowError in GenericMetadataSupport for self-referential generic bound. Source folder mockito/ appears empty or not present; no source files could be opened."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 114, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the report. The snippet, the Mockito versions (works on 1.9.5, fails on 1.10.x and master) and the StackOverflowError trace together are enough to reproduce this as written, so we can work from it. I could not open the Mockito source in this checkout, so I have not yet confirmed which class the trace points to. That will be the next step when someone looks at the generic type resolution code. The builder-hierarchy use case you describe is useful context for why the self-bounded case matters.\"}",
+  "final_is_json": true
+}

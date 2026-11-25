@@ -1,0 +1,84 @@
+{
+  "run": "482-1",
+  "number": 482,
+  "issue": {
+    "number": 482,
+    "title": "Restore depecated Answers.get() method",
+    "body": "Commit da5e750957b494e7fa0548bf1286d67b8b0386d5 removed the deprecated `Answers.get()` method, however the method was only deprecated in the 2.0 BETA line and never made it into a GA release. It would be helpful if the method could remain in the deprecated form in 2.0 to give people an opportunity to move away from it.\n\n(originally raise by a Spring Boot user [here](https://github.com/spring-projects/spring-boot/pull/6323))\n",
+    "created_at": "2016-07-06T21:22:33Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/482.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 482,\n3\t  \"title\": \"Restore depecated Answers.get() method\",\n4\t  \"body\": \"Commit da5e750957b494e7fa0548bf1286d67b8b0386d5 removed the deprecated `Answers.get()` method, however the method was only deprecated in the 2.0 BETA line and never made it into a GA release. It would be helpf [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "enum Answers|Answers\\.get|RETURNS_DEFAULTS",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answers|answer",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n36:112\tAllow instances of other classes in AdditionalAnswers.delegatesTo\n224:407\tVararg method call on mock object fails when used org.mockito.AdditionalAnswers#delegatesTo\n252:482\tRestore depecated Answers.get() method\n312:614\tAdditional [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Answers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Answers",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 482, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the report and for the context from the Spring Boot side. You'd like the deprecated form of a removed Answers accessor kept in the 2.0 line so users have time to migrate away from it. We'll consider this request for the backlog.\"}",
+  "final_is_json": true
+}

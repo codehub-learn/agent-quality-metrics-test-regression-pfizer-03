@@ -1,0 +1,97 @@
+{
+  "run": "1262-1",
+  "number": 1262,
+  "issue": {
+    "number": 1262,
+    "title": "Improve documentation about partial mocks and doReturn() style of stubbing",
+    "body": "I think the documentation here is wrong:\nhttps://github.com/mockito/mockito/blob/release/2.x/src/main/java/org/mockito/Mockito.java#L1646 \n\nI believe the doReturn() syntax should be used there instead. At least when I do that it works but when I do the when(myFoo.myMethod()).thenReturn() that line itself runs the real impl of myMethod.\n\n",
+    "created_at": "2017-11-17T23:34:10Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1262.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1262,\n3\t  \"title\": \"Improve documentation about partial mocks and doReturn() style of stubbing\",\n4\t  \"body\": \"I think the documentation here is wrong:\\nhttps://github.com/mockito/mockito/blob/release/2.x/src/main/java/org/mockito/Mockito.java#L1646 \\n\\nI believe the doReturn() synt [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "partial mock|doReturn",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "-n": true,
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "76: *      <a href=\"#12\">12. <code>doReturn()</code>|<code>doThrow()</code>|<code>doAnswer()</code>|<code>doNothing()</code>|<code>doCallRealMethod()</code> family of methods</a><br/>\n80: *      <a href=\"#16\">16. Real partial mocks (Since 1.8.0) </a><br/>\n700: * <h3 id=\"12\">12. <a class=\"meaningful_ [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "1262|partial mock|doReturn",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "39:118\tdoReturn with varargs\n445:874\tOverridden abstract methods using generics are not longer called for partial mock (working with Mockito 1.10.19)\n492:963\tInvalid property reported by mocks and partial mocks\n562:1108\tMockito with Groovy fails to create stubs for partial mock for abstract class de [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T spy\\(T object\\)|public static <T> T spy\\(|OngoingStubbing<T> thenReturn\\(T value\\)|public static <T> OngoingStubbing<T> when\\(",
+        "path": "mockito/mockito-core/src/main/java",
+        "-n": true,
+        "output_mode": "content"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* spy\\(|public static .* when\\(|thenReturn\\(T value\\)",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "-n": true,
+        "output_mode": "content"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "T spy\\(|> when\\(|thenReturn\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "-n": true,
+        "output_mode": "content"
+      },
+      "result": "350: * when(mockedList.get(0)).thenReturn(\"first\");\n396: * when(mockedList.get(anyInt())).thenReturn(\"element\");\n399: * when(mockedList.contains(argThat(isValid()))).thenReturn(true);\n642: *   .thenReturn(\"foo\");\n658: *   .thenReturn(\"one\", \"two\", \"three\");\n661: * <strong>Warning</strong> : if inste [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 2058,
+        "limit": 40
+      },
+      "result": "2058\t     * <p>\n2059\t     * This implementation can be helpful when working with legacy code.\n2060\t     * When this implementation is used, un-stubbed methods will delegate to the real implementation.\n2061\t     * This is a way to create a partial mock object that calls real methods by default.\n2062\t [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1262, \"label\": \"docs\", \"route\": \"answer\", \"related\": [1492, 1396, 1381], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Thanks for the report. The current Javadoc in Mockito.java already covers this. The CALLS_REAL_METHODS Javadoc (Note 1) says that when(mock.getSomething()).thenReturn(fakeValue) calls the real method on a partial mock, and recommends doReturn(fakeValue).when(mock).getSomething() instead. The spy() Javadoc in the same file also recommends doReturn for stubbing spies. The line you linked points to the release/2.x branch, which seems to predate this wording. If you still see the old text in a released version, please tell us which version so we can check it. Your observation that when().thenReturn() runs the real method is correct and expected for partial mocks.\"}",
+  "final_is_json": true
+}

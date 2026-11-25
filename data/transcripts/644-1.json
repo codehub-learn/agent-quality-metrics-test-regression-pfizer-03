@@ -1,0 +1,149 @@
+{
+  "run": "644-1",
+  "number": 644,
+  "issue": {
+    "number": 644,
+    "title": "Mockito machers exception ",
+    "body": "> Hey,\n> \n> I use a Mockito when with matchers\n> `Mockito.when(aRepository.searchForList(\n>     Mockito.any(LocalDateTime.class),\n>     Mockito.anyLong(), \n>     Mockito.anyBoolean()\n> )).thenReturn(mockedSearchForList);`\n> \n> so after i run tests, have this exception\n> `org.mockito.exceptions.misusing.InvalidUseOfMatchersException: Invalid use of argument matchers! 0 matchers expected, 3 recorded:`\n> \n> this exception may occurs if i mix matchers and real values, which is not my case.\n> \n> Mockito version 1.10.19\n",
+    "created_at": "2016-09-21T14:43:44Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/644.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 644,\n3\t  \"title\": \"Mockito machers exception \",\n4\t  \"body\": \"> Hey,\\n> \\n> I use a Mockito when with matchers\\n> `Mockito.when(aRepository.searchForList(\\n>     Mockito.any(LocalDateTime.class),\\n>     Mockito.anyLong(), \\n>     Mockito.anyBoolean()\\n> )).thenReturn(mockedSearchFor [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class InvalidUseOfMatchersException|0 matchers expected|matchers expected",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)matcher|anyLong|anyBoolean|localdatetime|InvalidUseOfMatchers|\\bany\\b.*when|mock.*when",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n41:120\tAdd Matchers.any(Object) or Marchers.any(Type)\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n61:150\tmockito 1.9.5 or 1.10.17  can not passed junit test when use generi [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InvalidUseOfMatchersException|recorded:",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T any\\(Class<T> type\\)|public static <T> T anyLong\\(\\)|public static boolean anyBoolean\\(\\)",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ArgumentMatchers*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Matchers*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InvalidUseOfMatchers",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "802:1528\tInvalidUseOfMatchers Exception\n1040:1970\tInvalidUseOfMatchersException for When...Return",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": [],
+        "level": "low"
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 644, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1970, 1528, 193], \"evidence\": [], \"reply\": \"Thanks for the report. To reproduce this we need a few more details:\\n1. A complete, runnable test. The snippet only shows the stubbing line, so please include how the repository mock is created, the signature of searchForList, and where the stubbing sits in the test.\\n2. Expected and actual behaviour stated explicitly: what the stub should return, and what happens instead.\\n3. The full stack trace, not only the first line of the exception.\\n4. Whether it still happens on a current Mockito release. 1.10.19 is quite old.\"}",
+  "final_is_json": true
+}

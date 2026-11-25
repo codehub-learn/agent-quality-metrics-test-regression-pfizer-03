@@ -1,0 +1,115 @@
+{
+  "run": "976-1",
+  "number": 976,
+  "issue": {
+    "number": 976,
+    "title": "Make MockSettings.useConstructor able to choose the right constructor",
+    "body": "## Use case\n\nWe recently added a very nice new feature #935 - ability to mock abstract classes / use real constructor for creating mocks. Currently we fail fast when multiple constructors are found matching provided arguments. However, Mockito could potentially do a better job identifying which constructor to use. Example scenario:\n\n```java\nclass A {}\nclass B extends A {}\nclass C extends B {}\n\nclass Foo {\n  Foo(A a) {};\n  Foo(B b) {};\n}\n\n//Below fails with current implementation:\nmock(Foo, withSettings().useConstructor(new A()));\nmock(Foo, withSettings().useConstructor(new B()));\n//However, we could make above work because the constructor argument are not really ambiguous\n\n//Example use case of ambiguous constructor that we can remain failing on\nmock(Foo, withSettings().useConstructor(new C()));\n```\n\n## Implementation\n\nTo get started, see CreatingMocksWithConstructorTest class. Unless the code changes, the interesting test method is [this one](https://github.com/mockito/mockito/blob/release/2.x/src/test/java/org/mockitousage/constructor/CreatingMocksWithConstructorTest.java#L150).",
+    "created_at": "2017-03-05T23:33:16Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/976.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 976,\n3\t  \"title\": \"Make MockSettings.useConstructor able to choose the right constructor\",\n4\t  \"body\": \"## Use case\\n\\nWe recently added a very nice new feature #935 - ability to mock abstract classes / use real constructor for creating mocks. Currently we fail fast when multiple c [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "useConstructor|ConstructorInstantiator|ConstructorMatcher|multiple constructors",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "constructor|useConstructor",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "92:195\tIf you have both through constructor and through annotation injection fields in class, injection will be failed for the first time\n348:685\tSupport constructor parameters for spying on abstract classes\n349:686\t@InjectMocks not working for multiple mocks of the same type via constructor injecti [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{MockSettings,ConstructorArgumentResolver,ConstructorInstantiator,MockSettingsImpl}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "useConstructor",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "useConstructor",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/MockSettings.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport java.io.Serializable;\n8\timport java.lang.reflect.Type;\n9\t\n10\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n11\timport o [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/instance/ConstructorInstantiator.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.instance;\n6\t\n7\timport static org.mockito.internal.util.StringUtil.join;\n8\t\n9\timport java.lang.reflect.Constructor;\n10\timport java.la [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 976, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [685, 2601], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/MockSettings.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/instance/ConstructorInstantiator.java\"], \"reply\": \"Thanks for the detailed write-up and the concrete examples. You'd like useConstructor to pick the most specific constructor when several match the given arguments, rather than failing on the first ambiguity.\"}",
+  "final_is_json": true
+}

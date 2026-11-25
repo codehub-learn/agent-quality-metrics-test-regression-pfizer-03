@@ -1,0 +1,159 @@
+{
+  "run": "1691-1",
+  "number": 1691,
+  "issue": {
+    "number": 1691,
+    "title": "CompletableFuture unit tests mocking",
+    "body": "I technically wanted the Execute the unit test for this particular step ```List<CompletableFuture<Data>> futureList= future.join();``` Not sure how to mock the future variable. I have return the tests to validate the ```oracleRepo.extractSpecificNameAndEventTypes(firstName, lastName)``` and ```nameEventTypesMap->sendNameData(nameEventTypesMap.values(),method```\n\n```extractSpecificNameAndEventTypes``` returns ```Map<String, NameEventTypes>```\n\n```sendNameData``` returns ```List<CompletableFuture<Data>>```\n\n```CompletableFuture<List<CompletableFuture<Data>>> future= CompletableFuture.supplyAsync(()->{\n        if(firstName!= null) {\n            return oracleRepo.extractSpecificNameAndEventTypes(firstName, lastName);\n        } else {\n            return oracleRepo.extractAllNameAndEventTypes();\n        }\n    },oracleExecutor).thenApplyAsync(nameEventTypesMap->sendNameData(nameEventTypesMap.values(),method),NameExecutor);\n    if(async){\n        return result;\n    }else{\n        List<CompletableFuture<Data>> futureList= future.join();\n        if(futureList==null || futureList.isEmpty()){\n            return result;\n        }\n       return futureList.stream().map(CompletableFuture::join).collect(Collectors.toList());\n    }```",
+    "created_at": "2019-04-17T16:46:50Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1691.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1691,\n3\t  \"title\": \"CompletableFuture unit tests mocking\",\n4\t  \"body\": \"I technically wanted the Execute the unit test for this particular step ```List<CompletableFuture<Data>> futureList= future.join();``` Not sure how to mock the future variable. I have return the tests to valida [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(completable|future|async)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "421:806\tUnable to Debug Asynchronous block using Mockito 2.2.22\n555:1089\tMockito.verifyCompletion for spies in an asynchronous environment.\n568:1117\tAnswer with delay in mock or spy to improve testing of asynchronous code\n892:1691\tCompletableFuture unit tests mocking\n905:1728\tThe future of inline mo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 1691: \"CompletableFuture unit tests mocking\". Reporter asks how to unit test code that calls future.join() on a CompletableFuture returned by supplyAsync(...).thenApplyAsync(...), with oracleRepo.extractSpecificNameAndEventTypes and sendNameData mocked. Label: question. No Mockito API is named in the issue body."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> OngoingStubbing<T> when\\(|public static <T> T mock\\(|public static <T> VerificationMode times\\(|OngoingStubbing<T> thenReturn\\(T value\\)",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "CompletableFuture|CompletionStage",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "OngoingStubbing<T> when\\(|static <T> T mock\\(|thenReturn\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 15
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "when\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 5
+      },
+      "result": "350: * when(mockedList.get(0)).thenReturn(\"first\");\n351: * when(mockedList.get(1)).thenThrow(new RuntimeException());\n396: * when(mockedList.get(anyInt())).thenReturn(\"element\");\n399: * when(mockedList.contains(argThat(isValid()))).thenReturn(true);\n493: *   doThrow(new RuntimeException()).when(mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "OngoingStubbing|static .* mock\\(|static .* verify\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 8
+      },
+      "result": "35:import org.mockito.stubbing.OngoingStubbing;\n2177:    public static <T> T mock(T... reified) {\n2193:    public static <T> T mock(@SuppressWarnings(\"rawtypes\") Answer defaultAnswer, T... reified) {\n2209:    public static <T> T mock(String name, T... reified) {\n2225:    public static <T> T mock(Moc [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "> when\\(T methodCall\\)|> verify\\(T mock\\)",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* when\\(|public static .* verify\\(",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 4
+      },
+      "result": "3145:    public static <T> OngoingStubbing<T> when(@Nullable T methodCall) {\n3175:    public static <T> T verify(T mock) {\n3201:    public static <T> T verify(T mock, VerificationMode mode) {",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1691, \"label\": \"question\", \"route\": \"answer\", \"related\": [2819, 806, 1117], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\"], \"reply\": \"Mockito has no special support for CompletableFuture, and you don't need any. The async chain is plain Java, so test it like any other code. Stub the repository with Mockito.when(oracleRepo.extractSpecificNameAndEventTypes(firstName, lastName)).thenReturn(map), and do the same for extractAllNameAndEventTypes. Create oracleRepo with Mockito.mock(...). Pass async as false so future.join() blocks, then assert on the returned list. Use Mockito.verify(...) to check the repository calls. Examples are in the Javadoc of mockito-core/src/main/java/org/mockito/Mockito.java.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,93 @@
+{
+  "run": "3659-1",
+  "number": 3659,
+  "issue": {
+    "number": 3659,
+    "title": "Add JDK21 sequenced collections for ReturnsEmptyValues",
+    "body": "JDK 21 introduced [Sequenced Collections (JEP 431)](https://openjdk.org/jeps/431) which added new interfaces to the `java.util` Collections API. Using these interfaces as return types leads to Mockito returning `null` when the method is unstubbed since they are obviously missing in `org.mockito.internal.stubbing.defaultanswers.ReturnsEmptyValues`.\n\nIs it possible to add this new API or impossible because of Java 11 baseline?",
+    "created_at": "2025-05-28T12:24:30Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/3659.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 3659,\n3\t  \"title\": \"Add JDK21 sequenced collections for ReturnsEmptyValues\",\n4\t  \"body\": \"JDK 21 introduced [Sequenced Collections (JEP 431)](https://openjdk.org/jeps/431) which added new interfaces to the `java.util` Collections API. Using these interfaces as return types leads to [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "SequencedCollection|SequencedSet|SequencedMap|LinkedHashSet|ReturnsEmptyValues",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "sequenced|jdk.?21|Sequenced",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "1523:3037\tJDK 21 - Dynamic Loading of Agent (byte-buddy-agent-1.14.4.jar)\n1749:3659\tAdd JDK21 sequenced collections for ReturnsEmptyValues",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ReturnsEmptyValues.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Collection|Deque|Queue|Map",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "count"
+      },
+      "result": "issue-index.tsv:16\n\nFound 16 total occurrences across 1 file.",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Collection",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "395:757\t\"mock-maker-inline\" prevents collection of code coverage for spys\n494:967\tCollection being changed after call throws off the verify results\n921:1753\trefEq() should use deep comparison also in collections and nested objects\n1228:2364\tMocks do not work with scala parallel collections\n1285:2523 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.defaultanswers;\n6\t\n7\timport static org.mockito.internal.util.ObjectMethodsGuru.isCompareToMethod;\n8\timport static org.mockito.intern [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 3659, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java\"], \"reply\": \"Thanks for the report and for the link to JEP 431. You are asking Mockito to return empty values for the JDK 21 types SequencedCollection, SequencedSet and SequencedMap, instead of null for unstubbed methods that return them.\"}",
+  "final_is_json": true
+}

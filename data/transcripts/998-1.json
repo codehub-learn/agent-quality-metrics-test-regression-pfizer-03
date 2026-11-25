@@ -1,0 +1,237 @@
+{
+  "run": "998-1",
+  "number": 998,
+  "issue": {
+    "number": 998,
+    "title": "Mock URL.class",
+    "body": "Hi \nAs per the update for mockito 2.2.x it supports mocking a final class, but when i try to mock the URL.class i get the values of the object null in the debug mode. I am using mockito-core-2.2.16 with java 7. I am not sure what is wrong with my code.\n\n               URL u = mock(URL.class);\n\t        HttpsURLConnection huc = mock(HttpsURLConnection.class);\n\t        when(new URL(anyString())).thenReturn(u);\n\t        when(u.openConnection()).thenReturn(huc);\n\nThanks\nShreyas\n![mock](https://cloud.githubusercontent.com/assets/19372060/24191956/71109e84-0f13-11e7-9442-7ca4c5346260.PNG)\n\n\n\n",
+    "created_at": "2017-03-22T09:53:20Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/998.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 998,\n3\t  \"title\": \"Mock URL.class\",\n4\t  \"body\": \"Hi \\nAs per the update for mockito 2.2.x it supports mocking a final class, but when i try to mock the URL.class i get the values of the object null in the debug mode. I am using mockito-core-2.2.16 with java 7. I am not sure what is [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "constructor|final class|URL|new .* thenReturn",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n92:195\tIf you have both through constructor and through annotation injection fields in class, injection will be failed for the first time\n258:497\tDEEP_STUBS tries to mock final class\n31 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T mock\\(Class<T> classToMock\\)",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .* mockConstruction\\(|public static <T> T mock\\(Class<T> classToMock|Mockito can only mock non-private",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "glob": "**/*.java"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Mockito,MockedConstruction,MockitoCore,MockUtil}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Bash",
+      "input": {
+        "command": "ls \"mockito\" | head -50"
+      },
+      "result": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockConstruction",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class Mockito\\b",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "offset": 2580,
+        "limit": 15
+      },
+      "result": "<system-reminder>Warning: the file exists but is shorter than the provided offset (2580). The file has 1812 lines.</system-reminder>",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "offset": 1300,
+        "limit": 10
+      },
+      "result": "1300\t2560\tmock(SecureRandom.class) and mock(Random.class) fails\n1301\t2561\tMockito silently produces incorrect mocks of jdk classes with java 17\n1302\t2563\tMockitoExtension should implement BeforeAllCallback and make sure any context @Mock/@InjectMocks is initialized before a @BeforeAll\n1303\t2568\tjava [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/MockedConstruction.java",
+        "limit": 60
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport java.lang.reflect.Constructor;\n8\timport java.util.List;\n9\t\n10\t/**\n11\t * Represents a mock of any object construction of the represented t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 60,
+        "limit": 120
+      },
+      "result": "60\t * <b>\n61\t *      <a href=\"#0\">0. Migrating to Mockito 2</a><br/>\n62\t *      <a href=\"#0.1\">0.1 Mockito Android support</a><br/>\n63\t *      <a href=\"#0.2\">0.2 Configuration-free inline mock making</a><br/>\n64\t *      <a href=\"#0.3\">0.3 Explicitly enabling instrumentation for inline mocking (Java  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 998 \"Mock URL.class\": reporter writes when(new URL(anyString())).thenReturn(u) to stub a constructor, and asks why mock(URL.class) gives null values in debug. Label: question. Evidence: mockito/mockito-core/src/main/java/org/mockito/MockedConstruction.java and mockito/mockito-core/src/main/java/org/mockito/Mockito.java (section 49, object construction mocking since 3.5.0). Related: 2588 (MockedConstruction of URL class), 2757 (constructor simulation not available)."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/MockedConstruction.java",
+        "offset": 60,
+        "limit": 40
+      },
+      "result": "60\t    @FunctionalInterface\n61\t    interface MockInitializer<T> {\n62\t\n63\t        /**\n64\t         * Configure the mock.\n65\t         *\n66\t         * @param mock the newly created mock.\n67\t         * @param context the mock context.\n68\t         * @throws Throwable any exception that may be thrown.\n69\t  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1000,
+        "limit": 150
+      },
+      "result": "1000\t * <a class=\"meaningful_link\" href=\"#spy_annotation\" name=\"spy_annotation\"><code>&#064;Spy</code></a>,\n1001\t * <a class=\"meaningful_link\" href=\"#injectmocks_annotation\" name=\"injectmocks_annotation\"><code>&#064;InjectMocks</code></a> (Since 1.8.3)</h3>\n1002\t *\n1003\t * <p>\n1004\t * Release 1.8.3  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1420,
+        "limit": 80
+      },
+      "result": "1420\t * private static void dummyCallbackImpl(String operation, Callback callback) {\n1421\t *     callback.receive(\"dummy\");\n1422\t * }\n1423\t *\n1424\t * doAnswer(answerVoid(TestClass::dummyCallbackImpl))\n1425\t *     .when(mock).execute(anyString(), any(Callback.class));\n1426\t *\n1427\t * // Java 7\n1428\t  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1560,
+        "limit": 90
+      },
+      "result": "1560\t * The new API is not intended for users who want to write unit tests.\n1561\t * It is intended for other test tools and mocking frameworks that need to extend or wrap Mockito with some custom logic.\n1562\t * During the design and implementation process (<a href=\"https://github.com/mockito/mockito [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1690,
+        "limit": 110
+      },
+      "result": "1690\t * If you have feedback or a better idea how to solve the problem please reach out.\n1691\t *\n1692\t *\n1693\t * <h3 id=\"48\">48. <a class=\"meaningful_link\" href=\"#static_mocks\" name=\"static_mocks\">Mocking static methods</a> (since 3.4.0)</h3>\n1694\t *\n1695\t * When using the <a href=\"#0.2\">inline mock [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 998, \"label\": \"question\", \"route\": \"answer\", \"related\": [2588, 2757], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/MockedConstruction.java\"], \"reply\": \"Hi Shreyas, Mockito can't stub a constructor. when(new URL(anyString())) runs the real constructor and passes its result to when(), so no stub gets registered. To get mocks created on constructor calls, use Mockito.mockConstruction(URL.class) inside try-with-resources, as described in the 'Mocking object construction' section of the Mockito Javadoc (since 3.5.0). It requires the inline mock maker. URL is a final class, so on 2.2.x you also need mockito-inline; since 5.0.0 the inline mock maker is the default. Mocking JDK classes like URL is limited, so see issue 2588 for that case.\"}",
+  "final_is_json": true
+}

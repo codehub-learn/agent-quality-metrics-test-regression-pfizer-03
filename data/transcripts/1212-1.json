@@ -1,0 +1,183 @@
+{
+  "run": "1212-1",
+  "number": 1212,
+  "issue": {
+    "number": 1212,
+    "title": "MockitoJUnitRunner too strict by default?",
+    "body": "In one of the projects being migrated to Mockito 2 I've observed that deprecated `org.mockito.runners.MockitoJUnitRunner` (tested with 2.11.0) works in a strict mode by default (fails a test on unnecessary stubbing). I wonder if it is an expected behavior?\n\nEven Mockito rule works in a \"warn\" mode by default. It makes it a little bit harder to migrate from Mockito 1.10.x to 2.x.",
+    "created_at": "2017-10-19T13:23:38Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1212.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1212,\n3\t  \"title\": \"MockitoJUnitRunner too strict by default?\",\n4\t  \"body\": \"In one of the projects being migrated to Mockito 2 I've observed that deprecated `org.mockito.runners.MockitoJUnitRunner` (tested with 2.11.0) works in a strict mode by default (fails a test on unnecessary [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class MockitoJUnitRunner|class MockitoRule|Strictness\\.|STRICT_STUBS|StrictStubs",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "strict|Strict|unnecessary|rule|runner",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n25:96\tDocument minimum JUnit requirement for MockitoJUnitRule\n54:139\tTidy-up public API of Mockito JUnit rule\n55:140\tMake Mockito JUnit rule easier to use\n137:275\tBackward incompatible change  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{MockitoJUnitRunner,MockitoJUnit,MockitoRule,JUnitRule}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Strictness\\.(WARN|LENIENT|STRICT_STUBS)|UnnecessaryStubbingException",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/junit",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 40
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*JUnit*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "UnnecessaryStubbing",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 30
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "UnnecessaryStubbing",
+        "path": "mockito",
+        "output_mode": "count"
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "issues/*.json",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockitoJUnitRunner",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnitRunner.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.junit;\n6\t\n7\timport java.lang.reflect.InvocationTargetException;\n8\t\n9\timport org.junit.runner.Description;\n10\timport org.junit.runner.Runner;\n11\timport [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnit.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.junit;\n6\t\n7\timport org.junit.rules.TestRule;\n8\timport org.mockito.internal.configuration.plugins.Plugins;\n9\timport org.mockito.internal.junit.JUnitRul [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/junit/DefaultJUnitRuleStrictness.java"
+      },
+      "result": "File does not exist. Note: your current working directory is .",
+      "error": true
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 1212: \"MockitoJUnitRunner too strict by default?\" Reporter migrating from Mockito 1.10 to 2.x. The deprecated org.mockito.runners.MockitoJUnitRunner (2.11.0) fails tests on unnecessary stubbing by default, while the MockitoRule (MockitoJUnit.rule()) only warns by default. Asks whether this is expected. Verified in source: MockitoJUnitRunner.java default constructor uses StrictRunner(createStrict); MockitoJUnitRunner.Silent is the opt-out and Strict/StrictStubs are variants; MockitoJUnit.rule() uses Strictness.WARN. Evidence files: mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnitRunner.java and mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnit.java."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1212, \"label\": \"question\", \"route\": \"answer\", \"related\": [720, 384, 391], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnitRunner.java\", \"mockito/mockito-core/src/main/java/org/mockito/junit/MockitoJUnit.java\"], \"reply\": \"Yes, this is by design. Since 2.1.0, MockitoJUnitRunner is strict by default: it reports unused stubs as failures (UnnecessaryStubbingException). MockitoJUnit.rule() defaults to warnings only (Strictness.WARN), which is why the two behave differently. To get the 1.x behaviour from the runner, annotate the test class with @RunWith(MockitoJUnitRunner.Silent.class). If you want the runner to also catch stubbing argument mismatches, use MockitoJUnitRunner.StrictStubs. The runner's Javadoc covers all three variants.\"}",
+  "final_is_json": true
+}

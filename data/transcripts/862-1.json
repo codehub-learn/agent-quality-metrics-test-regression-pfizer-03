@@ -1,0 +1,109 @@
+{
+  "run": "862-1",
+  "number": 862,
+  "issue": {
+    "number": 862,
+    "title": "Broken InlineByteBuddyMockMakerTest with Java 9",
+    "body": "After #861 merge it turned out that InlineByteBuddyMockMakerTest fails with Java 9 (tested locally with 9-ea+146).\n\n```\norg.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMakerTest > should_create_mock_from_hashmap FAILED\n    org.junit.ComparisonFailure: expected:<\"bar\"> but was:<null>\n        at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(java.base@9-ea/Native Method)\n        at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(java.base@9-ea/NativeConstructorAccessorImpl.java:62)\n        at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(java.base@9-ea/DelegatingConstructorAccessorImpl.java:45)\n        at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMakerTest.should_create_mock_from_hashmap(InlineByteBuddyMockMakerTest.java:79)\n```\n\nhttps://travis-ci.org/mockito/mockito/jobs/187897096#L586",
+    "created_at": "2016-12-31T14:17:58Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/862.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 862,\n3\t  \"title\": \"Broken InlineByteBuddyMockMakerTest with Java 9\",\n4\t  \"body\": \"After #861 merge it turned out that InlineByteBuddyMockMakerTest fails with Java 9 (tested locally with 9-ea+146).\\n\\n```\\norg.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMakerTest > should [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv"
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito\n6\t70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7\t71\tjava.lang.NoClassDefFoundError: org.mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InlineByteBuddyMockMakerTest.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "should_create_mock_from_hashmap|class InlineByteBuddyMockMakerTest",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*InlineByteBuddy*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.creation.instance.Instantiator;\n9\timport org.mockito.int [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/test/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMakerTest.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2017 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.junit.Test;\n8\timport org.mockito.Mock;\n9\timport org.mockito.internal.creation.settings.CreationSettings;\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 862, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [788, 520, 1116], \"evidence\": [\"mockito/mockito-core/src/test/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMakerTest.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java\"], \"reply\": \"Thanks for the report. As written, I can't reproduce this from the issue alone. The test should_create_mock_from_hashmap is not in InlineByteBuddyMockMakerTest at the current commit, which only has should_delegate_call, so it may have been changed or removed since 2016. Could you share: 1) the Mockito version you used; 2) the body of should_create_mock_from_hashmap, or a minimal snippet that mocks a HashMap and returns the wrong value; 3) whether it still fails, and on which JDK build. The stack trace and the expected 'bar' versus null result are useful. The mock maker involved is InlineByteBuddyMockMaker.\"}",
+  "final_is_json": true
+}

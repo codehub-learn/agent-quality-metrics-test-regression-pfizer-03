@@ -1,0 +1,90 @@
+{
+  "run": "86-1",
+  "number": 86,
+  "issue": {
+    "number": 86,
+    "title": "New lightweight, stub-only mocks for scenarios where high performance is needed",
+    "body": "It is possible to create \"stub-only\" mocks that don't track invocations and hence might be useful for scenarios where low memory footprint / high speed is desired.\n\n``` java\nFoo lightweight = mock(Foo.class, withSettings().stubOnly());\n```\n\nFor more information please see: https://code.google.com/p/mockito/issues/detail?id=84\n",
+    "created_at": "2014-09-25T20:24:17Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/86.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 86,\n3\t  \"title\": \"New lightweight, stub-only mocks for scenarios where high performance is needed\",\n4\t  \"body\": \"It is possible to create \\\"stub-only\\\" mocks that don't track invocations and hence might be useful for scenarios where low memory footprint / high speed is desired.\\n\\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "stubOnly",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)stub|lightweight|performance|memory",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n17:86\tNew lightweight, stub-only mocks for scenarios where high performance is needed\n28:99\tRETURNS_DEEP_STUBS automatically tries to create serializable mocks\n46:128\tDeep st [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockSettings.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "stubOnly|isStubOnly",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/MockSettings.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport java.io.Serializable;\n8\timport java.lang.reflect.Type;\n9\t\n10\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n11\timport o [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 86, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [348, 1460], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/MockSettings.java\"], \"reply\": \"Thanks for the suggestion. You are asking for a stub-only mock, created with withSettings().stubOnly(), that skips recording invocations so it uses less memory and runs faster. We have noted it as a request.\"}",
+  "final_is_json": true
+}

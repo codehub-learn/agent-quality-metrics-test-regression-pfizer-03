@@ -1,0 +1,154 @@
+{
+  "run": "750-1",
+  "number": 750,
+  "issue": {
+    "number": 750,
+    "title": "thenReturn does not intercept call but thenAnswer does",
+    "body": "I am trying to mock SharedPreferences in android.\n\nThis code returns the variable mJson:\n\n```\n        when(mMockSharedPreferences.getString(anyString(), anyString()))\n                .thenAnswer(new Answer<String>() {\n                    @Override\n                    public String answer(InvocationOnMock invocation) throws Throwable {\n                        return mJson;\n                    }\n                });\n\n```\nbut this one doesn't:\n\n```\n        when(mMockSharedPreferences.getString(anyString(), anyString()))\n                .thenReturn(mJson);\n\n```\n\nI am using 2.2.11.",
+    "created_at": "2016-11-09T09:46:04Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/750.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 750,\n3\t  \"title\": \"thenReturn does not intercept call but thenAnswer does\",\n4\t  \"body\": \"I am trying to mock SharedPreferences in android.\\n\\nThis code returns the variable mJson:\\n\\n```\\n        when(mMockSharedPreferences.getString(anyString(), anyString()))\\n                .the [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenReturn\\(T value\\)|OngoingStubbing<T> thenAnswer\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "glob": "*OngoingStubbing.java"
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenReturn|thenAnswer|mock|stub",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 0
+      },
+      "result": "<persisted-output>\nOutput too large (76KB). Full output saved to: [local file]\n\nPreview (first 2KB):\n3:64\tDefault answer to fail on an unstubbed method invocation\n5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenReturn\\(|thenAnswer\\(",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "**/OngoingStubbing.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)thenReturn|thenAnswer|sharedpref|eager|evaluat|captured|value.*null",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 40
+      },
+      "result": "71:166\tUnfinishedStubbingException when thenReturn contains mock which is used in when\n185:345\tVerification using After and ArgumentCaptor returns unexpected size of captured values list\n209:379\tVerification using After and ArgumentCaptor with Times or AtLeast methods returns unexpected size of capt [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{OngoingStubbing,Stubber,InvocationOnMock,Answers}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Stubbing*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "interface OngoingStubbing|public interface Stubber|class ReturnsEmptyValues",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 750: thenReturn(mJson) does not pick up later changes to mJson, while thenAnswer returning mJson does. Mockito source directory mockito/ appears empty in this workspace (Grep and Glob find no files), so no Mockito source was checked."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "thenReturn",
+        "path": "mockito/",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 750, \"label\": \"question\", \"route\": \"answer\", \"related\": [1168, 2366], \"evidence\": [], \"reply\": \"Thanks for the report. This is expected behaviour rather than a bug. The value you pass to the return call is read once, when that line runs. If mJson is null or still holds an old value at that moment, the stub keeps returning that value even after mJson changes later. The callback version works because it reads mJson each time the mock is called. To fix it, either set mJson before you define the stub, or use the callback form so the value is read at call time. The Mockito source was not available in this workspace, so I could not check exact API names here.\"}",
+  "final_is_json": true
+}

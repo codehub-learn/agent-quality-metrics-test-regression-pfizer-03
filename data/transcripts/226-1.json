@@ -1,0 +1,33 @@
+{
+  "run": "226-1",
+  "number": 226,
+  "issue": {
+    "number": 226,
+    "title": "Exclude internal package from javadoc",
+    "body": "Internal package don't need to be included in the javadoc generation, just like the jdk doesn't have `com.sun` package\n\nIn the javadoc that may be done via a doclet since `exclude '**/internal/**'` raise javadoc errors\n\n``` groovy\ndoclet = \"qualified.name.of.DocletExclude\"\ndocletpath = [rootProject.file('./gradle/doclet-exclude.jar')]\n```\n",
+    "created_at": "2015-06-06T21:23:36Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/226.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 226,\n3\t  \"title\": \"Exclude internal package from javadoc\",\n4\t  \"body\": \"Internal package don't need to be included in the javadoc generation, just like the jdk doesn't have `com.sun` package\\n\\nIn the javadoc that may be done via a doclet since `exclude '**/internal/**'` raise java [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|doclet|internal",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n15:80\tExpose 'internal' classes so Powermock-osgi can be incorporated without special builds of Mockito\n31:107\tImprove internal implementation so that it is possible to implement mocking abstr [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 226, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [762, 614], \"evidence\": [], \"reply\": \"Thanks for the report. You're asking for the internal packages (org.mockito.internal) to be left out of the generated Javadoc, the way the JDK hides com.sun, and for this to be done with a custom doclet because a plain exclude pattern makes the javadoc task fail. I haven't checked the build setup beyond this, so I can't say how hard it would be, but the request is clear and is now in the backlog.\"}",
+  "final_is_json": true
+}

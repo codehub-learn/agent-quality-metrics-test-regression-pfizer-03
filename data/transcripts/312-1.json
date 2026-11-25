@@ -1,0 +1,147 @@
+{
+  "run": "312-1",
+  "number": 312,
+  "issue": {
+    "number": 312,
+    "title": "ThrowsExceptionClass is urealiable - exception doesn't containt stack trace",
+    "body": "The `ThrowsExceptionClass` is using `ObjenesisHelper.newInstance` which happens to have different strategy of creating objects depending on the JVM used. \nI'm using Java HotSpot VM. On this machine ,created `Throwable`, is initalized with all nulls.\nAs a result calling `throwable.fillInStackTrace()` has no effect and there is no chance the stack trace is ever filled. You can easily observe this behaviour by this sample code:\n\n``` java\nThrowable t = (Throwable) ObjenesisHelper.newInstance(Throwable.class);\nt.fillInStackTrace();\nt.printStackTrace();\n```\n\nAfter a bit of struggling I ended up using `ThrowsException` instead of `ThrowsExceptionClass`.\n\nObjenesis strategy to create instances is dependent on VM name (returned by `System.getProperty(\"java.vm.name\")`) so there is no 100% guarantee that this behaviour is reproduced on your machine.\n",
+    "created_at": "2015-10-30T13:30:22Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/312.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 312,\n3\t  \"title\": \"ThrowsExceptionClass is urealiable - exception doesn't containt stack trace\",\n4\t  \"body\": \"The `ThrowsExceptionClass` is using `ObjenesisHelper.newInstance` which happens to have different strategy of creating objects depending on the JVM used. \\nI'm using Java H [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ThrowsExceptionClass|ObjenesisHelper",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ThrowsException|Objenesis|stack trace|fillInStackTrace",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "12:76\tUpgraded Objenesis dependency to 2.1\n106:214\tobjenesis dependency in INDEX.LIST (mockito-all)\n148:298\tObjenesisHelper references in MockMaker-independent code\n158:312\tThrowsExceptionClass is urealiable - exception doesn't containt stack trace\n230:418\tobjenesis INDEX.LIST should not be included [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ThrowsException*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ThrowsException",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "fillInStackTrace",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ObjenesisHelper",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "limit": 3
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 312, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [866], \"evidence\": [], \"reply\": \"Thanks for the report. The snippet calls ObjenesisHelper directly, and I could not find the Mockito source for the exception answer class in this checkout, so I cannot yet confirm where the behaviour lives. Could you send: 1) the Mockito version you used, 2) the JVM vendor and version (the java -version output), and 3) the stack trace you get from a mock that throws the exception, if you still have it. With those I can check whether the empty stack trace reproduces on the matching code.\"}",
+  "final_is_json": true
+}

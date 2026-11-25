@@ -1,0 +1,81 @@
+{
+  "run": "1086-1",
+  "number": 1086,
+  "issue": {
+    "number": 1086,
+    "title": "Documentation update - MockitoJUnit.strictness(STRICT_STUBS) does not do verifyNoMoreInteractions",
+    "body": "### Problem\n\nOur documentation about \"strict stubs\" does not clearly indicate the difference between \"strict mocks\" (described at #1097). In short, \"strict stubs\" are not \"strict mocks\", e.g. we detect unused or incorrectly declared stubs but we don't force the user to verify all interactions.\n\n### Suggested implementation\n\nSuggest an update to the Javadoc that would make things clear? Perhaps on Strictness type or on Strictness.STRICT_STUBS enum value.\n\n### Original report\n\nI'd expect to let this test fail:\n\n```\npublic class SomeTest {\n  @Rule public final MockitoRule mockitoRule = MockitoJUnit.rule().strictness(STRICT_STUBS);\n\n  @Mock Something something;\n\n  @Test public void something() {\n    Single.just(1)\n        .doOnSuccess(something::add)\n        .test()\n        .assertResult(1);\n  }\n\n  interface Something {\n    void add(int i);\n  }\n}\n```\n\nwhen using `strictness(STRICT_STUBS)`, since I'm not verifying that `something.add(1)` was called.\n\nAdding:\n\n```\n  @After public void tearDown() {\n    verifyNoMoreInteractions(something);\n  }\n```\n\nyields the desire red unit test:\n\n```\norg.mockito.exceptions.verification.NoInteractionsWanted: \nNo interactions wanted here:\n-> at tearDown(SomeTest.java:27)\nBut found this interaction on mock 'something':\n-> at io.reactivex.internal.operators.single.SingleDoOnSuccess$DoOnSuccess.onSuccess(SingleDoOnSuccess.java:53)\n```\n\nIs this by design?\n\nJunit Version: 4.12\nMockito Version: 2.8.9\n",
+    "created_at": "2017-05-16T08:34:02Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1086.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1086,\n3\t  \"title\": \"Documentation update - MockitoJUnit.strictness(STRICT_STUBS) does not do verifyNoMoreInteractions\",\n4\t  \"body\": \"### Problem\\n\\nOur documentation about \\\"strict stubs\\\" does not clearly indicate the difference between \\\"strict mocks\\\" (described at #1097). In sh [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft"
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "STRICT_STUBS",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "strict stubs|strict mocks|verifyNoMoreInteractions",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "157:311\tAdd BDD version of verifyNoMoreInteractions()\n327:649\tBetter support of strict mocks\n552:1086\tDocumentation update - MockitoJUnit.strictness(STRICT_STUBS) does not do verifyNoMoreInteractions\n556:1097\tStrict mocks support\n672:1308\tJUnit rule: Unused consecutive when/then calls don't fail wit [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{Strictness,MockitoJUnit,Mockito}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "STRICT_STUBS",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1086, \"label\": \"docs\", \"route\": \"answer\", \"related\": [1097, 649, 1769], \"evidence\": [], \"reply\": \"Thanks for the report. You're right that strict stubs and strict mocks are different things. Strict stubs report unused stubs and stubs whose arguments don't match a call, but they don't require every interaction to be verified, so a verifyNoMoreInteractions check is still your own choice. The Strictness documentation should say this plainly, and it's a fair docs fix. Related work on strict mocks is tracked in #1097. I could not open the Mockito source for this check, so I haven't confirmed the exact current Javadoc wording.\"}",
+  "final_is_json": true
+}

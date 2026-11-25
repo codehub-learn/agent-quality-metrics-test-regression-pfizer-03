@@ -1,0 +1,41 @@
+{
+  "run": "984-1",
+  "number": 984,
+  "issue": {
+    "number": 984,
+    "title": "Release commits do not trigger code coverage report",
+    "body": "Found out at https://github.com/mockito/mockito/pull/980#issuecomment-285124740\nThis was initially fixed in #493, but I think the adoption of the new mockito-release-tools repository introduced this regression. All pull requests now have a failing status as CodeCov is unable to provide any feedback.\n\nCommits should instead of `[ci skip]` use `[ci skip-release]`. Therefore Travis will kick off, but the release mechanism is not triggered.",
+    "created_at": "2017-03-09T12:08:08Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/984.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 984,\n3\t  \"title\": \"Release commits do not trigger code coverage report\",\n4\t  \"body\": \"Found out at https://github.com/mockito/mockito/pull/980#issuecomment-285124740\\nThis was initially fixed in #493, but I think the adoption of the new mockito-release-tools repository introduced t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)codecov|coverage|travis|ci skip|release",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "9:73\tNew release\n19:89\tadd latest release into maven central\n30:105\tContinuous deployment should not release new version if binaries are equal\n33:109\tImprove automated release notes look\n40:119\ttidy-up and rework release notes automation\n43:123\tRelease Mockito 2.0\n48:132\tMaven Release for 1.10.14\n62 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 984, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [784, 2095, 789], \"evidence\": [], \"reply\": \"Thanks for the report. Could you add two details so we can reproduce this? 1) The Mockito version or commit where you saw the problem. 2) A specific example, such as the commit SHA or CI build link of a release commit where the coverage report did not run, along with the commit message used. Your description of the expected behaviour (coverage runs on release commits) is clear, so those two items are what we need to check the CI setup.\"}",
+  "final_is_json": true
+}

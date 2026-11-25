@@ -1,0 +1,41 @@
+{
+  "run": "552-1",
+  "number": 552,
+  "issue": {
+    "number": 552,
+    "title": "Fix again javadoc stylesheet",
+    "body": "Previously we had a nice javadoc stylesheet. That worked well with JDK6.\nThen we used travis that was only allowing OracleJDK7, that came with a better javadoc stylesheet so we dropped ours.\n\nNow since the release of mockito 2.x is using openjdk6, we should reintroduce a better stylesheet.\n\nCurrent state ❌ \nhttp://site.mockito.org/mockito/docs/2.0.100-beta/org/mockito/Mockito.html\n<img width=\"712\" alt=\"screen shot 2016-08-13 at 19 41 59\" src=\"https://cloud.githubusercontent.com/assets/803621/17644719/cecc5ec4-618e-11e6-912e-9b0dcd7e94db.png\">\n\nPrevious ✅ \nhttp://site.mockito.org/mockito/docs/2.0.0-beta/org/mockito/Mockito.html\n<img width=\"877\" alt=\"screen shot 2016-08-13 at 19 45 32\" src=\"https://cloud.githubusercontent.com/assets/803621/17644722/d71bcd08-618e-11e6-831a-a01c47e8cc61.png\">\n",
+    "created_at": "2016-08-13T17:48:15Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/552.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 552,\n3\t  \"title\": \"Fix again javadoc stylesheet\",\n4\t  \"body\": \"Previously we had a nice javadoc stylesheet. That worked well with JDK6.\\nThen we used travis that was only allowing OracleJDK7, that came with a better javadoc stylesheet so we dropped ours.\\n\\nNow since the release of [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)javadoc|stylesheet|css",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "112:226\tExclude internal package from javadoc\n113:228\t@Captor javadoc contains a wrong call example\n128:256\ttask mockitoJavadoc fails when compiling in windows\n244:453\tEither revert recent Functional Interfaces change or change JavaDoc\n269:533\tRemove code.google.com from javadoc\n277:545\tEnsure threa [cut]",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {
+        "findings": []
+      },
+      "result": "No findings reported.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 552, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [629, 755, 1513], \"evidence\": [], \"reply\": \"Thanks for the report and the before and after screenshots, they make the difference easy to see. You're asking to bring back a custom Javadoc stylesheet for the generated docs, since the stylesheet that came with newer JDKs looks worse than the one we used to ship. We've added this to the backlog.\"}",
+  "final_is_json": true
+}

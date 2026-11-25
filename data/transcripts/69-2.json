@@ -1,0 +1,211 @@
+{
+  "run": "69-2",
+  "number": 69,
+  "issue": {
+    "number": 69,
+    "title": "Removing mockingDetails API from Mockito",
+    "body": "After some exchange with other member of the community, code such as \n\n``` java\nMockito.mockingDetails(someObject).isMock();\nMockito.mockingDetails(someObject).isSpy();\n```\n\nIt looks wrong ; Mockito is the entry point for user friendly usage from within the test. Inspecting mocks looks wrong when it's a normal _user_.\n\nHowever I know framework developers may need to inspect mocks. Let's keep the `MockingDetails` type but instantiate it from another static factory method.\n\nThe drawback is the removal of this API for current users. Maybe we can mark `Mockito.mockingDetails(..)` deprecated in 1.9.x and remove it in 2.0.0\n",
+    "created_at": "2014-08-05T11:43:52Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/69.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 69,\n3\t  \"title\": \"Removing mockingDetails API from Mockito\",\n4\t  \"body\": \"After some exchange with other member of the community, code such as \\n\\n``` java\\nMockito.mockingDetails(someObject).isMock();\\nMockito.mockingDetails(someObject).isSpy();\\n```\\n\\nIt looks wrong ; Mockito is [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails|class MockingDetails|interface MockingDetails",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails|mock|spy|deprecat|enhance|mockito|static|Mockito",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 40
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n11:75\tNew \"serializable\" parameter of @Mock annotation\n13:77 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/MockingDetails*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails",
+        "path": "mockito",
+        "-i": true,
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockingDetails",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "org\\.mockito",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/MockingDetails.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport java.util.Collection;\n8\t\n9\timport org.mockito.invocation.Invocation;\n10\timport org.mockito.invocation.MockHandler;\n11\timport org.mockito. [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1,
+        "limit": 400
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n9\timport org.mockito.exceptions.mis [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 880,
+        "limit": 120
+      },
+      "result": "880\t * As usual you are going to read <b>the partial mock warning</b>:\n881\t * Object oriented programming is more less tackling complexity by dividing the complexity into separate, specific, SRPy objects.\n882\t * How does partial mock fit into this paradigm? Well, it just doesn't...\n883\t * Partial mo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1250,
+        "limit": 130
+      },
+      "result": "1250\t * <h3 id=\"31\">31. <a class=\"meaningful_link\" href=\"#serilization_across_classloader\" name=\"serilization_across_classloader\">Mockito mocks can be <em>serialized</em> / <em>deserialized</em> across classloaders (Since 1.10.0)</a></h3>\n1251\t *\n1252\t * Mockito introduces serialization across class [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 1100,
+        "limit": 80
+      },
+      "result": "1100\t * Helps avoiding redundant verification of stubbed calls - typically we're not interested in verifying stubs.\n1101\t * <p>\n1102\t * <b>Warning</b>, <code>ignoreStubs()</code> might lead to overuse of verifyNoMoreInteractions(ignoreStubs(...));\n1103\t * Bear in mind that Mockito does not recommend [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails\\(Object",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "2277:    public static MockingDetails mockingDetails(Object toInspect) {",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "offset": 2262,
+        "limit": 20
+      },
+      "result": "2262\t        return mock(classToMock, withSettings().name(name).defaultAnswer(RETURNS_DEFAULTS));\n2263\t    }\n2264\t\n2265\t    /**\n2266\t     * Returns a MockingDetails instance that enables inspecting a particular object for Mockito related information.\n2267\t     * Can be used to find out if given obje [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)api|deprecat|inspect|details",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n54:139\tTidy-up public API of Mockito JUnit rule\n67:156\tApi Suggestions\n77:177\tAdd API to remove internal ThreadLocal values when done with Mockito\n145:292\tjava.lang.AbstractMethodError: org.powermock.api.mockito.internal.mockmaker.PowerMockMaker.isTypeMo [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 69, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [541, 577], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/MockingDetails.java\"], \"reply\": \"Thanks for the report. You are asking us to move inspection of mocks off the Mockito entry point, keeping the MockingDetails type but reaching it through another factory method, and to deprecate Mockito.mockingDetails first and remove it in 2.0.0. We have logged this for the backlog. In the current source, Mockito.mockingDetails(Object) is still present and not deprecated, and MockingDetails remains a public interface.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,123 @@
+{
+  "run": "210-1",
+  "number": 210,
+  "issue": {
+    "number": 210,
+    "title": "Return empty value for Iterables",
+    "body": "http://code.google.com/p/mockito/issues/detail?id=175\n\nI expect an Iterable to be mocked by default with an empty Iterable. I understand from the initial issue this behavior would be introduced in Mockito 2, but beta-8 still returns null.\n\nCould we return null for Iterables ?\n\nShould we have the same behavior for Iterator ?\n\nThanks\n",
+    "created_at": "2015-05-19T08:05:57Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/210.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 210,\n3\t  \"title\": \"Return empty value for Iterables\",\n4\t  \"body\": \"http://code.google.com/p/mockito/issues/detail?id=175\\n\\nI expect an Iterable to be mocked by default with an empty Iterable. I understand from the initial issue this behavior would be introduced in Mockito 2, but b [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Iterable|Iterator",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "ReturnsEmptyValues.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)iterable|iterator",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "103:210\tReturn empty value for Iterables",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ReturnsEmptyValues.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Iterable",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "glob": "*ReturnsEmptyValues*"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "RETURNS_DEFAULTS|ReturnsEmptyValues|ReturnsEmptyValues",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ReturnsEmptyValues",
+        "path": "",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.defaultanswers;\n6\t\n7\timport static org.mockito.internal.util.ObjectMethodsGuru.isCompareToMethod;\n8\timport static org.mockito.intern [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(empty|default|return null|RETURNS_)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n28:99\tRETURNS_DEEP_STUBS automatically tries to create serializable mocks\n58:146\tSpy on java 8 default methods with interface hierarchy\n84:186\tAllow Java 8 default (\"defender\") methods to be tested\n89:191\tMock returning java.util.Optional [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 210, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1766, 781, 876], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/defaultanswers/ReturnsEmptyValues.java\"], \"reply\": \"Thanks for the report. Current source already returns an empty ArrayList for Iterable (see ReturnsEmptyValues), so the Iterable part is covered in this version. Iterator still gets null by default, so the open request is to return an empty value for Iterator-returning methods as well. We have logged it as an enhancement.\"}",
+  "final_is_json": true
+}

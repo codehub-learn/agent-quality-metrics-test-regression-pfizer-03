@@ -1,0 +1,122 @@
+{
+  "run": "457-1",
+  "number": 457,
+  "issue": {
+    "number": 457,
+    "title": "Stubbing with some AdditionalMatchers can NPE with null actuals",
+    "body": "``` java\nimport static org.hamcrest.MatcherAssert.assertThat;\nimport static org.hamcrest.Matchers.is;\nimport static org.mockito.AdditionalMatchers.leq;\nimport static org.mockito.Matchers.eq;\nimport static org.mockito.Mockito.mock;\nimport static org.mockito.Mockito.when;\n\nimport org.junit.Test;\n\npublic class BlahTest\n{\n    @Test\n    public void test()\n    {\n        final BoolResult mockBoolResult = mock(BoolResult.class);\n\n        when(mockBoolResult.getResult(eq(5))).thenReturn(true);  // Succeeds as expected\n        when(mockBoolResult.getResult(leq(5))).thenReturn(true); // Fails with an NPE - as of v2.0.64 - unexpected!\n\n        assertThat(mockBoolResult.getResult(null), is(false));\n    }\n\n    interface BoolResult\n    {\n        boolean getResult(Integer value);\n    }\n}\n```\n",
+    "created_at": "2016-06-23T17:38:12Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/457.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 457,\n3\t  \"title\": \"Stubbing with some AdditionalMatchers can NPE with null actuals\",\n4\t  \"body\": \"``` java\\nimport static org.hamcrest.MatcherAssert.assertThat;\\nimport static org.hamcrest.Matchers.is;\\nimport static org.mockito.AdditionalMatchers.leq;\\nimport static org.mockito.Ma [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class AdditionalMatchers|static <T extends Comparable<T>> T leq|public static .* leq\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "null|NPE|Nullable|leq|Leq|Comparable",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n27:98\tpossible NPE exception when class cannot be mocked via PowerMockito\n38:117\tNullPointerException when using argThat() for long parameter in verify\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match null [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/AdditionalMatchers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "leq|Leq",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/AdditionalMatchers.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;\n8\t\n9\timport org.mockito.internal.matchers.ArrayEquals;\n10 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "limit": 5
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/LessOrEqual.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.matchers;\n6\t\n7\timport java.io.Serializable;\n8\t\n9\tpublic class LessOrEqual<T extends Comparable<T>> extends CompareTo<T> implements Serializab [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CompareTo.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.matchers;\n6\t\n7\timport java.io.Serializable;\n8\t\n9\timport org.mockito.ArgumentMatcher;\n10\t\n11\tpublic abstract class CompareTo<T extends Compara [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 457, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [134, 185], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/AdditionalMatchers.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CompareTo.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/matchers/LessOrEqual.java\"], \"reply\": \"Thanks for the report. The snippet shows the expected result (false for a null argument) and the actual NPE, so a maintainer can follow it as written. The matcher lives in AdditionalMatchers.leq, which builds a LessOrEqual, and the comparison is in CompareTo.matches. In the current source, CompareTo.matches returns false when the actual value is null, so the NPE may come from an older release. Could you confirm the exact Mockito version where you still see it, and whether it still fails on the latest release?\"}",
+  "final_is_json": true
+}

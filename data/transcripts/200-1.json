@@ -1,0 +1,73 @@
+{
+  "run": "200-1",
+  "number": 200,
+  "issue": {
+    "number": 200,
+    "title": "ArgumentCaptor.fromClass's return type should match a parameterized type",
+    "body": "`ArgumentCaptor.fromClass`'s return type should match a parameterized type.  I.e. the expression `ArgumentCaptor.fromClass(Class<S>)` should be of type `ArgumentCaptor<U>` where `S` is a subtype of `U`.   \n\nFor example:\n\n```\nArgumentCaptor<Consumer<String>> captor = ArgumentCaptor.fromClass(Consumer.class)\n```\n\ndoes not type check (i.e. it is a compile time error). It should type check. \n\nThe reasons that it is desirable for `ArgumentCaptor.fromClass` to allow expressions such as the example above to type check are:\n\n1) `ArgumentCaptor.fromClass` is intended to be a convenience method to allow the user to construct an ArgumentCaptor without casting the returned value.\n\nCurrently, the user can devise a workaround such as: \n\n```\nArgumentCaptor<? extends Consumer<String>> captor \n= ArgumentCaptor.fromClass(Consumer.class)\n```\n\nThis workaround is inconvenient, and so contrary to `ArgumentCaptor.fromClass` being a convenience method.\n\n2) It is inconsistent with `@Captor`, which can be applied to a field with a paramterized type.  I.e.\n\n```\n@Captor ArgumentCaptor<Consumer<String>> captor \n```\n\ntype checks.\n",
+    "created_at": "2015-04-16T16:42:19Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/200.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 200,\n3\t  \"title\": \"ArgumentCaptor.fromClass's return type should match a parameterized type\",\n4\t  \"body\": \"`ArgumentCaptor.fromClass`'s return type should match a parameterized type.  I.e. the expression `ArgumentCaptor.fromClass(Class<S>)` should be of type `ArgumentCaptor<U>` whe [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "fromClass",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captor|Captor",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "10:74\tArgumentCaptor supports var args\n86:188\tArgumentCaptor no longer working for varargs\n97:200\tArgumentCaptor.fromClass's return type should match a parameterized type\n113:228\t@Captor javadoc contains a wrong call example\n185:345\tVerification using After and ArgumentCaptor returns unexpected size [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "captorForClass|public static .*ArgumentCaptor",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentCaptor.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 200, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [565], \"evidence\": [], \"reply\": \"Thanks for the detailed report. You'd like the static factory that takes a Class to return a captor whose type parameter can be a parameterized supertype of that class, so a captor typed as Consumer<String> can be created from Consumer.class without a cast or a wildcard, matching how @Captor fields already accept parameterized types.\"}",
+  "final_is_json": true
+}

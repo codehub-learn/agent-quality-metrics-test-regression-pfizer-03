@@ -1,0 +1,136 @@
+{
+  "run": "838-1",
+  "number": 838,
+  "issue": {
+    "number": 838,
+    "title": "Feature request: ArgumentMatchers.matches(Pattern regex)",
+    "body": "you ladies and gentlemen are geniuses by the way.\n\nArgumentMatchers.match( String regex ) exists... but wouldn't it be slightly better if it were match( Pattern regex )? (i.e. catering for multi-line Strings, etc.).\n\nAlso, devising a regex which distinctly does NOT match a given String is non-trivial.  And yet not atypical of a mocking use case.  Hence I suggest you clever people take the heavy lifting away from grunts like me by offering ArgumentMatchers.doesNotMatch( Pattern regex ).\n\nI posed this question today on Stack Overflow [here](http://stackoverflow.com/questions/41270738/mockito-argumentmatchers-doesnotmatch?noredirect=1#comment69745269_41270738).  \n\n------\n\n**EDIT 1** by @bric3 : removed the issue guidelines\n**EDIT 2** by @bric3 : Renamed the issue title. Previous title was `Feature request: ArgumentMatchers.doesNotMatch( Pattern regex )`",
+    "created_at": "2016-12-21T21:27:04Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/838.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 838,\n3\t  \"title\": \"Feature request: ArgumentMatchers.matches(Pattern regex)\",\n4\t  \"body\": \"you ladies and gentlemen are geniuses by the way.\\n\\nArgumentMatchers.match( String regex ) exists... but wouldn't it be slightly better if it were match( Pattern regex )? (i.e. catering for  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static .*(String regex|Pattern pattern|matches\\(|find\\()",
+        "path": "mockito",
+        "glob": "**/ArgumentMatchers.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "matches|Pattern|doesNotMatch",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "431:838\tFeature request: ArgumentMatchers.matches(Pattern regex)\n984:1869\teq() argument matcher for Kotlin suspend function call matches original call but will not match subsequent continuation resume calls\n1009:1905\tArgumentMatchers.matches not working\n1052:1995\tUpdate the ArrayEquals class in matc [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentMatchers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static String matches\\(|public static <T> T matches\\(|Pattern",
+        "path": "mockito",
+        "glob": "**/ArgumentMatchers.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ArgumentMatchers*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "static .* matches\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "type": "java",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "ArgumentMatchers",
+        "path": "mockito",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java",
+        "offset": 1,
+        "limit": 2000
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.progress.ThreadSafeMockingProgress.mockingProgress;\n8\timport static org.mockito.internal.util.Primitives.defa [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 838, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/ArgumentMatchers.java\"], \"reply\": \"Thanks for the suggestion, and for the kind words. The Pattern overload you asked for already exists as ArgumentMatchers.matches(Pattern), so that part is covered. The open request is a negated matcher, doesNotMatch(Pattern), for cases where a regex that fails to match is hard to write. We have logged it for the backlog.\"}",
+  "final_is_json": true
+}

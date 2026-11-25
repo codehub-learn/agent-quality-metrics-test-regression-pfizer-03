@@ -1,0 +1,63 @@
+{
+  "run": "840-1",
+  "number": 840,
+  "issue": {
+    "number": 840,
+    "title": "Tweak JUnit rule strictness at the method level",
+    "body": "Team, I would really appreciate feedback about this enhancement.\n\nThere is a feature request reported - a way to exempt from unnecessary stubbing at method level (#792). The feature request makes sense to me. Currently, if the user wants to opt-out from JUnit rule or JUnit runner strictness, he needs to do it at the scope of the entire class. Ideally, we can opt-out from strictness at finer granularity level (method or even at mock level).\n\nInspired by @bric3 [idea](https://github.com/mockito/mockito/issues/792#issuecomment-265762478) I'd like to get your feedback about this API enhancement for strict JUnit rules.\n\nExample test class:\n\n```java\npublic class MyTest {\n    //Mockito stubbing is strict in the entire test class\n    @Rule public MockitoRule mockito = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);\n\n    @Test public void lenient_mockito() throws Throwable {\n        //making Mockito lenient only for this test method\n        //below API already exist but it does not have any effect inside of the test method\n        mockito.strictness(Strictness.LENIENT);\n\n        //rest of the test\n    }\n}\n```\n\nPros:\n - we already have 'strictness' method in the MockitoRule API so it's not adding any new API\n - least surprise principle - users might expect this behavior to work but currently 'strictness' method _creates_ new instance of the rule and _not_ change the state of the rule.\n\nCons:\n - it's slightly not intuitive that 'strictness' method actually changes state (it's not a setter).",
+    "created_at": "2016-12-22T21:54:43Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/840.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 840,\n3\t  \"title\": \"Tweak JUnit rule strictness at the method level\",\n4\t  \"body\": \"Team, I would really appreciate feedback about this enhancement.\\n\\nThere is a feature request reported - a way to exempt from unnecessary stubbing at method level (#792). The feature request makes se [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "strictness\\(",
+        "path": "mockito",
+        "glob": "*MockitoRule*.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)strict|lenient",
+        "path": "issues",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/junit/MockitoRule.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.junit;\n6\t\n7\timport org.junit.rules.MethodRule;\n8\timport org.mockito.MockSettings;\n9\timport org.mockito.Mockito;\n10\timport org.mockito.MockitoAnnotatio [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)strict|lenient|rule|junit",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "25:96\tDocument minimum JUnit requirement for MockitoJUnitRule\n44:124\tConcise way to collect multiple verify failures, ideally with JUnitCollector or  derivative\n54:139\tTidy-up public API of Mockito JUnit rule\n55:140\tMake Mockito JUnit rule easier to use\n61:150\tmockito 1.9.5 or 1.10.17  can not passe [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 840, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [792, 1764], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/junit/MockitoRule.java\"], \"reply\": \"Thanks for the detailed write-up and the thought put into the pros and cons. You're asking for MockitoRule.strictness(...) to take effect when it is called inside a single test method, so one test can switch to Strictness.LENIENT without changing the whole class. Right now it returns a new rule instance and leaves the existing one alone. We've added this to the backlog next to #792 and #1764, which cover the same method-level scope request.\"}",
+  "final_is_json": true
+}

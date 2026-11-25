@@ -1,0 +1,134 @@
+{
+  "run": "134-1",
+  "number": 134,
+  "issue": {
+    "number": 134,
+    "title": "Argument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls",
+    "body": "This is a bug I'm seeing in 1.10.8 version (older version has the same issue - tested with 1.9.0).\n\nGiven:\n\n``` java\nFunction<Object, Integer> function = Mockito.mock(Function.class);\nwhen(function.apply(Mockito.anyString())).thenReturn(1);\nInteger result = function.apply(2);\n```\n\nExpected behavior:\n\n``` java\nresult == null;\n```\n\nActual behavior:\n\n``` java\nresult == 1;\n```\n\nNote that the function is called with an integer (not a string), and still the mocked function return the value which it should return only when a string is passed. The same works when using anyBoolean() or any other methof from any\\* family.\n",
+    "created_at": "2014-12-12T10:20:31Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/134.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 134,\n3\t  \"title\": \"Argument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\",\n4\t  \"body\": \"This is a bug I'm seeing in 1.10.8 version (older version has the same issue - tested with 1.9.0).\\n\\nGiven:\\n\\n``` java\\nFunction<Object, Integer> function = Mockito.mo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> T anyString\\(\\)|public static .* anyList\\(\\)|class Any\\b|class InstanceOf",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "^\\d+\\t.*(anyString|null|Null|any\\(\\))",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true,
+        "head_limit": 30
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n38:117\tNullPointerException when using argThat() for long parameter in verify\n50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n83:185\tanyString() does not work for null\n114:230\tNull Pointer when invo [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentMatchers.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "anyString\\(\\)|anyList\\(\\)",
+        "path": "mockito",
+        "glob": "*.java",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 10
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "anyString",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito-core/src/main/java/org/mockito/**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "anyString",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "50:134\tArgument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\n83:185\tanyString() does not work for null\n486:951\tanyString returning an empty string\n904:1724\tUse of anyString() leads to UnnecessaryStubbingException\n1261:2464\tMocking a static method with string input passes whe [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 134: \"Argument matcher anyXxx() (i.e. anyString(), anyList()) should not match nulls\". Reporter says anyString() stub on a Function<Object,Integer> returns 1 when called with Integer 2. Note: the mockito/ source folder is empty in this workspace, so no source files could be opened or searched."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 134, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [185, 1188], \"evidence\": [], \"reply\": \"Thanks for the report. It names the Mockito version (1.10.8 and 1.9.0), includes a snippet, and gives both expected and actual behaviour, so a maintainer can run it as written. The example passes an Integer, not null, to a String matcher, while the title is about nulls. Could you confirm which case you mean? I could not open the matcher source in this check, so I can't yet name the class where this behaviour lives.\"}",
+  "final_is_json": true
+}

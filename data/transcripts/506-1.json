@@ -1,0 +1,33 @@
+{
+  "run": "506-1",
+  "number": 506,
+  "issue": {
+    "number": 506,
+    "title": "Improved exception message for wanted but not invoked",
+    "body": "Currently, Mockito prints following message when specific verification fails:\n\n```\nWanted but not invoked:\nmock.simpleMethod();\n-> at ....\n\nHowever, there were other interactions with this mock:\nmock.otherMethod();\n-> at ....\nmock.booleanReturningMethod();\n-> at ....\n```\n\nIt would be useful to print the number of invocations:\n\n```\nWanted but not invoked:\nmock.simpleMethod();\n-> at ....\n\nHowever, there were exactly 2 interactions with this mock:\nmock.otherMethod();\n-> at ....\nmock.booleanReturningMethod();\n-> at ....\n```\n",
+    "created_at": "2016-07-24T17:04:33Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/506.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 506,\n3\t  \"title\": \"Improved exception message for wanted but not invoked\",\n4\t  \"body\": \"Currently, Mockito prints following message when specific verification fails:\\n\\n```\\nWanted but not invoked:\\nmock.simpleMethod();\\n-> at ....\\n\\nHowever, there were other interactions with thi [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)wanted|not invoked|message|interactions|verif",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "20:90\tImprove exception messages when user mocks a method declared on non-public parent\n38:117\tNullPointerException when using argThat() for long parameter in verify\n44:124\tConcise way to collect multiple verify failures, ideally with JUnitCollector or  derivative\n47:130\tSpying and Verification Does [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 506, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the suggestion. You'd like the \\\"Wanted but not invoked\\\" failure message to also state how many interactions the mock recorded (for example, \\\"there were exactly 2 interactions with this mock\\\") so the count is visible before the list of other calls.\"}",
+  "final_is_json": true
+}

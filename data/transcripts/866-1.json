@@ -1,0 +1,105 @@
+{
+  "run": "866-1",
+  "number": 866,
+  "issue": {
+    "number": 866,
+    "title": "When custom exception fillInstackTrace() returns null, Exception mock cannot work properly",
+    "body": "```java\npublic class CustomException extends Exception {\n\n    public CustomException() {\n        super();\n    }\n\n    @Override\n    public Exception fillInStackTrace() {\n        return null;\n    }\n}\n```\n\nTestCase like this\n```java\n when(demo.process()).thenThrow(new CustomException())\n\n//... test code\n```\n\n```\njava.lang.NullPointerException\n\tat org.mockito.internal.exceptions.stacktrace.ConditionalStackTraceFilter.filter(ConditionalStackTraceFilter.java:23)\n\tat org.mockito.internal.stubbing.answers.ThrowsException.answer(ThrowsException.java:32)\n\tat org.mockito.internal.stubbing.StubbedInvocationMatcher.answer(StubbedInvocationMatcher.java:35)\n\tat org.mockito.internal.handler.MockHandlerImpl.handle(MockHandlerImpl.java:95)\n```\n",
+    "created_at": "2017-01-03T08:29:31Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/866.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 866,\n3\t  \"title\": \"When custom exception fillInstackTrace() returns null, Exception mock cannot work properly\",\n4\t  \"body\": \"```java\\npublic class CustomException extends Exception {\\n\\n    public CustomException() {\\n        super();\\n    }\\n\\n    @Override\\n    public Exception f [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ConditionalStackTraceFilter|ThrowsException",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "fillInStackTrace|exception|stack|trace|NullPointer",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "8:72\tNullPointerException when stubbing a class in Groovy 2.3.6\n20:90\tImprove exception messages when user mocks a method declared on non-public parent\n27:98\tpossible NPE exception when class cannot be mocked via PowerMockito\n37:114\t1.10 regression (StackOverflowError) with interface where generic t [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{ConditionalStackTraceFilter,ThrowsException,MockitoException}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/ThrowsException.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.stubbing.answers;\n6\t\n7\timport java.io.Serializable;\n8\t\n9\timport org.mockito.invocation.InvocationOnMock;\n10\timport org.mockito.stubbing.Valid [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/exceptions/stacktrace/ConditionalStackTraceFilter.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.exceptions.stacktrace;\n6\t\n7\timport java.io.Serializable;\n8\t\n9\timport org.mockito.configuration.IMockitoConfiguration;\n10\timport org.mockito.i [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 866: custom exception overriding fillInStackTrace() to return null causes NPE in ConditionalStackTraceFilter.filter when thrown via thenThrow. Source opened: mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/ThrowsException.java and mockito/mockito-core/src/main/java/org/mockito/internal/exceptions/stacktrace/ConditionalStackTraceFilter.java. Current filter calls throwable.getStackTrace() and setStackTrace(), with no explicit null dereference in the reported form."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 866, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [312], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/stubbing/answers/ThrowsException.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/exceptions/stacktrace/ConditionalStackTraceFilter.java\"], \"reply\": \"Thanks for the report. The snippet and the stack trace are helpful. To reproduce it we still need two things:\\n- The Mockito version you are using.\\n- What you expected to happen in the test. The trace shows the NPE, but not the result you wanted.\\n\\nThe line numbers in your trace don't match the current source, so the version will also tell us whether this was already changed or fixed.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,107 @@
+{
+  "run": "878-1",
+  "number": 878,
+  "issue": {
+    "number": 878,
+    "title": "@Spy dosn't report the correct error when it can't instantiate abstract class",
+    "body": "The annotation engine doesn't inform the user correctly when the spying an inner `private static abstract class`.\n\n```\norg.mockito.exceptions.base.MockitoException: Unable to initialize @Spy annotated field 'a'.\nnull\n\n\tat org.mockito.internal.configuration.SpyAnnotationEngine.process(SpyAnnotationEngine.java:70)\n\tat org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:59)\n\tat org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:41)\n```\n\nIndeed when the class is private, javac still generates a synthetic 1-arg constructor taking the enclosing class.\n\nThat should be easy to improve, as the `SpyAnnotationEngine` just needs to report an error message for this case.",
+    "created_at": "2017-01-12T13:11:26Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/878.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 878,\n3\t  \"title\": \"@Spy dosn't report the correct error when it can't instantiate abstract class\",\n4\t  \"body\": \"The annotation engine doesn't inform the user correctly when the spying an inner `private static abstract class`.\\n\\n```\\norg.mockito.exceptions.base.MockitoException: Un [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Unable to initialize @Spy|class SpyAnnotationEngine",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "spy|abstract|instantiat",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "22:92\tAllow convenient spying on abstract classes\n31:107\tImprove internal implementation so that it is possible to implement mocking abstract classes\n32:108\tClarify Spy vs Mock CALLS_REAL_METHODS\n42:122\tProblem spying on abstract classes\n47:130\tSpying and Verification Doesn't Work On Instances Creat [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/SpyAnnotationEngine.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Unable to initialize @Spy|Unable to initialize",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "SpyAnnotationEngine",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/configuration/SpyAnnotationEngine.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.configuration;\n6\t\n7\timport static org.mockito.Mockito.CALLS_REAL_METHODS;\n8\timport static org.mockito.Mockito.withSettings;\n9\timport static o [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 878, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [220, 122], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/configuration/SpyAnnotationEngine.java\"], \"reply\": \"Thanks for the report. To reproduce it, could you send:\\n- The Mockito version you were running.\\n- A small test class with the private static abstract inner class and the @Spy field.\\n- The result you expected, if it differs from the current error.\\n\\nFor reference, SpyAnnotationEngine now checks for private abstract inner classes and throws a message that names both the inner and outer class. Could you retest on the latest release and tell us whether the 'null' message still appears?\"}",
+  "final_is_json": true
+}

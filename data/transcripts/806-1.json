@@ -1,0 +1,151 @@
+{
+  "run": "806-1",
+  "number": 806,
+  "issue": {
+    "number": 806,
+    "title": "Unable to Debug Asynchronous block using Mockito 2.2.22",
+    "body": "Below is the source code\n\n```java\npublic class Calculator {\n\t@Inject AsyncExecutor async;\n\t\n    public int sum(int add1, int add2) {\n    \tSystem.out.println(\"Before Aync call\");\n    \tasync.submit(new Callable<Void>() {\n\t\t\t@Override\n\t\t\tpublic Void call() throws Exception {\n\t\t\t\tSystem.out.println(\"Inside Async Block\");\n\t\t\t\treturn null;\n\t\t\t}\n\t\t});\n        return add1 + add2;\n    }\n}\n```\n\nBelow is the test case\n\n```java\n@RunWith(MockitoJUnitRunner.class)\npublic class CalculatorTest {\n\t@Spy\n\tprivate AsyncExecutor async = new AsyncExecutorImpl();\n\t@InjectMocks\n\tprivate Calculator calculator;\n\n\t@Test\n\tpublic void testSum() throws Exception {\n\t\tint result = calculator.sum(1, 2);\n\t\tassertEquals(3, result);\n\t}\n}\n```\n\nControl is not halting at `System.out.println(\"Inside Async Block\");`  in case of above Junit being debug with a break point inside async block\n\n**EDITED by @bric3**: correct snippet code block",
+    "created_at": "2016-12-10T03:28:36Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/806.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 806,\n3\t  \"title\": \"Unable to Debug Asynchronous block using Mockito 2.2.22\",\n4\t  \"body\": \"Below is the source code\\n\\n```java\\npublic class Calculator {\\n\\t@Inject AsyncExecutor async;\\n\\t\\n    public int sum(int add1, int add2) {\\n    \\tSystem.out.println(\\\"Before Aync call\\\");\\n  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)async|debug|breakpoint|@Spy|InjectMocks",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "6:70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n73:169\t@InjectMocks and @Spy on same field should cause MockitoException\n76:174\tAnnotation to instantiate and inject non-mock into @InjectMocks\n100:205\tInjectMocks injects mock into wrong field\n109:220\t2.0.8-beta - [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/{Spy,InjectMocks}.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public @interface (Spy|InjectMocks)\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*{Spy,InjectMocks}*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "@interface Spy|@interface InjectMocks",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Spy",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "answer-draft",
+        "args": "Issue 806: \"Unable to Debug Asynchronous block using Mockito 2.2.22\". Reporter's breakpoint inside an async Callable passed to a collaborator is never hit when running a test that uses Mockito spy/inject annotations. Labelled question. Mockito source folder mockito/ appears empty in this workspace, so no source files could be opened or verified."
+      },
+      "result": "Launching skill: answer-draft",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Mockito.java",
+        "limit": 40
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport org.jspecify.annotations.Nullable;\n8\timport org.mockito.exceptions.misusing.PotentialStubbingProblem;\n9\timport org.mockito.exceptions.mis [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/Spy.java",
+        "limit": 60
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static java.lang.annotation.ElementType.FIELD;\n8\timport static java.lang.annotation.RetentionPolicy.RUNTIME;\n9\t\n10\timport java.lang.annot [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java",
+        "limit": 60
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static java.lang.annotation.ElementType.FIELD;\n8\timport static java.lang.annotation.RetentionPolicy.RUNTIME;\n9\t\n10\timport java.lang.annot [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java",
+        "limit": 30
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.util.Primitives.defaultValue;\n8\t\n9\timport java.util.List;\n10\t\n11\timport org.mockito.internal.matchers.Capturi [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 806, \"label\": \"question\", \"route\": \"answer\", \"related\": [2743, 1488, 1581], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/Mockito.java\", \"mockito/mockito-core/src/main/java/org/mockito/Spy.java\", \"mockito/mockito-core/src/main/java/org/mockito/InjectMocks.java\", \"mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java\"], \"reply\": \"Hi, Mockito does not run or pause the Callable. A @Spy wraps your real AsyncExecutorImpl, so the block only runs if that implementation executes it, often on another thread. The test can also finish before that thread reaches your breakpoint, and the debugger may only suspend the test thread. To step through the block deterministically, capture the Callable with ArgumentCaptor (see its Javadoc in org.mockito.ArgumentCaptor): verify the submit call, take getValue(), and call() it from the test thread. You can also set the breakpoint in AsyncExecutorImpl's submit method to confirm the block is reached.\"}",
+  "final_is_json": true
+}

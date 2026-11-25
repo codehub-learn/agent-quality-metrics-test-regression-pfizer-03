@@ -1,0 +1,129 @@
+{
+  "run": "565-1",
+  "number": 565,
+  "issue": {
+    "number": 565,
+    "title": "ArgumentCaptor should be type aware",
+    "body": "Assume we have the following test.\n\n```\n @Mock\n private Consumer<Collection<?>> consumer;\n\n @Test\n public void test() throws Exception {\n\n    consumer.accept(new HashSet<>());\n    consumer.accept(new ArrayList<>());\n\n    ArgumentCaptor<ArrayList<?>> captor = ArgumentCaptor.forClass(ArrayList.class);\n    verify(consumer).accept(captor.capture());\n }\n```\n\nThe test fails with:\n\n```\norg.mockito.exceptions.verification.TooManyActualInvocations:\nconsumer.accept(<Capturing argument>);\nWanted 1 time:\n-> at foo.TestClass.testName(TestClass.java:64)\nBut was 2 times. Undesired invocation:\n-> at agh.TestClass.testName(TestClass.java:61)\n\n    at foo.TestClass.test(TestClass.java:64)\n    [..]\n```\n\nThe problem here is that ArgumentCaptor is not type aware. That should be fixed.\n\nThis issue was extracted from #358 and relates to #439.\n",
+    "created_at": "2016-08-17T07:52:34Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/565.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 565,\n3\t  \"title\": \"ArgumentCaptor should be type aware\",\n4\t  \"body\": \"Assume we have the following test.\\n\\n```\\n @Mock\\n private Consumer<Collection<?>> consumer;\\n\\n @Test\\n public void test() throws Exception {\\n\\n    consumer.accept(new HashSet<>());\\n    consumer.accept(new Ar [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class ArgumentCaptor|forClass|public T capture|isA\\(|class CapturingMatcher",
+        "path": "mockito",
+        "glob": "*ArgumentCaptor*.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)captor|captur|type.?aware|generic|ArgumentCaptor",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "10:74\tArgumentCaptor supports var args\n37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n46:128\tDeep stubbing with generic responses in the call chain is not working\n61:150\tmockito 1.9.5 or 1.10.17  can not passed junit test when use generic clas [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/ArgumentCaptor*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "public static <T> ArgumentCaptor<T> forClass",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Captor*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "forClass",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito;\n6\t\n7\timport static org.mockito.internal.util.Primitives.defaultValue;\n8\t\n9\timport java.util.List;\n10\t\n11\timport org.mockito.internal.matchers.Capturi [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "forClass",
+        "path": "mockito/mockito-core/src/main/java/org/mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.matchers;\n6\t\n7\timport static org.mockito.internal.exceptions.Reporter.noArgumentValueWasCaptured;\n8\t\n9\timport java.io.Serializable;\n10\timport [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 565, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [200, 562], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/ArgumentCaptor.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/matchers/CapturingMatcher.java\"], \"reply\": \"Thank you for the report. You are asking that ArgumentCaptor check the captured argument's type, so a captor declared for ArrayList only captures ArrayList values and ignores a HashSet passed to the same method.\"}",
+  "final_is_json": true
+}

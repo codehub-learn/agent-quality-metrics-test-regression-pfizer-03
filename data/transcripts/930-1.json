@@ -1,0 +1,39 @@
+{
+  "run": "930-1",
+  "number": 930,
+  "issue": {
+    "number": 930,
+    "title": "Update contributing guidelines",
+    "body": "Goal: get more high quality contributions\n\nCurrent contributing guidelines are great. I would like to include a list tickets that potential contributors can work on. This requires vetting the tickets and scoping them so they are ready to be worked on by external contributors.\n\nThis ticket is a placeholder, more details to be added when one starts working on it. Assigning myself so that I have it on my radar. Reassign to yourself if you want to take it on!",
+    "created_at": "2017-02-04T14:58:16Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/930.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 930,\n3\t  \"title\": \"Update contributing guidelines\",\n4\t  \"body\": \"Goal: get more high quality contributions\\n\\nCurrent contributing guidelines are great. I would like to include a list tickets that potential contributors can work on. This requires vetting the tickets and scoping the [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)contribut|good first|newcomer|help wanted|ticket",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "475:930\tUpdate contributing guidelines\n528:1044\tMistake in Contribution guide, Code style example\n570:1126\tfetching all contributors fails on shipkit-bootstrap\n632:1248\tfetchContributors always run, even when not releasing\n873:1657\tOOME contributed to by UnnecessaryStubbingsReporter in lenient mode\n [cut]",
+      "error": false
+    },
+    {
+      "tool": "Output",
+      "input": {},
+      "result": "<tool_use_error>Error: No such tool available: Output</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 930, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1044, 2868], \"evidence\": [], \"reply\": \"Thanks for the suggestion. You're asking for the contributing guide to include a vetted list of tickets that new contributors can pick up, scoped so they are ready for external work. Thanks for keeping this on the radar.\"}",
+  "final_is_json": true
+}

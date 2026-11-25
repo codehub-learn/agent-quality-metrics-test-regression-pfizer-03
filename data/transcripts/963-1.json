@@ -1,0 +1,142 @@
+{
+  "run": "963-1",
+  "number": 963,
+  "issue": {
+    "number": 963,
+    "title": "Invalid property reported by mocks and partial mocks",
+    "body": "Hi,\n\nWe migrated to Mockito 2.x not so long ago and we came across a test that used to works back in Mockito 2.1.0 and no longer works with the latest 2.x version (2.7.11).\n\nHere is the SSCCE to replicate the issue:\n\n```\npackage com.some.company;\n\nimport static org.junit.Assert.*;\n\nimport java.beans.BeanInfo;\nimport java.beans.IntrospectionException;\nimport java.beans.Introspector;\nimport java.beans.PropertyDescriptor;\nimport java.util.HashMap;\nimport java.util.Map;\n\nimport org.junit.Test;\nimport org.mockito.Mockito;\n\npublic class Mockito2Issue\n{\n\tpublic class SomeClass\n\t{\n\t\tString property;\n\n\t\tpublic String getAProperty()\n\t\t{\n\t\t\treturn property;\n\t\t}\n\n\t\tprotected String getNotAProperty()\n\t\t{\n\t\t\treturn \"abc\";\n\t\t}\n\t}\n\n\t@Test\n\tpublic void testMockBug() throws IntrospectionException\n\t{\n\t\tSomeClass someClassMock = Mockito.mock(SomeClass.class);\n\n\t\tBeanInfo info = Introspector.getBeanInfo(someClassMock.getClass());\n\n\t\tMap<String, PropertyDescriptor> mockPropertyDescriptors = new HashMap<>();\n\t\tfor (PropertyDescriptor propertyDescriptor : info.getPropertyDescriptors())\n\t\t{\n\t\t\tmockPropertyDescriptors.put(propertyDescriptor.getName(), propertyDescriptor);\n\t\t}\n\n\t\tassertTrue(mockPropertyDescriptors.containsKey(\"AProperty\"));\n\t\tassertFalse(mockPropertyDescriptors.containsKey(\"notAProperty\"));\n\t}\n\n\t@Test\n\tpublic void testSpyBug() throws IntrospectionException\n\t{\n\t\tSomeClass someClassSpy = Mockito.spy(new SomeClass());\n\n\t\tBeanInfo info = Introspector.getBeanInfo(someClassSpy.getClass());\n\n\t\tMap<String, PropertyDescriptor> spyPropertyDescriptors = new HashMap<>();\n\t\tfor (PropertyDescriptor propertyDescriptor : info.getPropertyDescriptors())\n\t\t{\n\t\t\tspyPropertyDescriptors.put(propertyDescriptor.getName(), propertyDescriptor);\n\t\t}\n\n\t\tassertTrue(spyPropertyDescriptors.containsKey(\"AProperty\"));\n\t\tassertFalse(spyPropertyDescriptors.containsKey(\"notAProperty\"));\n\t}\n}\n```\n\n**Before (1.10.19):**\nUsed to works\n\n**After (2.7.11)**\nBoth tests fail on `assertFalse(mockPropertyDescriptors.containsKey(\"notAProperty\"));`\n\nIt seems that although the `getNotAProperty` method is `protected`, the most recent version of Mockito 2.x consider this as valid property getter, but not the very first 2.x stable release (2.1.0).\n\nCan you take a look at this?\n\n\nEnvironment details:\n\nComponent | Version\n--------- | ------\nOS | Ubuntu 16.10\nJava | Oracle Java(TM) SE Runtime Environment (build 1.8.0_101-b13)\nEclipse | Neon.2\nJUnit | 4.8.2\nMockito | 2.1.0 (before), 2.7.11 (after)",
+    "created_at": "2017-02-23T19:51:19Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/963.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 963,\n3\t  \"title\": \"Invalid property reported by mocks and partial mocks\",\n4\t  \"body\": \"Hi,\\n\\nWe migrated to Mockito 2.x not so long ago and we came across a test that used to works back in Mockito 2.1.0 and no longer works with the latest 2.x version (2.7.11).\\n\\nHere is the SSCCE [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isProtected|Modifier\\.PROTECTED|ModifierReviewable|protected",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)introspect|PropertyDescriptor|getter|bean",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "547:1077\tMockito should automatically reset @MockBean's before each test case\n703:1365\tVerifying class-level @Transactional-annotated Spring bean\n1037:1966\tMockito treat FactoryBean`s wrong\n1048:1987\tRemoval of getters in InterceptedInvocation breaks Mockito-Scala\n1124:2112\tThe circular dependency c [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Visibility|isVisibleTo|PUBLIC",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*SubclassBytecodeGenerator*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*ByteBuddy*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Modifier.PROTECTED|isProtected|ElementMatchers.isProtected",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)protected|getter|property|introspect",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "134:271\tMockito spy is unable to verify protected method call from within an anonymous class\n417:800\tHow to mock protected method\n492:963\tInvalid property reported by mocks and partial mocks\n1048:1987\tRemoval of getters in InterceptedInvocation breaks Mockito-Scala\n1535:3059\tmaven plugin / property  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 963: Invalid property reported by mocks and partial mocks"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 963, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [], \"evidence\": [], \"reply\": \"Thanks for the detailed report and the SSCCE. The snippet, the two Mockito versions (2.1.0 before, 2.7.11 after), and the expected and actual results are all clear, so the report is reproducible as written. The change in behaviour is that a protected getter is now reported as a bean property on mocks and spies. I could not find the implementing source in the copy of the repository I checked, so I can't yet name the responsible class. A maintainer will need to confirm this against 2.7.11 and identify what changed since 2.1.0.\"}",
+  "final_is_json": true
+}

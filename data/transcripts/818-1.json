@@ -1,0 +1,159 @@
+{
+  "run": "818-1",
+  "number": 818,
+  "issue": {
+    "number": 818,
+    "title": "StackOverflow occurs when mocking a HashMap with mockmaker",
+    "body": "As investigated in #752, mocking a `HashMap` halts with a stack overflow when using `mock-maker-inline`:\n\n```\nMockito.mock(HashMap.class);\n\nException in thread \"Reference Handler\" java.lang.StackOverflowError\n\tat java.lang.Class.privateGetDeclaredMethods(Class.java:2701)\n\tat java.lang.Class.getDeclaredMethod(Class.java:2128)\n\tat java.util.HashMap.get(HashMap.java:556)\n\tat sun.reflect.Reflection.filterMethods(Reflection.java:291)\n\tat java.lang.Class.privateGetDeclaredMethods(Class.java:2701)\n\tat java.lang.Class.getDeclaredMethod(Class.java:2128)\n\tat java.util.HashMap.get(HashMap.java:556)\n\tat sun.reflect.Reflection.filterMethods(Reflection.java:291)\n\tat java.lang.Class.privateGetDeclaredMethods(Class.java:2701)\n\tat java.lang.Class.getDeclaredMethod(Class.java:2128)\n\tat java.util.HashMap.get(HashMap.java:556)\n\tat sun.reflect.Reflection.filterMethods(Reflection.java:291)\n\tat java.lang.Class.privateGetDeclaredMethods(Class.java:2701)\n\tat java.lang.Class.getDeclaredMethod(Class.java:2128)\n\tat java.util.HashMap.get(HashMap.java:556)\n\tat sun.reflect.Reflection.filterMethods(Reflection.java:291)\n```\n\nThis does not occur when mocking `Map`.\nVerified against Mockito 2.2.28.",
+    "created_at": "2016-12-13T21:17:11Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/818.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 818,\n3\t  \"title\": \"StackOverflow occurs when mocking a HashMap with mockmaker\",\n4\t  \"body\": \"As investigated in #752, mocking a `HashMap` halts with a stack overflow when using `mock-maker-inline`:\\n\\n```\\nMockito.mock(HashMap.class);\\n\\nException in thread \\\"Reference Handler\\\" ja [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)hashmap|stackoverflow|stack overflow|mock-maker-inline|inline mock",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "37:114\t1.10 regression (StackOverflowError) with interface where generic type has itself as upper bound\n120:244\tStackOverflowError in MockitoSerializationIssue.java\n267:530\tProvide Mockito examples on Stackoverflow-Documentation\n382:733\tAttempt to mock a Kotlin-sealed class contained in another clas [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/InlineByteBuddyMockMaker.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getDeclaredMethods|privateGetDeclaredMethods|HashMap",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*Inline*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "getDeclaredMethods|isStackOverflow|StackOverflowError",
+        "path": "mockito/mockito-core/src/main/java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**\\*.java"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InlineBytecodeGenerator|InlineDelegateByteBuddyMockMaker|class InlineByteBuddyMockMaker",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.creation.instance.Instantiator;\n9\timport org.mockito.int [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "issues",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.creation.instance.InstantiationException;\n9\timport org.m [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport net.bytebuddy.ByteBuddy;\n8\timport net.bytebuddy.ClassFileVersion;\n9\timport net.bytebuddy.asm.Advice;\n10\timpor [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 818: mocking java.util.HashMap with mock-maker-inline causes StackOverflowError (Mockito 2.2.28 report). Evidence so far: InlineBytecodeGenerator.EXCLUDES (mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java) lists Class, primitive wrappers, String, WeakReference, but not HashMap. InlineDelegateByteBuddyMockMaker.isTypeMockable reports HashMap as mockable. Related issues: 1999, 2105, 2884, 1979."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "Reproducible as written. The report has the snippet, the Mockito version (2.2.28), the stack trace, and the contrast with `Map`. The code that decides what gets instrumented is `InlineBytecodeGenerator`, and `HashMap` is not in its `EXCLUDES` list.\n\n```json\n{\"number\": 818, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1999, 2105, 2884], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java\"], \"reply\": \"Thanks for the report. This is reproducible as written: the snippet, the Mockito version (2.2.28), the stack trace, and the comparison with Map are all there. The inline mock maker retransforms java.util.HashMap because it is not in the EXCLUDES list in InlineBytecodeGenerator, which is where the class instrumentation happens. The trace loops through JDK reflection (Reflection.filterMethods and HashMap.get), so the recursion starts in JDK code that runs while Mockito instruments the class. Related reports: #1999 (ReferenceQueue), #2105 (Math), #2884 (WeakReference).\"}\n```",
+  "final_is_json": false
+}

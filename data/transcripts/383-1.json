@@ -1,0 +1,148 @@
+{
+  "run": "383-1",
+  "number": 383,
+  "issue": {
+    "number": 383,
+    "title": "Mockito JAR is not a valid OSGi bundle because illegal version format",
+    "body": "Hi,\n\nThe current Mockito JAR is not a valid OSGi-bundle because it uses an illegal version for exporting its packages. I get the following error when I run my PAX-EXAM tests with the latest Mockito version:\n\norg.ops4j.pax.exam.TestContainerException: Problem starting test container.\nCaused by: org.osgi.framework.BundleException: Could not create bundle object.\nCaused by: java.lang.IllegalArgumentException: invalid version \"2.0.44-beta\": non-numeric \"44-beta\"\nCaused by: java.lang.NumberFormatException: For input string: \"44-beta\"\n\nThe version should be **2.0.44.beta** (with a dot instead a dash). This is since 2.0.28-beta, the last valid bundle was 2.0.27-beta.\n",
+    "created_at": "2016-04-06T16:25:56Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/383.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 383,\n3\t  \"title\": \"Mockito JAR is not a valid OSGi bundle because illegal version format\",\n4\t  \"body\": \"Hi,\\n\\nThe current Mockito JAR is not a valid OSGi-bundle because it uses an illegal version for exporting its packages. I get the following error when I run my PAX-EXAM tests wi [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Bundle-Version|<version>|2\\.0\\.44|beta|OSGi|osgi",
+        "path": "mockito",
+        "glob": "**/pom.xml",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "-beta|Bundle-Version|Export-Package",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "osgi|bundle|beta|version",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "15:80\tExpose 'internal' classes so Powermock-osgi can be incorporated without special builds of Mockito\n16:84\tConsume new cglib and asm versions\n18:88\tEnsure continuous deployment process does not produce \"-dev\" versions\n29:101\tDocumentation mentions non-existing version 1.9.8 in few places\n30:105\tC [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{build.gradle,gradle.properties,*.bnd,MANIFEST.MF,pom.xml}",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "version",
+        "path": "mockito",
+        "glob": "*.gradle*",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Bundle|Export-Package|osgi",
+        "path": "mockito",
+        "-i": true,
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/progress/MockingProgressImpl.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2007 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.progress;",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "osgi|Bundle-Version|Export-Package",
+        "path": "mockito",
+        "-i": true,
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv",
+        "offset": 200,
+        "limit": 20
+      },
+      "result": "200\t362\tCan no longer mock function that takes generic arguments\n201\t363\tMockito doesnt work with arquillian, missing dependecy SignatureVisitor\n202\t364\tMockito fails to mock methods results on Kotlin classes.\n203\t365\tSimplify the InvocationOnMock-API to get a casted argument\n204\t366\tNPE trying to m [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check",
+        "args": "Issue 383: Mockito JAR is not a valid OSGi bundle because illegal version format. Issue body is in issues/383.json. Related issues: 385 (OSGi metadata is incorrect), 595 (Handle beta non-semantic versioning scheme), 522 (OSGi test project to validate OSGi headers). Source search: no OSGi manifest, Bundle-Version, or Export-Package entries and no build files were found under mockito/, so the reported version string could not be traced to source in this snapshot."
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 383, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [385, 595, 522], \"evidence\": [], \"reply\": \"Thanks for the report. The version (2.0.44-beta), the OSGi error and the stack trace are clear, but the report has no code or test showing the failure, so I can't reproduce it as written. Could you add the exact Mockito artifact and version you resolved, and the Pax Exam test or minimal project that triggers the bundle error? I also couldn't find any OSGi manifest or bundle version code in the source snapshot, so I can't point to the class involved yet. The error is raised by org.osgi.framework.BundleException while the bundle object is created.\"}",
+  "final_is_json": true
+}

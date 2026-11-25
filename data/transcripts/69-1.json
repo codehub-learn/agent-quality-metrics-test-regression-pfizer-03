@@ -1,0 +1,112 @@
+{
+  "run": "69-1",
+  "number": 69,
+  "issue": {
+    "number": 69,
+    "title": "Removing mockingDetails API from Mockito",
+    "body": "After some exchange with other member of the community, code such as \n\n``` java\nMockito.mockingDetails(someObject).isMock();\nMockito.mockingDetails(someObject).isSpy();\n```\n\nIt looks wrong ; Mockito is the entry point for user friendly usage from within the test. Inspecting mocks looks wrong when it's a normal _user_.\n\nHowever I know framework developers may need to inspect mocks. Let's keep the `MockingDetails` type but instantiate it from another static factory method.\n\nThe drawback is the removal of this API for current users. Maybe we can mark `Mockito.mockingDetails(..)` deprecated in 1.9.x and remove it in 2.0.0\n",
+    "created_at": "2014-08-05T11:43:52Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/69.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 69,\n3\t  \"title\": \"Removing mockingDetails API from Mockito\",\n4\t  \"body\": \"After some exchange with other member of the community, code such as \\n\\n``` java\\nMockito.mockingDetails(someObject).isMock();\\nMockito.mockingDetails(someObject).isSpy();\\n```\\n\\nIt looks wrong ; Mockito is [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails",
+        "path": "mockito",
+        "glob": "Mockito.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails|mockingDetails",
+        "path": "issue-index.tsv",
+        "-i": true,
+        "output_mode": "content"
+      },
+      "result": "5:69\tRemoving mockingDetails API from Mockito\n273:541\timprove Mockito.mockingDetails API\n274:542\tnew API MockingDetails.getStubbings for advanced users and integrations\n275:543\tnew MockingDetails.printInvocations() API for debugging tests and edge cases",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "static MockingDetails mockingDetails|class MockingDetails|interface MockingDetails",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mockingDetails",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/Mockito.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": ".",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 69, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [541], \"evidence\": [], \"reply\": \"Thanks for raising this. You're asking to move mock inspection off the Mockito entry point, keeping the MockingDetails type but reaching it through a different static factory, and to deprecate the current Mockito call in 1.9.x before removing it in 2.0.0. You already flagged the main trade-off, which is breaking existing users, so it's worth weighing that carefully. We've logged the request for the maintainers to consider.\"}",
+  "final_is_json": true
+}

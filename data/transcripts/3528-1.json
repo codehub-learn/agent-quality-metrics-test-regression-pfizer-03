@@ -1,0 +1,225 @@
+{
+  "run": "3528-1",
+  "number": 3528,
+  "issue": {
+    "number": 3528,
+    "title": "Mockito 5.14 + Java 21 + Maven surefire agent config : Cannot mock final class",
+    "body": "Reproduction: https://github.com/lwiddershoven/mockito-issue\n\nWhen maven (or IntelliJ) run my test it fails:\n```\n[ERROR] IssueTest.issue -- Time elapsed: 0.159 s <<< ERROR!\norg.mockito.exceptions.base.MockitoException: \n\nCannot mock/spy class java.lang.reflect.Method\nMockito cannot mock/spy because :\n - final class\n        at IssueTest.issue(IssueTest.java:12)\n```\n\nI use:\n- Mockito 5.14.2\n- JVM OpenJDK Runtime Environment Temurin-21.0.5+11 (build 21.0.5+11-LTS)\n- Maven: Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d26018693\n\nI have applied the maven configuration from: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#mockito-instrumentation\n\nMockito works fine when mocking normal classes, but specifically not final classes.\n\nThe pom configuration has been picked up as the Mockito and javaagent warnings do not show up in the maven output anymore.\n\nRelevant part of the pom:\n```xml\n <plugins>\n            <plugin>\n                <groupId>org.apache.maven.plugins</groupId>\n                <artifactId>maven-dependency-plugin</artifactId>\n                <executions>\n                    <execution>\n                        <goals>\n                            <goal>properties</goal>\n                        </goals>\n                    </execution>\n                </executions>\n            </plugin>\n            <plugin>\n                <groupId>org.apache.maven.plugins</groupId>\n                <artifactId>maven-surefire-plugin</artifactId>\n                <version>${surefire-plugin.version}</version>\n                <configuration>\n                    <!-- Java 21+ does not allow dynamic loading/  some mockito functionality - this is how we enable that explicitly-->\n                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>\n                    <systemPropertyVariables>\n                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>\n                        <maven.home>${maven.home}</maven.home>\n                    </systemPropertyVariables>\n                </configuration>\n            </plugin>\n        </plugins>\n```\n\nI'm not sure what more I can do to test or fix this. Any ideas?",
+    "created_at": "2024-12-06T13:20:35Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/3528.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 3528,\n3\t  \"title\": \"Mockito 5.14 + Java 21 + Maven surefire agent config : Cannot mock final class\",\n4\t  \"body\": \"Reproduction: https://github.com/lwiddershoven/mockito-issue\\n\\nWhen maven (or IntelliJ) run my test it fails:\\n```\\n[ERROR] IssueTest.issue -- Time elapsed: 0.159 s << [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "final class",
+        "path": "mockito",
+        "glob": "*.java",
+        "output_mode": "content",
+        "head_limit": 20
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(inline|final|javaagent|instrument|surefire|reflect)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n175:332\tFinalize Mockito Runners\n191:352\tuse @InjectMocks for final fields\n215:392\tNPE when Test extends from android.test.ActivityInstrumentationTestCase2\n233:422\tWhitebox.setInternalS [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Cannot mock/spy|mockable|isFinal\\(",
+        "path": "mockito",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(javaagent|java ?21|argLine|5\\.14|agent|Method)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 40
+      },
+      "result": "3:64\tDefault answer to fail on an unstubbed method invocation\n13:77\tGetting an absolute count of calls to a mocked method\n14:78\tDefining a new mocked method invokes previously defined one\n20:90\tImprove exception messages when user mocks a method declared on non-public parent\n21:91\tDocument Mockito.a [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{InlineDelegateByteBuddyMockMaker,InlineBytecodeGenerator,MockitoException,InlineMockMaker,SubclassByteBuddyMockMaker}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isFinal|final class|Cannot mock",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*MockMaker*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "mockito/**/*Mockability*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java",
+        "limit": 5
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "final",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 5
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isFinal|Modifier|isTypeMockable|Mockability",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "35:import java.lang.reflect.Modifier;\n453:        if (Modifier.isFinal(typeToMock.getModifiers())) {\n476:                && Modifier.isAbstract(typeToMock.getModifiers())) {\n484:        if (Modifier.isPrivate(typeToMock.getModifiers())) {\n604:    public TypeMockability isTypeMockable(final Class<?>  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "isTypeMockable|class InlineBytecodeGenerator|Cannot mock",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java",
+        "offset": 440,
+        "limit": 60
+      },
+      "result": "440\t                            settings.getDefaultAnswer()));\n441\t        } catch (Exception bytecodeGenerationFailed) {\n442\t            throw prettifyFailure(settings, bytecodeGenerationFailed);\n443\t        }\n444\t    }\n445\t\n446\t    private <T> RuntimeException prettifyFailure(\n447\t            Mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java",
+        "offset": 600,
+        "limit": 25
+      },
+      "result": "600\t        }\n601\t    }\n602\t\n603\t    @Override\n604\t    public TypeMockability isTypeMockable(final Class<?> type) {\n605\t        return new TypeMockability() {\n606\t            @Override\n607\t            public boolean mockable() {\n608\t                return INSTRUMENTATION.isModifiableClass(type) && ! [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "mock/spy|because :",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)(javaagent|inline|final class|5\\.14|Java 21|argLine)",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true,
+        "head_limit": 80
+      },
+      "result": "45:127\tWhen trying to mock a non final class, get java.lang.NoClassDefFoundError: com.ibm.ecm.util.DocumentContent\n247:466\tRetrieving Arguments for ArgumentMatchers from other mocks not working inline\n258:497\tDEEP_STUBS tries to mock final class\n319:632\tPossible solution to spy final class\n332:657\tS [cut]",
+      "error": false
+    },
+    {
+      "tool": "Skill",
+      "input": {
+        "skill": "repro-check"
+      },
+      "result": "Launching skill: repro-check",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 3528, \"label\": \"bug\", \"route\": \"repro-check\", \"related\": [1601, 2436, 1879], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java\"], \"reply\": \"Thanks for the report, the versions and stack trace are useful. The test code is only linked to an external repo, so please paste the IssueTest source (around line 12) here, and say what you expected to happen when mocking java.lang.reflect.Method. Also tell us whether the javaagent is actually applied: the message 'Cannot mock/spy ... final class' does not match the text in InlineDelegateByteBuddyMockMaker ('Mockito cannot mock this class'), which suggests the subclass mock maker is in use. Could you run mvn help:effective-pom and share the surefire argLine, and what ${org.mockito:mockito-core:jar} resolves to? Thanks.\"}",
+  "final_is_json": true
+}

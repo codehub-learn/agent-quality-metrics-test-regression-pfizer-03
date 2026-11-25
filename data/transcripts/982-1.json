@@ -1,0 +1,176 @@
+{
+  "run": "982-1",
+  "number": 982,
+  "issue": {
+    "number": 982,
+    "title": "Break cyclical compile time dependency on hideRecursiveCall",
+    "body": "I am working on upgrading the version of mockito in AOSP to 2.7.13 using byte buddy and byte buddy android rather than dexmaker.\n\nAs part of that I need to exclude a number of classes which will not compile on Android because it does not support Java agents/instrumentation. The mockito code has always been very well organized and made that very simple to do but in the latest version I found a minor issue.\n\nThe files I need to exclude are:\n- src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java\n- src/main/java/org/mockito/internal/creation/bytebuddy/InlineBytecodeGenerator.java\n- src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java\n\nUnfortunately, when I do that I get a compile error because MockMethodAdvice is trying to use hideRecursiveCall from InlineByteBuddyMockMaker. I looked at the code and it seems as though InlineByteBuddyMockMaker depends on InlineBytecodeGenerator which depends on MockMethodAdvice which depends on hideRecursiveCall from InlineByteBuddyMockMaker.\n\nThe only places that actually use hideRecursiveCall are MockMethodAdvice and InlineByteBuddyMockMakerTest. That depends on InlineByteBuddyMockMaker which depends on InlineBytecodeGenerator which depends on MockMethodAdvice which depends on hideRecursiveCall from InlineByteBuddyMockMaker.\n\nSo, moving hideRecursiveCall from InlineByteBuddyMockMaker to MockMethodAdvice breaks a dependency cycle and allows the InlineByteBuddyMockMaker.java file to be excluded without problem. Also, MockMethodAdvice seems to be a better place for it.\n\nIf you are happy with this proposal or can suggest a better place for hideRecursiveCall then I am happy to submit a fix for this.",
+    "created_at": "2017-03-08T11:30:26Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/982.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 982,\n3\t  \"title\": \"Break cyclical compile time dependency on hideRecursiveCall\",\n4\t  \"body\": \"I am working on upgrading the version of mockito in AOSP to 2.7.13 using byte buddy and byte buddy android rather than dexmaker.\\n\\nAs part of that I need to exclude a number of classes wh [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hideRecursiveCall",
+        "path": "mockito",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hideRecursiveCall|cyclic|cycle|MockMethodAdvice",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "178:335\t2.0.31-beta -> 2.0.32-beta Cannot mock RecyclerView.Adapter\n504:982\tBreak cyclical compile time dependency on hideRecursiveCall\n750:1437\tDifferent mocks are used for @Mock and @InjectMock when using @TestInstance(TestInstance.Lifecycle.PER_CLASS) of jUnit5\n1148:2177\tRelease cycles?\n1292:2540 [cut]",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/{MockMethodAdvice,InlineByteBuddyMockMaker,InlineBytecodeGenerator}.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "InlineByteBuddy|android|Android|dexmaker",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-i": true
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n93:196\tStable version (1.10.19) and HEAD don't build on Android\n215:392\tNPE when Test extends from android.test.ActivityInstrumentationTestCase2\n363:706\tMockito 2.x doesn't work for connected  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class (InlineByteBuddyMockMaker|MockMethodAdvice|InlineBytecodeGenerator)\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*MockMaker*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "MockMaker",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.creation.instance.Instantiator;\n9\timport org.mockito.int [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hideRecursiveCall",
+        "path": "",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "hideRecursiveCall|MockMethodAdvice|InlineBytecodeGenerator",
+        "path": "mockito/mockito-core",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "Recursive|InlineDelegateByteBuddyMockMaker",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/MockMethodAdvice.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport static net.bytebuddy.matcher.ElementMatchers.isVisibleTo;\n8\timport static net.bytebuddy.matcher.ElementMatche [cut]",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java"
+      },
+      "result": "1\t/*\n2\t * Copyright (c) 2016 Mockito contributors\n3\t * This program is made available under the terms of the MIT License.\n4\t */\n5\tpackage org.mockito.internal.creation.bytebuddy;\n6\t\n7\timport org.mockito.MockedConstruction;\n8\timport org.mockito.creation.instance.InstantiationException;\n9\timport org.m [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 982, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [1876, 922, 939], \"evidence\": [\"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/MockMethodAdvice.java\", \"mockito/mockito-core/src/main/java/org/mockito/internal/creation/bytebuddy/InlineDelegateByteBuddyMockMaker.java\"], \"reply\": \"Thanks for the detailed report and for offering to send a fix. You are asking for the stack trace helper used by the inline mock maker to move into MockMethodAdvice, so that InlineByteBuddyMockMaker can be excluded on Android without a compile error.\"}",
+  "final_is_json": true
+}

@@ -1,0 +1,33 @@
+{
+  "run": "224-1",
+  "number": 224,
+  "issue": {
+    "number": 224,
+    "title": "Clean up old branches",
+    "body": "Currently the repository contains a lot of old branches.\n\n![image](https://cloud.githubusercontent.com/assets/5948271/8020909/9a942064-0c8b-11e5-88c2-179eb7f40ce2.png)\n\nIs there a specific reason why they are not deleted? For example branch issue230 has been merged into master back in 2012, but the branch is still alive.\n\nDeleting old branches would make it easier to see ongoing contributions from pull-requests by both contributors and external users.\n",
+    "created_at": "2015-06-06T18:39:51Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/224.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 224,\n3\t  \"title\": \"Clean up old branches\",\n4\t  \"body\": \"Currently the repository contains a lot of old branches.\\n\\n![image](https://cloud.githubusercontent.com/assets/5948271/8020909/9a942064-0c8b-11e5-88c2-179eb7f40ce2.png)\\n\\nIs there a specific reason why they are not deleted?  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)branch",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "69:159\tZipCompareTest failed in master branch\n110:224\tClean up old branches\n232:421\tRemove stale branches\n300:594\tMake the build script aware of the release branch\n345:681\tConfigure the release branch to publish automatically\n978:1856\tChange main branch to \"master\"?",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 224, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [421], \"evidence\": [], \"reply\": \"Thanks for raising this. You're asking for the stale branches in the repository, such as the long-merged issue230 branch, to be deleted so that open contributions are easier to spot. Your request is noted for the maintainers.\"}",
+  "final_is_json": true
+}

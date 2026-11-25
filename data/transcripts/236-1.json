@@ -1,0 +1,153 @@
+{
+  "run": "236-1",
+  "number": 236,
+  "issue": {
+    "number": 236,
+    "title": "nicer textual printing of typed parameters",
+    "body": "When matchers fail but yield the same toString(), Mockito prints extra type information. However, the type information is awkwardly printed for Strings. I've encountered this issue while working on removing hard dependency to hamcrest.\n\n```\n//current:\nsomeMethod(1, (Integer) 2);\nsomeOther(1, \"(String) 2\");\n//desired:\nsomeOther(1, (String) \"2\");\n```\n",
+    "created_at": "2015-06-20T20:19:32Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/236.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 236,\n3\t  \"title\": \"nicer textual printing of typed parameters\",\n4\t  \"body\": \"When matchers fail but yield the same toString(), Mockito prints extra type information. However, the type information is awkwardly printed for Strings. I've encountered this issue while working on removin [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "\\(\\s*\\+\\s*\\w+.*\\)|getSimpleName|getName\\(\\)|ArgumentsAreDifferent",
+        "path": "mockito",
+        "glob": "*Descriptor*.java",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "class\\s+(ArgumentMismatch|Printer|ArgumentsAreDifferent|MatcherDescriptor|\\w*Describ\\w*)\\b",
+        "path": "mockito",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "\\(\\(\\s*\\w+\\s*\\)|typed|Typed|getTypeName|class\\.getSimpleName",
+        "path": "mockito/mockito-core/src/main/java/org/mockito/internal/util",
+        "output_mode": "files_with_matches"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*{Argument,Describ,Printer,Mismatch}*.java",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*.java",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "*",
+        "path": ""
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issue-index.tsv"
+      },
+      "result": "1\tnumber\ttitle\n2\t1\t[test] improve stuff\n3\t64\tDefault answer to fail on an unstubbed method invocation\n4\t67\tFlickering test\n5\t69\tRemoving mockingDetails API from Mockito\n6\t70\tMissing @Mock for @InjectMocks silently fails when it cannot find the dependency\n7\t71\tjava.lang.NoClassDefFoundError: org.mock [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "typed|Typed",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 20
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "\\(String\\)|\\(Integer\\)|describeType|typeName",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "-n": true
+      },
+      "result": "No matches found",
+      "error": false
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "mockito"
+      },
+      "result": "EISDIR: illegal operation on a directory, read 'mockito'",
+      "error": true
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "package org\\.mockito",
+        "path": "mockito",
+        "output_mode": "count",
+        "head_limit": 5
+      },
+      "result": "No matches found\n\nFound 0 total occurrences across 0 files.",
+      "error": false
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*",
+        "path": "mockito"
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "ReportFindings",
+      "input": {},
+      "result": "<tool_use_error>InputValidationError: ReportFindings failed due to the following issue:\nThe required parameter `findings` is missing</tool_use_error>",
+      "error": true
+    }
+  ],
+  "final": "{\"number\": 236, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [570, 716], \"evidence\": [], \"reply\": \"Thanks for the report. You'd like mismatch messages to show type information more clearly when two arguments have the same toString(), so a String argument prints as (String) \\\"2\\\" instead of the quoted \\\"(String) 2\\\".\"}",
+  "final_is_json": true
+}

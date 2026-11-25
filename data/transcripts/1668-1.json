@@ -1,0 +1,55 @@
+{
+  "run": "1668-1",
+  "number": 1668,
+  "issue": {
+    "number": 1668,
+    "title": "Add subproject for errorprone Mockito plugins",
+    "body": "We heavily rely on ErrorProne plugins to prohibit certain usage of Mockito. Examples include disallowing the usages of Mockito internals or extending interfaces annotated by `@NotExtensible`.\n\nThese plugins are beneficial to the Java community and we would like to open source them to the project. The extra subproject would contain several checkers (and tests) that implement several safeguards. Users can add the checkers to their project to their benefit.\n\nFor example for Gradle, the configuration would be as follows (using https://github.com/tbroyer/gradle-errorprone-plugin#custom-error-prone-checks):\n\n```gradle\ndependencies {\n  errorprone(\"org.mockito:mockito-errorprone:$mockitoVersion\")\n}\n```\n\nThis would allow us to make issues like #1616 and #1613 compiler errors rather than runtime failures.",
+    "created_at": "2019-03-18T14:47:55Z"
+  },
+  "steps": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "issues/1668.json"
+      },
+      "result": "1\t{\n2\t  \"number\": 1668,\n3\t  \"title\": \"Add subproject for errorprone Mockito plugins\",\n4\t  \"body\": \"We heavily rely on ErrorProne plugins to prohibit certain usage of Mockito. Examples include disallowing the usages of Mockito internals or extending interfaces annotated by `@NotExtensible`.\\n\\nThese  [cut]",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "NotExtensible",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "errorprone|error-prone",
+        "path": "mockito",
+        "output_mode": "files_with_matches",
+        "head_limit": 10
+      },
+      "result": "No files found",
+      "error": false
+    },
+    {
+      "tool": "Grep",
+      "input": {
+        "pattern": "(?i)errorprone|error-prone|checker|internal|NotExtensible|compile",
+        "path": "issue-index.tsv",
+        "output_mode": "content",
+        "head_limit": 30
+      },
+      "result": "7:71\tjava.lang.NoClassDefFoundError: org.mockito.internal.runners.RunnerImpl on ART on L Preview on Android\n15:80\tExpose 'internal' classes so Powermock-osgi can be incorporated without special builds of Mockito\n31:107\tImprove internal implementation so that it is possible to implement mocking abstr [cut]",
+      "error": false
+    }
+  ],
+  "final": "{\"number\": 1668, \"label\": \"enhancement\", \"route\": \"backlog\", \"related\": [2554, 2617], \"evidence\": [], \"reply\": \"Thanks for the detailed proposal and the offer to contribute these checkers. To restate the request: add a separate mockito-errorprone subproject with Error Prone checks that flag use of Mockito internals and extending interfaces marked @NotExtensible, so these mistakes fail at compile time instead of at runtime.\"}",
+  "final_is_json": true
+}
